@@ -1,0 +1,85 @@
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fontspec}
+
+\definecolor{codegray}{rgb}{0.97,0.97,0.97}
+\definecolor{codebg}{rgb}{0.95,0.95,0.95}
+\definecolor{keywordcolor}{rgb}{0.0,0.0,0.7}
+\definecolor{stringcolor}{rgb}{0.6,0.0,0.0}
+\definecolor{commentcolor}{rgb}{0.0,0.5,0.0}
+
+\newfontfamily\listingmono[
+  Path=../latin-modern-mono/,
+  Extension=.otf,
+  UprightFont=lmmono10-regular,
+  BoldFont=lmmonolt10-bold,
+  ItalicFont=lmmonolt10-oblique,
+  BoldItalicFont=lmmonolt10-boldoblique,
+  RawFeature={fallback=monocyrfallback},
+  BoldFeatures={RawFeature={fallback=monocyrfallback}},
+  ItalicFeatures={RawFeature={fallback=monocyrfallback}},
+  BoldItalicFeatures={RawFeature={fallback=monocyrfallback}},
+]{lmmono10-regular}
+
+%\setmonofont{PT Mono}
+\lstset{
+    showstringspaces=false,
+    language=Python,
+    basicstyle=\listingmono\small,
+    numberstyle=\small,
+    stepnumber=1,
+    frame=none,
+    breaklines=true,
+    breakatwhitespace=false,
+    tabsize=4,
+    captionpos=b,
+    backgroundcolor=\color{codegray},
+    columns=fixed,
+    keepspaces=true,
+    xrightmargin=5pt,
+    extendedchars=true,
+	keywordstyle=\bfseries,    
+    numbers=left,
+    xleftmargin=1.1em,
+    numbersep=0.5em,
+    aboveskip=0pt,
+    belowskip=0pt
+}
+
+\setlist[itemize]{listparindent=\parindent}
+
+
+\definecolor{bg}{RGB}{245,245,245}
+\definecolor{kw}{RGB}{0,92,197}
+\definecolor{com}{RGB}{0,128,0}
+\definecolor{str}{RGB}{163,21,21}
+
+\lstdefinestyle{modern}{
+    backgroundcolor=\color{bg},
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{kw}\bfseries,
+    commentstyle=\color{com}\itshape,
+    stringstyle=\color{str},
+    numbers=left,
+    numberstyle=\scriptsize,
+    frame=single,
+    rulecolor=\color{gray!30},
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=2,
+    numbersep=0.5em,
+    xleftmargin=1.1em,
+    xrightmargin=0.2cm,
+}
+
+%\raggedbottom
+
+%\lstset{
+%    basicstyle=\ttfamily\small,
+%    keywordstyle=\color{keywordcolor}\bfseries,
+%    stringstyle=\color{stringcolor},
+%    commentstyle=\color{commentcolor}\itshape,
+%    numbers=left,
+%    numberstyle=\color{gray},
+%    breaklines=true
+%}

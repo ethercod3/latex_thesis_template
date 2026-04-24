@@ -1,0 +1,35 @@
+sequenceDiagram
+    autonumber
+    actor Admin as Администратор/Разработчик
+    participant CLI as Vault CLI
+    participant ENV as Окружение (VAULT_MASTER_KEK_HEX)
+    participant DB as Vault DB
+    participant API as Vault API (HTTPS)
+    actor Client as Клиент приложения
+
+    rect rgb(235, 245, 255)
+    Note over Admin,DB: Поток 1. Загрузка и перешифрование данных
+    Admin->>CLI: load --name ... --alg-in ... --alg-out ... --dek-in ... --dek-out ...
+    CLI->>DB: Получить wrapped DEK (dek-in, dek-out)
+    DB-->>CLI: wrapped ключи
+    CLI->>ENV: Считать master KEK
+    ENV-->>CLI: master KEK
+    CLI->>CLI: Unwrap DEK, decrypt(alg-in), encrypt(alg-out)
+    CLI->>DB: Сохранить data_record (header, payload, auth_hash)
+    DB-->>CLI: OK
+    CLI-->>Admin: Результат операции
+    end
+
+    rect rgb(236, 255, 239)
+    Note over Client,DB: Поток 2. Получение данных через API
+    Client->>API: GET /data/{name} + Authorization: Bearer ...
+    API->>DB: Получить запись data_record
+    DB-->>API: header + payload + auth_hash + dek_out
+    API->>API: Проверить auth (PBKDF2 verify)
+    API->>DB: Получить wrapped DEK (dek_out)
+    DB-->>API: wrapped DEK
+    API->>ENV: Считать master KEK
+    ENV-->>API: master KEK
+    API->>API: Unwrap DEK и decrypt контейнер
+    API-->>Client: plaintext_hex / plaintext_utf8
+    end

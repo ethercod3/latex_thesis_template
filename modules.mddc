@@ -1,0 +1,35 @@
+flowchart LR
+    MAIN[main.py<br>Точка входа]
+    CLI[vault/cli.py<br>CLI-команды]
+    API[vault/api.py<br>FastAPI HTTPS]
+
+    SCHEMAS["vault/schemas.py<br>Pydantic-схемы CLI/API"]
+    SETTINGS[vault/settings.py<br>Конфигурация окружения]
+    CRYPTO[vault/crypto.py<br>Encrypt/Decrypt AEAD]
+    KEYM[vault/key_manager.py<br>Wrap/Unwrap DEK, KEK utils]
+    AUTH[vault/auth.py<br>Hash/Verify Bearer]
+    DB[vault/db.py<br>SQLAlchemy Repository]
+    DBS[vault/db_schemas.py<br>Pydantic-схемы БД]
+
+    DBSTORE[(SQLite/PostgreSQL<br>База данных)]
+    ENV[(Переменные окружения<br>VAULT_DB_URL<br>VAULT_MASTER_KEK_HEX)]
+
+    MAIN --> CLI
+
+    CLI --> SCHEMAS
+    CLI --> SETTINGS
+    CLI --> CRYPTO
+    CLI --> KEYM
+    CLI --> DB
+    CLI --> ENV
+
+    API --> SETTINGS
+    API --> CRYPTO
+    API --> KEYM
+    API --> AUTH
+    API --> DB
+    API --> ENV
+
+    DB --> DBS
+    DB --> AUTH
+    DB --> DBSTORE

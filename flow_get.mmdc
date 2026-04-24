@@ -1,0 +1,20 @@
+sequenceDiagram
+    autonumber
+    actor Client as Клиент приложения
+    participant API as Vault API (HTTPS)
+    participant DB as Vault DB
+    participant ENV as Окружение (VAULT_MASTER_KEK_HEX)
+
+    rect rgb(236, 255, 239)
+    Note over Client,DB: Поток 2. Получение данных через API
+    Client->>API: GET /data/{name} + Authorization: Bearer ...
+    API->>DB: Получить запись data_record
+    DB-->>API: header + payload + auth_hash + dek_out
+    API->>API: Проверить auth (PBKDF2 verify)
+    API->>DB: Получить wrapped DEK (dek_out)
+    DB-->>API: wrapped DEK
+    API->>ENV: Считать master KEK
+    ENV-->>API: master KEK
+    API->>API: Unwrap DEK и decrypt контейнер
+    API-->>Client: plaintext_hex / plaintext_utf8
+    end

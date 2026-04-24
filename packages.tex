@@ -1,0 +1,83 @@
+%\usepackage[
+%left=3cm,
+%right=1cm,
+%top=2.5cm,
+%bottom=2cm,
+%]{geometry}
+\usepackage[
+    left=3cm,
+    right=1cm,
+    top=2.5cm,
+    bottom=1.8cm,
+    includefoot
+]{geometry}
+%\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{xurl}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{fontspec}
+\usepackage[justification=centering]{caption}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{csquotes}
+\usepackage{indentfirst}
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{etoolbox}
+\usepackage{graphicx}
+%\usepackage{fancyhdr}
+\usepackage{titleps}
+\usepackage{afterpage}
+\usepackage{lipsum}
+%\usepackage{tabularx}
+\usepackage[export]{adjustbox}
+\usepackage{newtxmath}
+\usepackage{array}
+\usepackage{csquotes}
+\usepackage{longtable}
+\usepackage{ltablex}
+%\usepackage{polyglossia}
+%\setdefaultlanguage{russian}
+\usepackage{enumitem}
+\usepackage{pdfpages}
+\usepackage{ragged2e}
+%\usepackage{xltabular}
+\usepackage[hypertexnames=false]{hyperref}
+\keepXColumns
+
+\makeatletter
+\AddEnumerateCounter{\asbuk}{\russian@alph}{щ}
+\makeatother
+
+\renewcommand{\lstlistingname}{Листинг}
+
+\makeatletter
+\renewenvironment{thebibliography}[1]
+  {%
+    \list{\@biblabel{\@arabic\c@enumiv}}%
+         {%
+           \settowidth\labelwidth{\@biblabel{#1}}%
+           \labelsep=0.5em
+           \leftmargin=0cm
+           \itemindent=2.2cm
+           \listparindent=0pt
+           \itemsep=0pt
+           \parsep=0pt
+           \topsep=0pt
+           \partopsep=0pt
+           \usecounter{enumiv}%
+         }%
+%    \raggedright
+%    \sloppy
+  }
+  {\endlist}
+\renewcommand{\@biblabel}[1]{#1.}
+\makeatother
+
+\setlength{\footskip}{2cm}

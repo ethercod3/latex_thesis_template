@@ -1,0 +1,20 @@
+sequenceDiagram
+    autonumber
+    actor Admin as Администратор/Разработчик
+    participant CLI as Vault CLI
+    participant ENV as Окружение (VAULT_MASTER_KEK_HEX)
+    participant DB as Vault DB
+
+    rect rgb(235, 245, 255)
+    Note over Admin,DB: Поток 1. Загрузка и перешифрование данных
+    Admin->>CLI: load --name ... --alg-in ... --alg-out ... --dek-in ... --dek-out ...
+    CLI->>DB: Получить wrapped DEK (dek-in, dek-out)
+    DB-->>CLI: wrapped ключи
+    CLI->>ENV: Считать master KEK
+    ENV-->>CLI: master KEK
+    CLI->>CLI: Unwrap DEK, decrypt(alg-in), encrypt(alg-out)
+    CLI->>DB: Сохранить data_record (header, payload, auth_hash)
+    DB-->>CLI: OK
+    CLI-->>Admin: Результат операции
+    end
+

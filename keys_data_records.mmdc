@@ -1,0 +1,24 @@
+erDiagram
+    keys {  
+        int id PK
+        string name
+        string key_type
+        string algorithm
+        text key_hex
+        datetime created_at
+        datetime updated_at
+    }
+
+    data_records {
+        int id PK
+        string name
+        string auth_hash
+        string alg_in
+        string alg_out
+        string dek_in
+        string dek_out
+        text header_json
+        text payload_hex
+        datetime created_at
+        datetime updated_at
+    }

@@ -1,0 +1,22 @@
+---
+config:
+  theme: default
+  flowchart:
+    curve: linear
+---
+flowchart TD
+
+    %% Основная цепочка
+    K[Ключ K] --> GEN["ChaCha20 block 0"]
+    GEN --> RS["$$(r, s)$$"]
+    RS --> POLY["$$T = Poly1305_r(A || C)$$"]
+
+    K --> ENC["ChaCha20"]
+    ENC --> C["$$C = ChaCha20_K(P, N)$$"]
+
+    %% Боковые входы
+    P[Открытый текст P] --> ENC
+    N[Nonce N] --> ENC
+    N --> GEN
+    A[Доп. данные A] --> POLY
+    C --> POLY

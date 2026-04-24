@@ -1,0 +1,21 @@
+﻿quadrantChart
+    x-axis "Низкая функциональность" --> "Высокая функциональность"
+    y-axis "Сложно внедрять" --> "Просто внедрять"
+
+    %% quadrant-1 "Оптимальный выбор"
+    %% quadrant-2 "Просто, но ограничено"
+    %% quadrant-3 "Слабые решения"
+    %% quadrant-4 "Функционально, но сложно"
+
+    "Облачные сервисы (AWS/Azure/GCP)": [0.72, 0.82]
+    "Doppler": [0.62, 0.86]
+    "Infisical (SaaS)": [0.58, 0.78]
+    "OpenBao": [0.82, 0.44]
+    "HashiCorp Vault": [0.92, 0.30]
+    "PAM / Secrets (CyberArk, Delinea)": [0.78, 0.24]
+    "Infisical self-hosted": [0.66, 0.42]
+    "Mozilla SOPS": [0.38, 0.73]
+    "Kubernetes Sealed Secrets": [0.34, 0.68]
+    "git-crypt": [0.27, 0.62]
+    "Шифрование .env вручную": [0.18, 0.36]
+    "Самописные скрипты": [0.14, 0.28]

@@ -1,0 +1,20 @@
+---
+config:
+  theme: default
+  flowchart:
+    curve: linear
+---
+flowchart TD
+
+    K[Ключ K] --> H["$$H = AES_K(0^{128})$$"]
+    H --> GHASH["$$S = GHASH_H(A, C)$$"]
+    GHASH --> TAG["$$T = S \oplus AES_K(N)$$"]
+
+    K --> CTR["AES-CTR"]
+    CTR --> C["$$C = AES-CTR_K(P, N)$$"]
+
+    P[Открытый текст P] --> CTR
+    N[Nonce N] --> CTR
+    N --> TAG
+    A[Доп. данные A] --> GHASH
+    C --> GHASH

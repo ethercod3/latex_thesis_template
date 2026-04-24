@@ -1,0 +1,53 @@
+\newpage
+
+\newgeometry{
+left=3cm,
+right=1cm,
+top=2cm,
+bottom=1.5cm,
+includehead,
+includefoot
+}
+
+\addcontentsline{toc}{section}{Приложение А}
+
+\setlength{\footskip}{2cm}
+
+\thispagestyle{plain}
+\pagestyle{appendixcontstyle}
+
+\vspace*{-\headheight}
+\vspace*{-\headsep}
+\vspace*{-0.8cm}
+
+%\setlength{\headsep}{1cm}
+
+
+\centering{ПРИЛОЖЕНИЕ А}
+
+\vspace*{0.3cm}
+	
+	\lstset{style=modern} 
+		
+	\lstinputlisting[caption=main.py,style=modern]{../vault_diploma/main.py}
+	\lstinputlisting[caption=pytest.ini]{../vault_diploma/pytest.ini}
+	\lstinputlisting[caption=requirements.txt]{../vault_diploma/requirements.txt}
+	\lstinputlisting[caption=vault/\_\_init\_\_.py]{../vault_diploma/vault/\_\_init\_\_.py}
+	\lstinputlisting[caption=vault/api.py]{../vault_diploma/vault/api.py}
+	\lstinputlisting[caption=vault/auth.py]{../vault_diploma/vault/auth.py}	
+	\lstinputlisting[caption=vault/cli.py]{../vault_diploma/vault/cli.py}	
+	\lstinputlisting[caption=vault/crypto.py]{../vault_diploma/vault/crypto.py}	
+	\lstinputlisting[caption=vault/db.py]{../vault_diploma/vault/db.py}	
+	\lstinputlisting[caption=vault/db\_schemas.py]{../vault_diploma/vault/db\_schemas.py}
+	\lstinputlisting[caption=vault/key\_manager.py]{../vault_diploma/vault/key\_manager.py}	
+	\lstinputlisting[caption=vault/schemas.py]{../vault_diploma/vault/schemas.py}		
+	\lstinputlisting[caption=vault/settings.py]{../vault_diploma/vault/settings.py}		
+	\lstinputlisting[caption=tests/conftest.py]{../vault_diploma/tests/conftest.py}		
+	\lstinputlisting[caption=tests/test\_api.py]{../vault_diploma/tests/test\_api.py}		
+	\lstinputlisting[caption=tests/test\_auth.py]{../vault_diploma/tests/test\_auth.py}		
+	\lstinputlisting[caption=tests/test\_cli.py]{../vault_diploma/tests/test\_cli.py}		
+	\lstinputlisting[caption=tests/test\_crypto.py]{../vault_diploma/tests/test\_crypto.py}		
+	\lstinputlisting[caption=tests/test\_db\_migration.py]{../vault_diploma/tests/test\_db\_migration.py}		
+	\lstinputlisting[caption=tests/test\_load\_flow.py]{../vault_diploma/tests/test\_load\_flow.py}
+	\lstinputlisting[caption=tests/test\_schemas.py]{../vault_diploma/tests/test\_schemas.py}
+	\lstinputlisting[caption=scripts/check\_all.py]{../vault_diploma/scripts/check\_all.py}
