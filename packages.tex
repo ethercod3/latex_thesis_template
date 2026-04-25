@@ -47,6 +47,7 @@
 \usepackage{enumitem}
 \usepackage{pdfpages}
 \usepackage{ragged2e}
+\usepackage{minted}
 %\usepackage{xltabular}
 \usepackage[hypertexnames=false]{hyperref}
 \keepXColumns
@@ -54,6 +55,8 @@
 \makeatletter
 \AddEnumerateCounter{\asbuk}{\russian@alph}{щ}
 \makeatother
+
+\setminted{frame=lines, linenos=true}
 
 \renewcommand{\lstlistingname}{Листинг}
 

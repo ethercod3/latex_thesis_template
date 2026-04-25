@@ -6,7 +6,7 @@ sequenceDiagram
     participant ENV as Окружение (VAULT_MASTER_KEK_HEX)
 
     rect rgb(236, 255, 239)
-    Note over Client,DB: Поток 2. Получение данных через API
+    Note over Client,ENV: Поток 2. Получение данных через API
     Client->>API: GET /data/{name} + Authorization: Bearer ...
     API->>DB: Получить запись data_record
     DB-->>API: header + payload + auth_hash + dek_out

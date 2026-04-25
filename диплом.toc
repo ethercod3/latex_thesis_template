@@ -1,33 +1,36 @@
 \babel@toc {russian}{}\relax 
 \contentsline {section}{Введение}{4}{Doc-Start}%
-\contentsline {section}{\numberline {1}Теоретические основы криптографии и модели безопасности}{6}{section.5}%
-\contentsline {subsection}{\numberline {1.1}Базовые свойства защиты (Триада CIA)}{6}{subsection.6}%
-\contentsline {subsection}{\numberline {1.2}Криптографические термины, используемые в работе}{7}{subsection.8}%
-\contentsline {subsection}{\numberline {1.3}Алгоритм PBKDF2}{9}{subsection.9}%
-\contentsline {subsection}{\numberline {1.4}Алгоритм AES-GCM}{10}{subsection.19}%
-\contentsline {subsection}{\numberline {1.5}Алгоритм ChaCha20-Poly1305}{12}{subsection.31}%
-\contentsline {section}{\numberline {2}Анализ предметной области}{15}{section.43}%
-\contentsline {subsection}{\numberline {2.1}Зачем нужна система защищенной работы с данными}{15}{subsection.44}%
-\contentsline {subsection}{\numberline {2.2}Особенности задачи для сред разработки и production}{15}{subsection.45}%
-\contentsline {subsection}{\numberline {2.3}Анализ существующих решений (конкурентов)}{16}{subsection.46}%
-\contentsline {subsection}{\numberline {2.4}Выводы по анализу и обоснование выбора собственного решения}{20}{subsection.53}%
-\contentsline {section}{\numberline {3}Постановка задачи и требования к системе}{23}{section.55}%
-\contentsline {section}{\numberline {4}Проектирование системы и модели данных}{24}{section.57}%
-\contentsline {subsection}{\numberline {4.1}Модули приложения}{24}{subsection.58}%
-\contentsline {subsection}{\numberline {4.2}Модель данных}{25}{subsection.61}%
-\contentsline {subsection}{\numberline {4.3}Потоки обработки}{26}{subsection.75}%
-\contentsline {subsection}{\numberline {4.4}Обоснование выбора технологического стека}{27}{subsection.87}%
-\contentsline {section}{\numberline {5}Модель угроз и допущений}{34}{section.98}%
-\contentsline {subsection}{\numberline {5.1}Ключевые активы системы}{34}{subsection.99}%
-\contentsline {subsection}{\numberline {5.2}Нарушители и их модель возможностей}{35}{subsection.105}%
-\contentsline {subsection}{\numberline {5.3}Границы доверия}{35}{subsection.110}%
-\contentsline {subsection}{\numberline {5.4}Принятые допущения модели}{35}{subsection.114}%
-\contentsline {subsection}{\numberline {5.5}Основные сценарии угроз и контрмеры}{36}{subsection.119}%
-\contentsline {subsection}{\numberline {5.6}Диаграмма модели угроз}{37}{subsection.120}%
-\contentsline {section}{\numberline {6}Схема взаимодействия с приложением}{38}{section.122}%
-\contentsline {subsection}{\numberline {6.1}Общая схема}{38}{subsection.123}%
-\contentsline {subsection}{\numberline {6.2}Схема работы веб-сервера}{42}{subsection.147}%
-\contentsline {section}{\numberline {7}Обоснование выбора методики разработки}{46}{section.152}%
-\contentsline {section}{\numberline {8}Реализация ключевых модулей}{51}{section.164}%
-\contentsline {section}{Заключение}{56}{Item.172}%
-\contentsline {section}{Библиографический список}{59}{Item.172}%
+\contentsline {section}{\numberline {1}Аналитический раздел}{6}{section.5}%
+\contentsline {subsection}{\numberline {1.1}Теоретические основы криптографии и модели безопасности}{6}{subsection.6}%
+\contentsline {subsubsection}{\numberline {1.1.1}Базовые свойства защиты (Триада CIA)}{6}{subsubsection.7}%
+\contentsline {subsubsection}{\numberline {1.1.2}Используемые криптографические термины}{7}{subsubsection.9}%
+\contentsline {subsubsection}{\numberline {1.1.3}Общие термины, используемые в работе}{8}{subsubsection.10}%
+\contentsline {subsubsection}{\numberline {1.1.4}Алгоритм PBKDF2}{9}{subsubsection.11}%
+\contentsline {subsubsection}{\numberline {1.1.5}Алгоритм AES-GCM}{11}{subsubsection.21}%
+\contentsline {subsubsection}{\numberline {1.1.6}Алгоритм ChaCha20-Poly1305}{13}{subsubsection.33}%
+\contentsline {subsection}{\numberline {1.2}Анализ предметной области}{15}{subsection.45}%
+\contentsline {subsubsection}{\numberline {1.2.1}Обоснование необходимости системы защищенной работы с данными}{15}{subsubsection.46}%
+\contentsline {subsubsection}{\numberline {1.2.2}Особенности задачи для сред разработки и production}{16}{subsubsection.47}%
+\contentsline {subsubsection}{\numberline {1.2.3}Анализ существующих решений (конкурентов)}{17}{subsubsection.48}%
+\contentsline {subsubsection}{\numberline {1.2.4}Выводы по анализу и обоснование выбора собственного решения}{21}{subsubsection.55}%
+\contentsline {section}{\numberline {2}Практический раздел}{25}{section.57}%
+\contentsline {subsection}{\numberline {2.1}Постановка задачи и требования к системе}{25}{subsection.58}%
+\contentsline {subsection}{\numberline {2.2}Проектирование системы и модели данных}{26}{subsection.60}%
+\contentsline {subsubsection}{\numberline {2.2.1}Модули приложения}{26}{subsubsection.61}%
+\contentsline {subsubsection}{\numberline {2.2.2}Модель данных}{27}{subsubsection.64}%
+\contentsline {subsubsection}{\numberline {2.2.3}Потоки обработки}{29}{subsubsection.78}%
+\contentsline {subsubsection}{\numberline {2.2.4}Обоснование выбора технологического стека}{32}{subsubsection.90}%
+\contentsline {subsection}{\numberline {2.3}Модель угроз и допущений}{36}{subsection.101}%
+\contentsline {subsubsection}{\numberline {2.3.1}Ключевые активы системы}{37}{subsubsection.102}%
+\contentsline {subsubsection}{\numberline {2.3.2}Нарушители и их модель возможностей}{38}{subsubsection.108}%
+\contentsline {subsubsection}{\numberline {2.3.3}Границы доверия}{38}{subsubsection.113}%
+\contentsline {subsubsection}{\numberline {2.3.4}Принятые допущения модели}{39}{subsubsection.117}%
+\contentsline {subsubsection}{\numberline {2.3.5}Основные сценарии угроз и контрмеры}{39}{subsubsection.122}%
+\contentsline {subsubsection}{\numberline {2.3.6}Диаграмма модели угроз}{40}{subsubsection.123}%
+\contentsline {subsection}{\numberline {2.4}Схема взаимодействия с приложением}{41}{subsection.125}%
+\contentsline {subsubsection}{\numberline {2.4.1}Общая схема}{41}{subsubsection.126}%
+\contentsline {subsubsection}{\numberline {2.4.2}Схема работы веб-сервера}{47}{subsubsection.151}%
+\contentsline {subsection}{\numberline {2.5}Обоснование выбора методики разработки}{48}{subsection.156}%
+\contentsline {subsection}{\numberline {2.6}Реализация ключевых модулей}{53}{subsection.167}%
+\contentsline {section}{Заключение}{58}{Item.175}%
+\contentsline {section}{Библиографический список}{61}{Item.175}%

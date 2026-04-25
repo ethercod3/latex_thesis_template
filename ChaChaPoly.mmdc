@@ -1,17 +1,17 @@
 ---
 config:
-  theme: default
+  theme: neutral
   flowchart:
     curve: linear
 ---
-flowchart TD
+flowchart LR
 
     %% Основная цепочка
-    K[Ключ K] --> GEN["ChaCha20 block 0"]
+    K[Ключ K] --> GEN["$$ChaCha20 block 0$$"]
     GEN --> RS["$$(r, s)$$"]
     RS --> POLY["$$T = Poly1305_r(A || C)$$"]
 
-    K --> ENC["ChaCha20"]
+    K --> ENC["$$ChaCha20$$"]
     ENC --> C["$$C = ChaCha20_K(P, N)$$"]
 
     %% Боковые входы

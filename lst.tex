@@ -3,13 +3,23 @@
 \usepackage{fontspec}
 
 \definecolor{codegray}{rgb}{0.97,0.97,0.97}
+\definecolor{lightgray}{rgb}{0.98,0.98,0.98}
+\definecolor{white}{rgb}{1,1,1}
 \definecolor{codebg}{rgb}{0.95,0.95,0.95}
 \definecolor{keywordcolor}{rgb}{0.0,0.0,0.7}
 \definecolor{stringcolor}{rgb}{0.6,0.0,0.0}
 \definecolor{commentcolor}{rgb}{0.0,0.5,0.0}
 
+\lstdefinelanguage{bashcustom}{
+    keywords={cd, ls, pwd, echo, export, python},
+    sensitive=true,
+    morecomment=[l]{\#},
+    morestring=[b]",
+    morestring=[b]',
+}
+
 \newfontfamily\listingmono[
-  Path=../latin-modern-mono/,
+  Path=latin-modern-mono/,
   Extension=.otf,
   UprightFont=lmmono10-regular,
   BoldFont=lmmonolt10-bold,
@@ -46,7 +56,7 @@
     belowskip=0pt
 }
 
-\setlist[itemize]{listparindent=\parindent}
+%\setlist[itemize]{listparindent=\parindent}
 
 
 \definecolor{bg}{RGB}{245,245,245}
@@ -70,6 +80,45 @@
     numbersep=0.5em,
     xleftmargin=1.1em,
     xrightmargin=0.2cm,
+}
+
+\lstdefinestyle{modernNoNumbers}{
+    backgroundcolor=\color{bg},
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{kw}\bfseries,
+    commentstyle=\color{com}\itshape,
+    stringstyle=\color{str},
+    numbers=none,
+    frame=single,
+    rulecolor=\color{gray!30},
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=2,
+    numbersep=0.5em,
+    xleftmargin=1.1em,
+    xrightmargin=0.2cm,
+}
+
+
+\lstdefinestyle{bashcommand}{
+    backgroundcolor=\color{codegray},
+    basicstyle=\listingmono\small,
+    keywordstyle=\bfseries,
+    commentstyle=\color{com}\itshape,
+    stringstyle=\color{str},
+    numbers=none,
+    frame=single,
+    rulecolor=\color{gray!30},
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=2,
+    numbersep=0.5em,
+%    xleftmargin=0.5em,
+    xrightmargin=0cm,
+    framexleftmargin=0.5em,
+    framextopmargin=0.5em,
+    framexbottommargin=0.5em,
+    framexrightmargin=0.5em,
 }
 
 %\raggedbottom
