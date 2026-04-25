@@ -1,0 +1,17 @@
+sequenceDiagram
+    autonumber
+    participant APP as Runtime (CLI/API)
+    participant DB as Vault DB
+    participant ENV as Окружение (VAULT_MASTER_KEK_HEX)
+    participant KM as key_manager
+
+    rect rgb(236, 255, 239)
+    APP->>DB: get_key(name, key_type=dek)
+    DB-->>APP: wrapped DEK
+    APP->>ENV: Считать master KEK
+    ENV-->>APP: master KEK
+    APP->>KM: unwrap_dek_hex(wrapped DEK, master KEK)
+    KM->>KM: validate_master_kek_hex() + AES-GCM decrypt
+    KM-->>APP: открытый DEK hex
+    Note over APP: Открытый DEK существует только в памяти процесса
+    end

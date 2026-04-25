@@ -2,3 +2,9 @@
 *.log
 *.out
 *.aux
+*.zip
+*.rar
+*.toc
+*.lof
+*.lot
+*.gz
