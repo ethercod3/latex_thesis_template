@@ -8,3 +8,6 @@
 *.lof
 *.lot
 *.gz
+_minted
+*.bkp
+*.minted
