@@ -6,6 +6,8 @@
 \input{sections.tex}
 \input{listings_set.tex}
 
+\onehalfspacing
+\setlength{\parindent}{1.25cm}
 \setlength{\intextsep}{0pt} 
 \setlength{\textfloatsep}{0pt}
 \setlength{\floatsep}{0pt}
@@ -13,20 +15,17 @@
 \setlength{\intextsep}{\baselineskip}
 \setlength{\textfloatsep}{\baselineskip}
 \setlength{\belowcaptionskip}{0pt}
-
-%\fancypagestyle{appendixstyle}{
-%    \fancyhf{}
-%    \fancyhead[R]{Продолжение приложения А}
-%    \fancyfoot[C]{\thepage}
-%    \renewcommand{\headrulewidth}{0pt}
-%}
-
-\newcommand{\listingsappendix}{А}
-
-\newpagestyle{appendixcontstyle}{ \sethead{}{}{Продолжение приложения \listingsappendix{}} \setfoot{}{\thepage}{} }
-
-
 \setlength{\headsep}{0.5\baselineskip}
+
+% Настройки приложений
+\newcommand{\listingsappendix}{Б}
+\newcommand{\currentappendixletter}{А}
+\newcommand{\setappendixletter}[1]{
+  \renewcommand{\currentappendixletter}{#1}
+}
+\newpagestyle{appendixcontstyle}{ \sethead{}{}{Продолжение приложения \currentappendixletter} \setfoot{}{\thepage}{} }
+
+
 
 \captionsetup[table]{
 	justification=raggedright,
@@ -39,16 +38,15 @@
   })
 }
 
-
 \newcommand{\fitgraphics}[1]{\includegraphics[max width=\textwidth, max height=\pagegoal-\pagetotal-2cm, keepaspectratio]{#1}}
 
 \newcommand{\listingfootnote}[1]{\footnote{Листинг \ref{#1}, приложение \listingsappendix{}, с. \pageref{#1}}}
 
 \newcommand{\addsubsubsection}[1]{\refstepcounter{subsubsection}\addcontentsline{toc}{subsubsection}{\protect\numberline{\thesubsubsection}#1}}
 
+% Шрифты и переносы строк
 \setmainfont{Times New Roman}
 \setmonofont{Inconsolata}
-%\setmonofont{Consolas}
 \hypersetup{breaklinks=true}
 \tolerance=1
 \emergencystretch=\maxdimen
@@ -64,35 +62,22 @@
 }
 \makeatother
 
+% Отутспы от секций
 \titlespacing*{\section}{0pt}{0pt}{0.3cm}
 \titlespacing*{\subsection}{0pt}{0pt}{0pt}
 \titlespacing*{\subsubsection}{0pt}{0pt}{0pt}
 \DeclareCaptionLabelSeparator{dash}{ -- }
 \captionsetup{labelsep=dash}
 
-\onehalfspacing
-\setlength{\parindent}{1.25cm}
 
+
+% Списки
 \setlist{
 	topsep=2pt,
 	itemsep=2pt,
 	parsep=0pt,
 	partopsep=0pt
 }
-
-\addto\captionsrussian{\renewcommand{\refname}{}} 
-
-\makeatletter
-\renewcommand*{\@biblabel}[1]{#1.}
-\makeatother
-
-%\def\labelitemi{--}
-
-\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
-\newcolumntype{Z}{>{\raggedright\arraybackslash}X}
-
-
-\setlength{\skip\footins}{\baselineskip}
 
 \setlist[itemize]{
     label=--,
@@ -120,6 +105,16 @@
     topsep=0pt
 }
 
+\addto\captionsrussian{\renewcommand{\refname}{}} 
+
+\makeatletter
+\renewcommand*{\@biblabel}[1]{#1.}
+\makeatother
+
+% Таблицы
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Z}{>{\raggedright\arraybackslash}X}
+\setlength{\skip\footins}{\baselineskip}
 
 \begin{document}
 
@@ -143,7 +138,7 @@
 	
 	По мере роста объёма цифровой информации и количества прикладных сервисов, важность безопасного хранения данных, а также возможности контроля доступа к этой информации, становится чрезвычайно высокой. Эффективные системы безопасности должны учитывать как криптографическую стойкость алгоритмов, так и надлежащее управление жизненным циклом ключей, проверку пользовательского ввода, контроль доступа и повторяемый операционный процесс. Особую озабоченность вызывает вопрос о том, как объединить требования этих разрозненных систем в единое программное решение, которое можно эффективно использовать на практике, а также масштабировать для будущих задач.
 	
-	Описанный в рамках этой дипломной работы проект посвящен разработке программного приложения <<Vault>>, которое обеспечивает безопасное управление ключами и обработку данных. Приложение будет иметь интерфейс командной строки для администрирования, веб-API для предоставления данных после соответствующей авторизации, модуль криптографических операций и уровень хранения, использующий реляционную базу данных. Приложение использует современные алгоритмы AEAD (<<AES-128-GCM>>, <<AES-256-GCM>> и <<ChaCha20-Poly1305>>) для обеспечения конфиденциальности и целостности данных. 
+	Разработанный в рамках этой дипломной работы проект посвящен разработке программного приложения <<Vault>>, которое обеспечивает безопасное управление ключами и обработку данных. Приложение будет иметь интерфейс командной строки для администрирования, веб-API для предоставления данных после соответствующей авторизации, модуль криптографических операций и уровень хранения, использующий реляционную базу данных. Приложение использует современные алгоритмы AEAD (<<AES-128-GCM>>, <<AES-256-GCM>> и <<ChaCha20-Poly1305>>) для обеспечения конфиденциальности и целостности данных. 
 	
 	Одним из ключевых принципов проектирования является разделение ролей ключей. Например, главный ключ (KEK) никогда не хранится в базе данных, а предоставляется среде, в которой происходит операция, в виде зашифрованного (упакованного) значения. 
 	
@@ -531,7 +526,7 @@
 	
 	\subsubsection{Особенности задачи для сред разработки и production}
 	
-	Основная проблема при работе с чувствительными данными заключается в том, требования безопасности часто внедряются во вред удобству.
+	Основная проблема при работе с чувствительными данными заключается в том, что требования безопасности часто внедряются во вред удобству.
 	
 	Для среды разработки важны:
 	
@@ -596,7 +591,7 @@
 		\item Keys (ключи для шифрования дисков и данных).
 		\item Certificates (управление SSL/TLS сертификатами).
 		\end{itemize}
-		Интегрируется с Azure Managed Identities, что позволяет приложениям получать доступ к секретам вообще без использования паролей.
+		Интегрируется с Azure Managed Identities, что позволяет приложениям получать доступ к секретам без использования паролей.
 	\end{itemize}
 	\item Google Cloud Platform (GCP)
 	\begin{itemize}
@@ -802,6 +797,9 @@
 			\hline
 			\multicolumn{1}{|c|}{Семантическое значение} &
 			\multicolumn{1}{c|}{Модуль} \\
+			\hline
+			\multicolumn{1}{|c|}{1} &
+			\multicolumn{1}{c|}{2} \\			
 			\hline
 	        Точка входа & \texttt{main.py, vault/cli.py, vault/api.py} \\
 	        \hline
@@ -1133,7 +1131,7 @@
 	
 	\begin{enumerate}
 	    \item Администратор инициирует команду \texttt{load} с указанием входного и выходного алгоритмов, а также имен DEK.
-	    \item Входной контейнер может быть передан двумя способами: как JSON-файл со структурой header + data либо как нагрузка в шестнадцатеричном представлении вместе с отдельным \texttt{--header-json}. В обоих вариантах данные проходят валидацию через Pydantic-модели.
+	    \item Входной контейнер может быть передан двумя способами: как JSON-файл со структурой header + data либо как нагрузка в шестнадцатеричном представлении вместе с отдельным \texttt{--header-json}. В обоих вариантах данные проходят валидацию через Pydantic-модели. В менее безопасном варианте данные могут передаваться через команду \texttt{store-plaintext} в открытом виде.
 	    \item CLI извлекает из БД обернутые ключи \texttt{dek-in} и \texttt{dek-out}, после чего считывает master KEK из окружения.
 	    \item Модуль \texttt{key\_manager}\listingfootnote{lst:vault/key_manager.py} выполняет извлечение обоих DEK. Если master KEK отсутствует, имеет неверную длину или не позволяет расшифровать обернутый DEK, операция прекращается без записи результата.
 	    \item Модуль \texttt{crypto}\listingfootnote{lst:vault/crypto.py} проверяет заголовок входного контейнера: наличие полей \texttt{alg, nonce, tag}, соответствие ожидаемому алгоритму, размер nonce 12 байт и размер tag 16 байт.
@@ -1464,7 +1462,7 @@ PS> python main.py --db-url sqlite:///vault.db load --name admin_data -f contain
 
 \subsubsection*{\textit{Загрузка и перешифрование открытых данных в произвольной форме}}
 
-Программе также поддерживает загрузку данных произвольной формы из файла. Для этого используется команда \texttt{store-plaintext}. Дальнейшее взаимодействие с такими данными ничем не отличается от основного метода взаимодействия с программой. Команда представлена в листинге \ref{lst:load_data_plain}.
+Программа также поддерживает загрузку данных произвольной формы из файла. Для этого используется команда \texttt{store-plaintext}. Дальнейшее взаимодействие с такими данными ничем не отличается от основного метода взаимодействия с программой. Команда представлена в листинге \ref{lst:load_data_plain}.
 
 \begin{lstlisting}[style=bashcommand, caption={Загрузка данных произвольного формата}, label=lst:load_data_plain]
 PS> python main.py --db-url sqlite:///vault.db store-plaintext --name admin_data2 -f .\sample.txt --auth "Bearer 123" --alg ChaCha20-Poly1305 --dek dst
@@ -1544,7 +1542,7 @@ PS> python main.py web-server down
 
 \subsubsection*{\textit{Создание контейнера}}
 
-Для глубокой интеграции с процессом разработки для создания контейнеров был выбран поход создания программного API для шифрования контейнеров вместо традиционного создания CLI команд. API реализован в виде функции \texttt{encrypt\_container} из модуля \texttt{vault.crypto}. Пример скрипта, который создает зашифрованный контейнер представлен в листинге \ref{lst:container_api}.
+Для глубокой интеграции с процессом разработки для создания контейнеров был выбран поход создания программного API для шифрования контейнеров вместо традиционного создания CLI команд. API реализован в виде функции \texttt{encrypt\_container} из модуля \texttt{vault.crypto}. Пример скрипта, который создает зашифрованный контейнер представлен в листинге \ref{lst:container_api} (Приложение А, с. \pageref{lst:container_api}).
 
 Сценарии, в которых такой подход оправдан:
 
@@ -1553,9 +1551,12 @@ PS> python main.py web-server down
 \item Backend для нескольких микросервисов. Один сервис отвечает за создание и хранение контейнеров, а другие не работают с ключами напрямую, а обращаются к Vault API за расшифрованными данными.
 \item Защищенное хранение конфигурации или технических секретов. Например, токены интеграций, ключи внешних API, параметры доступа к стендам. Их можно хранить в виде контейнеров и выдавать только авторизованным клиентам.
 \item Локальные и тестовые контуры разработки. Когда команде нужен не тяжелый KMS, а компактный сервис, который дает единый процесс: положить данные, зашифровать, хранить, выдать по токену.
+
+\clearpage
+
 \end{itemize}
 
-\lstinputlisting[language=python, style=modern, caption={Пример использования программного API для создания зашифрованного контейнера}, label=lst:container_api]{../vault_diploma/scripts/create_container_demo.py}
+%\lstinputlisting[language=python, style=modern, caption={Пример использования программного API для создания зашифрованного контейнера}, label=lst:container_api]{../vault_diploma/scripts/create_container_demo.py}
 	
 	\newpage
 	
@@ -1628,6 +1629,11 @@ PS> python main.py web-server down
 	RFC 8439 ChaCha20 and Poly1305 for IETF Protocols. URL: https://datatracker.ietf.org/doc/html/rfc8439 (дата обращения 18.04.2026)
 	\end{thebibliography}
 	
+	\newpage
+	\setappendixletter{А}
+	\input{appendix_b.tex}
+	\newpage
+	\setappendixletter{Б}
 	\input{include_listings.tex}
 	
 

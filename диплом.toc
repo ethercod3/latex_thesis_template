@@ -34,6 +34,7 @@
 \contentsline {subsection}{\numberline {2.5}Обоснование выбора методики разработки}{53}{subsection.160}%
 \contentsline {subsection}{\numberline {2.6}Реализация ключевых модулей}{55}{subsection.171}%
 \contentsline {section}{\numberline {3}Демонстрация результата работы}{60}{section.186}%
-\contentsline {section}{Заключение}{69}{section*.368}%
-\contentsline {section}{Библиографический список}{72}{section*.369}%
-\contentsline {section}{Приложение А}{74}{section*.370}%
+\contentsline {section}{Заключение}{67}{section*.304}%
+\contentsline {section}{Библиографический список}{70}{section*.305}%
+\contentsline {section}{Приложение А}{72}{section*.306}%
+\contentsline {section}{Приложение Б}{74}{section*.371}%

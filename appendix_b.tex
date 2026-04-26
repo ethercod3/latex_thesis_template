@@ -1,0 +1,30 @@
+%\newpage
+
+\newgeometry{
+left=3cm,
+right=1cm,
+top=2cm,
+bottom=1.5cm,
+includehead,
+includefoot
+}
+
+\phantomsection
+\addcontentsline{toc}{section}{Приложение \currentappendixletter}
+
+\setlength{\footskip}{2cm}
+
+\thispagestyle{plain}
+\pagestyle{appendixcontstyle}
+
+\vspace*{-\headheight}
+\vspace*{-\headsep}
+\vspace*{-0.8cm}
+
+\centering{ПРИЛОЖЕНИЕ \currentappendixletter}
+
+\vspace*{0.3cm}
+
+\lstset{style=modern} 
+
+\lstinputlisting[language=python, style=modern, caption={Пример использования программного API для создания зашифрованного контейнера}, label=lst:container_api]{../vault_diploma/scripts/create_container_demo.py}

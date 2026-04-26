@@ -1,4 +1,4 @@
-\newpage
+%\newpage
 
 \newgeometry{
 left=3cm,
@@ -10,7 +10,7 @@ includefoot
 }
 
 \phantomsection
-\addcontentsline{toc}{section}{Приложение А}
+\addcontentsline{toc}{section}{Приложение \currentappendixletter}
 
 \setlength{\footskip}{2cm}
 
@@ -21,13 +21,10 @@ includefoot
 \vspace*{-\headsep}
 \vspace*{-0.8cm}
 
-%\setlength{\headsep}{1cm}
-
-
-\centering{ПРИЛОЖЕНИЕ А}
+\centering{ПРИЛОЖЕНИЕ \currentappendixletter}
 
 \vspace*{0.3cm}
-	
+
 \lstset{style=modern} 
 
 \lstinputlisting[caption=main.py,label=lst:main.py,style=modern]{../vault_diploma/main.py}
