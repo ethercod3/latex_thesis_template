@@ -1,3 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-python\PYG{+w}{ }\PYGZhy{}m\PYG{+w}{ }uvicorn\PYG{+w}{ }vault.api:app\PYG{+w}{ }\PYGZhy{}\PYGZhy{}host\PYG{+w}{ }\PYGZlt{}host\PYGZgt{}\PYG{+w}{ }\PYGZhy{}\PYGZhy{}port\PYG{+w}{ }\PYGZlt{}port\PYGZgt{}\PYG{+w}{ }\PYGZhy{}\PYGZhy{}ssl\PYGZhy{}keyfile\PYG{+w}{ }\PYGZlt{}key\PYGZgt{}\PYG{+w}{ }\PYGZhy{}\PYGZhy{}ssl\PYGZhy{}certfile\PYG{+w}{ }\PYGZlt{}cert\PYGZgt{}
-\end{MintedVerbatim}
