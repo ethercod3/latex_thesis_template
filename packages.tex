@@ -1,9 +1,9 @@
 \usepackage[
-    left=3cm,
-    right=1cm,
-    top=2.5cm,
-    bottom=1.8cm,
-    includefoot
+left=3cm,
+right=1cm,
+top=2.5cm,
+bottom=1.8cm,
+includefoot
 ]{geometry}
 \usepackage[russian]{babel}
 \usepackage{xurl}
@@ -42,153 +42,9 @@
 \usepackage{totcount}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage[most]{tcolorbox}
+% ----------------------------------------
 \tcbuselibrary{listings,breakable,skins}
 \keepXColumns
-
-% --------------------------
-%       СЧЕТЧИКИ
-
-%  ------------- РЕГИСТРАЦИЯ ---------
-\regtotcounter{table}
-\regtotcounter{lstlisting}
-\newcounter{bibcount}
-\newcounter{appendixcount}
-
-\newcommand{\newappendix}{
-  \stepcounter{appendixcount}
-}
-
-%  ------------- СЧЕТЧИК БИБЛИОГРАФИИ ---------
-\makeatletter
-\AtEndDocument{%
-  \immediate\write\@auxout{%
-    \string\gdef\string\totalbibitems{\number\value{enumiv}}%
-  }%
-}
-\makeatother
-
-\providecommand{\totalbibitems}{0}
-
-%  ------------- СЧЕТЧИК ПРИЛОЖЕНИЙ ---------
-\makeatletter
-\AtEndDocument{%
-  \immediate\write\@auxout{%
-    \string\gdef\string\totalappendices{\arabic{appendixcount}}%
-  }%
-}
-\makeatother
-
-%  ------------- СЧЕТЧИК ТАБЛИЦ ---------
-\makeatletter
-\AtEndEnvironment{thebibliography}{%
-  \protected@write\@auxout{}{%
-    \string\gdef\string\tablesBeforeBib{\number\value{table}}%
-  }%
-  \protected@write\@auxout{}{%
-    \string\gdef\string\listingsBeforeBib{\number\value{lstlisting}}%
-  }%
-}
-\makeatother
-
-\providecommand{\tablesBeforeBib}{0}
-\providecommand{\listingsBeforeBib}{0}
-\providecommand{\totalappendices}{0}
-
-% -----------------------------------
-
-\makeatletter
-\AddEnumerateCounter{\asbuk}{\russian@alph}{щ}
-\makeatother
-
 \setminted{frame=lines, linenos=true}
-
 \renewcommand{\lstlistingname}{Листинг}
-
-\makeatletter
-\renewenvironment{thebibliography}[1]
-  {%
-    \list{\@biblabel{\@arabic\c@enumiv}}%
-         {%
-           \settowidth\labelwidth{\@biblabel{#1}}%
-           \labelsep=0.5em
-           \leftmargin=0cm
-           \itemindent=2.2cm
-           \listparindent=0pt
-           \itemsep=0pt
-           \parsep=0pt
-           \topsep=0pt
-           \partopsep=0pt
-           \usecounter{enumiv}%
-         }%
-%    \raggedright
-%    \sloppy
-  }
-  {\endlist}
-\renewcommand{\@biblabel}[1]{#1.}
-\makeatother
-
 \setlength{\footskip}{2cm}
-
-
-
-% ------------ МНОЖЕСТВЕННЫЕ ФОРМЫ -------
-
-\newcommand{\russianTables}[1]{%
-  \ifnum#1=11 таблиц\else
-  \ifnum#1=12 таблиц\else
-  \ifnum#1=13 таблиц\else
-  \ifnum#1=14 таблиц\else
-    \ifnum#1=1 таблица\else
-      \ifnum#1=2 таблицы\else
-      \ifnum#1=3 таблицы\else
-      \ifnum#1=4 таблицы\else
-        таблиц%
-      \fi\fi\fi\fi
-    \fi
-  \fi\fi\fi
-}
-
-\newcommand{\russianAppendices}[1]{%
-  \ifnum#1=11 приложений\else
-  \ifnum#1=12 приложений\else
-  \ifnum#1=13 приложений\else
-  \ifnum#1=14 приложений\else
-    \ifnum#1=1 приложение\else
-      \ifnum#1=2 приложения\else
-      \ifnum#1=3 приложения\else
-      \ifnum#1=4 приложения\else
-        приложений%
-      \fi\fi\fi\fi
-    \fi
-  \fi\fi\fi
-}
-
-\newcommand{\russianSources}[1]{%
-  \ifnum#1=11 источников\else
-  \ifnum#1=12 источников\else
-  \ifnum#1=13 источников\else
-  \ifnum#1=14 источников\else
-    \ifnum#1=1 источник\else
-      \ifnum#1=2 источника\else
-      \ifnum#1=3 источника\else
-      \ifnum#1=4 источника\else
-        источников%
-      \fi\fi\fi\fi
-    \fi
-  \fi\fi\fi
-}
-
-\newcommand{\russianListings}[1]{%
-  \ifnum#1=11 листингов\else
-  \ifnum#1=12 листингов\else
-  \ifnum#1=13 листингов\else
-  \ifnum#1=14 листингов\else
-    \ifnum#1=1 листинг\else
-      \ifnum#1=2 листинга\else
-      \ifnum#1=3 листинга\else
-      \ifnum#1=4 листинга\else
-        листингов%
-      \fi\fi\fi\fi
-    \fi
-  \fi\fi\fi
-}

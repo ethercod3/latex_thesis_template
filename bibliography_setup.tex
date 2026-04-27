@@ -1,0 +1,22 @@
+\makeatletter
+\renewenvironment{thebibliography}[1]
+  {%
+    \list{\@biblabel{\@arabic\c@enumiv}}%
+         {%
+           \settowidth\labelwidth{\@biblabel{#1}}%
+           \labelsep=0.5em
+           \leftmargin=0cm
+           \itemindent=2.2cm
+           \listparindent=0pt
+           \itemsep=0pt
+           \parsep=0pt
+           \topsep=0pt
+           \partopsep=0pt
+           \usecounter{enumiv}%
+         }%
+%    \raggedright
+%    \sloppy
+  }
+  {\endlist}
+\renewcommand{\@biblabel}[1]{#1.}
+\makeatother
