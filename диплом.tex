@@ -8,8 +8,8 @@
 
 \onehalfspacing
 \setlength{\parindent}{1.25cm}
-\setlength{\intextsep}{0pt} 
-\setlength{\textfloatsep}{0pt}
+%\setlength{\intextsep}{0pt} 
+%\setlength{\textfloatsep}{0pt}
 \setlength{\floatsep}{0pt}
 
 \setlength{\intextsep}{\baselineskip}
@@ -113,11 +113,51 @@
 \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
 \setlength{\skip\footins}{\baselineskip}
 
+
+\setlength{\LTpost}{0pt}
+
+\makeatletter
+\let\origtable\table
+\let\endorigtable\endtable
+
+\renewenvironment{table}
+  {\setlength{\intextsep}{0cm}%
+   \setlength{\textfloatsep}{0cm}%
+   \origtable}
+  {\endorigtable}
+\makeatother
+
 \begin{document}
 
 	\includepdf[pages=-]{титульник.pdf}
 	
-	\setcounter{page}{2}
+	\includepdf[pages=-]{задание.pdf}
+
+	\thispagestyle{empty}
+	
+	{\centering РЕФЕРАТ\par}
+	
+	\vspace*{\baselineskip}
+	
+	Дипломная работа содержит \pageref{bib:end}с., \tablesBeforeBib{} \russianTables{\tablesBeforeBib}, \totalappendices{} \russianAppendices{\totalappendices}, \totalbibitems{} \russianSources{\totalbibitems}, \listingsBeforeBib{} \russianListings{\listingsBeforeBib}
+	
+	\vspace*{\baselineskip}
+	
+	КРИПТОГРАФИЯ, ШИФРОВАНИЕ, РАЗРАБОТКА, PYTHON, API
+	
+	\vspace*{\baselineskip}
+	
+	В работе разработана программа, централизующая процесс управления секретными данными, использующая передовые алгоритмы аутентифицированного шифрования.
+	
+	Целью данной дипломной работы является анализ существующих алгоритмов аутентифицированного шифрования, выбор подходящих в рамках данной работы, анализ существующих на рынке решений, решающих похожие задачи, составление технического задания на разработку, выбор подходящих технологий для разработки, анализ модели угроз, разработка ПО, и его тестирование.
+	
+	Актуальность данной работы заключается в необходимости управления секретными данными, такими как API-ключи, токены, пароли в окружении современных приложений. На данный момент большинство команд разработки используют подход переменных окружения для управления секретами, однако этот подход в определенных ситуациях представляет риски для утечки данных, а также при большом количестве секретных данных управление ими в файлах <<\texttt{.env}>> не всегда является удобным.
+	
+	Для решения этих проблем в рамках данной работы был разработан сервис, реализующий модель конвертного шифрования, централизующий управление секретными данными через интерфейс командной строки, и выдающий данные по веб-API.
+	\newpage
+
+	
+	\setcounter{page}{4}
 	
 	{\centering СОДЕРЖАНИЕ\par}
 
@@ -810,7 +850,7 @@
 	        \hline
 	    \end{tabularx}
 	\end{table}
-	
+
 	Такое разделение снижает связанность кода: CLI и API используют общие криптографические и валидационные модули, а работа с базой данных изолирована в репозитории \texttt{VaultRepository}.
 	
 	Схема модулей приложения представлена на рисунке \ref{fig:modules}.
@@ -971,6 +1011,8 @@
 	Результаты сравнительного анализа представлены в таблице~\ref{tab:tech_stack_compare}.
 	
 	\input{tech_table.tex}
+	
+	Вывод: выбранный технологический стек выбран правильно с учетом специфики проекта и соответствует всем требованиям.
 	
 	\subsection{Модель угроз и допущений}
 	
@@ -1626,6 +1668,8 @@ PS> python main.py web-server down
 	RFC 8439 ChaCha20 and Poly1305 for IETF Protocols. URL: https://datatracker.ietf.org/doc/html/rfc8439 (дата обращения 18.04.2026)
 	\end{thebibliography}
 	
+	\label{bib:end}
+
 	\newpage
 	\setappendixletter{А}
 	\input{appendix_b.tex}
