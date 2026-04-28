@@ -60,4 +60,4 @@ fig.update_layout(
 # fig.show()
 
 fig.update_layout(font_size=14, margin=dict(b=60, t=0, l=0, r=0))
-fig.write_image("languages.pdf")
+fig.write_image("figures/languages.pdf")
