@@ -83,11 +83,6 @@
 % Убирает автоматическую надпись "Содержание"
 \addto\captionsrussian{\renewcommand{\refname}{}} 
 
-% Заменяет автоматическую нумерацию в библиографии вида "[1]" на "1."
-\makeatletter
-\renewcommand*{\@biblabel}[1]{#1.}
-\makeatother
-
 %  --- Таблицы ---
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
