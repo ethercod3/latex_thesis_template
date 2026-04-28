@@ -117,7 +117,7 @@
 	
 	\vspace*{\baselineskip}
 	
-	Дипломная работа содержит \pageref{bib:end}с., \tablesBeforeBib{} \russianTables{\tablesBeforeBib}, \totalappendices{} \russianAppendices{\totalappendices}, \totalbibitems{} \russianSources{\totalbibitems}, \listingsBeforeBib{} \russianListings{\listingsBeforeBib}
+	Дипломная работа содержит \pageref*{bib:end}с., \tablesBeforeBib{} \russianTables{\tablesBeforeBib}, \totalappendices{} \russianAppendices{\totalappendices}, \totalbibitems{} \russianSources{\totalbibitems}, \listingsBeforeBib{} \russianListings{\listingsBeforeBib}
 	
 	\vspace*{\baselineskip}
 	
@@ -135,6 +135,8 @@
 		\newpage
 
 	{\centering СОДЕРЖАНИЕ\par}
+	
+	\vspace*{-1.6cm}
 
 	\tableofcontents
 	\newpage
@@ -1586,12 +1588,12 @@ PS> python main.py web-server down
 	
 	\label{bib:end}
 
-	\newpage
-	\setappendixletter{А}
-	\input{appendix_b.tex}
-	\newpage
-	\setappendixletter{Б}
-	\input{include_listings.tex}
+%	\newpage
+%	\setappendixletter{А}
+%	\input{appendix_b.tex}
+%	\newpage
+%	\setappendixletter{Б}
+%	\input{include_listings.tex}
 	
 
 \end{document}

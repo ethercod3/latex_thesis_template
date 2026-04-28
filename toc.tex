@@ -5,17 +5,41 @@
 \usepackage{tocloft}
 \usepackage[russian]{babel}
 
-\setlength\cftsubsecnumwidth{1.5em}
-\setlength\cftsubsubsecnumwidth{2.2em}
-\setlength\cftsecnumwidth{0.7em}
-\setlength{\cftbeforesecskip}{0.5pt}
+\addto\captionsrussian{\renewcommand{\contentsname}{}}
+
+% Заголовок содержания
+\renewcommand{\cfttoctitlefont}{\hfill\normalsize}
+\renewcommand{\cftaftertoctitle}{\hfill}
 \setlength{\cftbeforetoctitleskip}{0pt}
-\renewcommand{\cfttoctitlefont}{\normalsize}
+\setlength{\cftaftertoctitleskip}{1.5\baselineskip}
+
+% Отступы уровней
+\setlength{\cftsecindent}{0pt}
+\setlength{\cftsubsecindent}{0.8cm}
+\setlength{\cftsubsubsecindent}{1.6cm}
+
+% Место под номер раздела
+\setlength{\cftsecnumwidth}{0.7cm}
+\setlength{\cftsubsecnumwidth}{1cm}
+\setlength{\cftsubsubsecnumwidth}{1.5cm}
+
+% Вертикальные интервалы
+\setlength{\cftbeforesecskip}{0.45\baselineskip}
+\setlength{\cftbeforesubsecskip}{0.25\baselineskip}
+\setlength{\cftbeforesubsubsecskip}{0.15\baselineskip}
+
+% Шрифт
 \renewcommand{\cftsecfont}{\normalsize}
 \renewcommand{\cftsubsecfont}{\normalsize}
+\renewcommand{\cftsubsubsecfont}{\normalsize}
 \renewcommand{\cftsecpagefont}{\normalsize}
 \renewcommand{\cftsubsecpagefont}{\normalsize}
-\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsubsecpagefont}{\normalsize}
+
+% Без точек-лидеров
 \renewcommand{\cftdot}{}
-\addto\captionsrussian{\renewcommand{\contentsname}{}}
+\renewcommand{\cftsecleader}{\hfill}
+\renewcommand{\cftsubsecleader}{\hfill}
+\renewcommand{\cftsubsubsecleader}{\hfill}
+
 \renewcommand{\UrlFont}{\rmfamily}
