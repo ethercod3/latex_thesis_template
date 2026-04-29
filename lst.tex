@@ -2,6 +2,8 @@
 %            НАСТРОЙКИ ЛИСТИНГОВ
 % --------------------------------------
 
+\renewcommand{\lstlistingname}{Листинг}
+
 \definecolor{codegray}{rgb}{0.97,0.97,0.97}
 \definecolor{lightgray}{rgb}{0.98,0.98,0.98}
 \definecolor{white}{rgb}{1,1,1}
@@ -56,8 +58,9 @@
     escapeinside={'(*@}{@*)'},
 }
 
-\newcommand{\codecallout}[1]{%
-  \hspace{-1em}
+
+\newcommand{\codecallout}[1]{
+  \hspace{-2.5em}
   \tikz[baseline=(n.base)]{
     \node[
       circle,
@@ -67,43 +70,33 @@
       minimum size=1.25em,
       font=\scriptsize\bfseries
     ] (n) {#1};
-  }%
+  }
   \hspace{0.2em}
 }
-
-%\newcommand{\codecalloutlabel}[1]{%
-%  \refstepcounter{codecallout}%
-%  \label{#1}%
-%  \codecallout{\thecodecallout}%
-%}
 
 \newcommand{\codecalloutref}[1]{\ref{#1}}
 
 \newcommand{\codecalloutlistingref}[1]{\ref{#1@listing}}
 
 \makeatletter
-\newcommand{\codecalloutlabel}[1]{%
-  \refstepcounter{codecallout}%
-  \label{#1}%
-  \protected@write\@auxout{}{%
-    \string\newlabel{#1@listing}{{\thelstlisting}{\thepage}{}{}{}}%
+\newcommand{\codecalloutlabel}[1]{
+  \refstepcounter{codecallout}
+  \label{#1}
+  \protected@write\@auxout{}{
+    \string\newlabel{#1@listing}{{\thelstlisting}{\thepage}{}{}{}}
   }%
-  \codecallout{\thecodecallout}%
+  \codecallout{\thecodecallout}
 }
 \makeatother
 
-\newcommand{\calloutfullref}[1]{%
-  \codecalloutref{#1}%
-  (см. с.~\pageref{#1}, листинг~\codecalloutlistingref{#1}, приложение~\listingsappendix{})%
+\newcommand{\calloutfullref}[1]{
+  \codecalloutref{#1}
+  (см. с.~\pageref{#1}, листинг~\codecalloutlistingref{#1}, приложение~\listingsappendix{})
 }
 
-\newcommand{\calloutfullreffootnote}[1]{%
-  \footnote{
-  Метка \codecalloutref{#1}, листинг~\codecalloutlistingref{#1}, приложение~\listingsappendix{}, с.~\pageref{#1}
-  }%
-}
+\newcommand{\calloutfullreffootnote}[1]{\footnote{Метка \codecalloutref{#1}, листинг \ref{#1@listing}, приложение~\listingsappendix{}, с.~\pageref{#1}}}
 
-\newcommand{\calloutfullreffootnotetextonly}[1]{%
+\newcommand{\calloutfullreffootnotetextonly}[1]{
    \codecalloutref{#1}, листинг~\codecalloutlistingref{#1}, приложение~\listingsappendix{}, с.~\pageref{#1}
 }
 
@@ -112,11 +105,6 @@
 \definecolor{com}{RGB}{0,128,0}
 \definecolor{str}{RGB}{163,21,21}
 \definecolor{text}{RGB}{25,25,25}
-
-%\definecolor{bg}{RGB}{250,250,250}
-%\definecolor{kw}{RGB}{0,102,204}
-%\definecolor{str}{RGB}{153,0,0}
-%\definecolor{com}{RGB}{102,153,102}
 
 \lstdefinestyle{modern}{
     backgroundcolor=\color{bg},
