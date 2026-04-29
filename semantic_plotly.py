@@ -19,4 +19,4 @@ fig = ff.create_table(data_matrix)
 fig.update_layout(font_size=14, margin=dict(b=15))
 fig.write_image("semantic.pdf")
 
-# fig.show()
+# fig.show()    
