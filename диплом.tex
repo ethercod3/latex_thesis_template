@@ -23,7 +23,11 @@
 \setlength{\belowcaptionskip}{0pt}
 % Базовый отступ от заголовков
 \setlength{\headsep}{0.5\baselineskip}
-\setlength{\footskip}{2cm}
+%\setlength{\footskip}{2.3cm}
+%\setlength{\skip\footins}{\baselineskip}
+
+%\setlength{\footskip}{0.5cm}
+%\setlength{\skip\footins}{0.5cm}
 
 % Настройки приложений
 \newcommand{\listingsappendix}{Б}
@@ -87,7 +91,6 @@
 %  --- Таблицы ---
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
-\setlength{\skip\footins}{\baselineskip}
 
 
 \setlength{\LTpost}{0pt}
@@ -195,7 +198,8 @@
 	классификацией угроз. Под угрозой информационной безопасности понимается совокупность условий и факторов, создающих потенциальную или реальную опасность нарушения безопасности информации \cite{milnichuk}.
 		
 	\begin{figure}[H]
-	\fitgraphics{cia.pdf}
+%	\fitgraphics{cia.pdf}
+	\centering\includegraphics[width=15cm]{cia.pdf}
 	\caption{Взаимодействие компонентов триады CIA}
 	\end{figure}
 	
@@ -810,8 +814,8 @@
 	Схема модулей приложения представлена на рисунке \ref{fig:modules}.
 
 	\begin{figure}[H]
-		\centering\includegraphics[width=\textwidth]{modules_alt.pdf}
-%		\centering\fitgraphics{modules.pdf}
+%		\centering\includegraphics[width=\textwidth]{modules_alt.pdf}
+		\centering\fitgraphics{modules_alt.pdf}
 		\caption{Схема модулей приложения}
 		\label{fig:modules}
 	\end{figure}
@@ -1587,7 +1591,26 @@ PS> python main.py web-server down
 		
 	\label{bib:end}
 
+	\afterpage{\setlength{\footskip}{3cm}}
+	\afterpage{\setlength{\skip\footins}{\baselineskip}}
+	\afterpage{
+		\newgeometry{
+		left=3cm,
+		right=1cm,
+		top=2cm,
+		bottom=2cm,
+		includehead,
+		includefoot
+		}
+	}
+
 	\newpage
+	
+%	\setlength{\footskip}{3cm}
+%	\setlength{\skip\footins}{\baselineskip}
+
+
+	
 	\setappendixletter{А}
 	\input{appendix_b.tex}
 	\newpage
