@@ -3,8 +3,8 @@ services:
     build: .
     volumes:
       - ./:/data
-      - ../vault_diploma:/vault_code
+      - ${VAULT_OS_PATH}:${VAULT_PATH}
     working_dir: /data
-    command: latexmk -lualatex -interaction=nonstopmode диплом.tex
+    command: sh -c "latexmk -lualatex -interaction=nonstopmode ${TARGET} && latexmk -c"
     env_file:
       - ./.env
