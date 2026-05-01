@@ -3,8 +3,8 @@
 from pathlib import Path
 import subprocess
 
-SRC = Path("mermaid")
-DST = Path("figures")
+SRC = Path("../mermaid")
+DST = Path("../figures")
 
 DST.mkdir(parents=True, exist_ok=True)
 

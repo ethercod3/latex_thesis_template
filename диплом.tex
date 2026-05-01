@@ -1,14 +1,13 @@
 \documentclass[14pt, a4paper]{extarticle}
 
-\input{packages.tex}
-\input{lst.tex}
-\input{toc.tex}
-\input{sections.tex}
-\input{listings_set.tex}
-\input{counters.tex}
-\input{russian_plural.tex}
-\input{bibliography_setup.tex}
-\input{lists_setup.tex}
+\input{preamble/packages.tex}
+\input{preamble/lst.tex}
+\input{preamble/toc.tex}
+\input{preamble/sections.tex}
+\input{preamble/counters.tex}
+\input{preamble/russian_plural.tex}
+\input{preamble/bibliography_setup.tex}
+\input{preamble/lists_setup.tex}
 
 % --- Где искать картинки ---
 \graphicspath{ {./figures/} }
@@ -698,7 +697,7 @@
 	
 	А также сравнительный анализ решений представлен в таблице \ref{tab:solutions_compare_full}.
 
-	\input{solutions_table.tex}
+	\input{tables/solutions_table.tex}
 	
 	Выполненный анализ показал, что существующие на данный момент платформы хорошо решают задачу управления секретами в промышленном масштабе, но не оптимальны для сценария, в котором необходимы:
 		
@@ -777,7 +776,7 @@
 		
 	Проектирование системы выполнено в модульно-слоистой архитектуре, где каждый слой решает ограниченный набор задач и имеет явные точки взаимодействия. Распределение модулей по семантическим слоям представлено в таблице~\ref{tab:semantic}.
 	
-    \input{semantic_table.tex}
+    \input{tables/semantic_table.tex}
 
 	Такое разделение снижает связанность кода: CLI и API используют общие криптографические и валидационные модули, а работа с базой данных изолирована в репозитории \texttt{VaultRepository}.
 	
@@ -946,7 +945,7 @@
 	
 	Результаты сравнительного анализа представлены в таблице~\ref{tab:tech_stack_compare}.
 	
-	\input{tech_table.tex}
+	\input{tables/tech_table.tex}
 	
 	Вывод: выбранный технологический стек выбран правильно с учетом специфики проекта и соответствует всем требованиям.
 	
@@ -1593,16 +1592,11 @@ PS> python main.py web-server down
 	}
 
 	\newpage
-	
-%	\setlength{\footskip}{3cm}
-%	\setlength{\skip\footins}{\baselineskip}
 
-
-	
 	\setappendixletter{А}
-	\input{appendix_b.tex}
+	\input{appendix/appendix_b.tex}
 	\newpage
 	\setappendixletter{Б}
-	\input{include_listings.tex}
+	\input{appendix/include_listings.tex}
 
 \end{document}

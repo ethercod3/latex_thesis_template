@@ -46,4 +46,4 @@ fig.update_layout(
 # fig.show()
 
 fig.update_layout(font_size=14, margin=dict(b=0, t=0, l=180, r=0))
-fig.write_image("methodologies.pdf")
+fig.write_image("../figures/methodologies.pdf")
