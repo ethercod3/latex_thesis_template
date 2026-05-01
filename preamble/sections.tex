@@ -24,3 +24,19 @@
 {0pt}
 {0pt}
 {1\baselineskip}
+
+
+% ------------------------------------------------
+% МАКРОС ДЛЯ GENERIC ГЛАВЫ (ВВЕДЕНИЕ, ЗАКЛЮЧЕНИЕ)
+% ------------------------------------------------
+
+\newcommand{\genericsection}[1]{
+\phantomsection
+\addcontentsline{toc}{section}{#1}
+
+\begin{center}
+	\MakeUppercase{#1}
+\end{center}
+
+\vspace*{-0.2cm}
+}
