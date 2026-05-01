@@ -26,11 +26,8 @@
 
 % Настройки приложений
 \newcommand{\listingsappendix}{Б}
-\newcommand{\currentappendixletter}{А}
-\newcommand{\setappendixletter}[1]{
-  \renewcommand{\currentappendixletter}{#1}
-}
-\newpagestyle{appendixcontstyle}{ \sethead{}{}{Продолжение приложения \currentappendixletter} \setfoot{}{\thepage}{} }
+\newcommand{\currentappendixletter}{\Asbuk{appendixcount}}
+\newpagestyle{appendixcontstyle}{\sethead{}{}{Продолжение приложения \currentappendixletter} \setfoot{}{\thepage}{}}
 
 % --- Подпись таблиц ---
 \captionsetup[table]{
@@ -1576,23 +1573,12 @@ PS> python main.py web-server down
 
 	\afterpage{\setlength{\footskip}{3cm}}
 	\afterpage{\setlength{\skip\footins}{\baselineskip}}
-	\afterpage{
-		\newgeometry{
-		left=3cm,
-		right=1cm,
-		top=2cm,
-		bottom=2cm,
-		includehead,
-		includefoot
-		}
-	}
+	\afterpage{\listingsgeometry}
 
 	\newpage
 
-	\setappendixletter{А}
 	\input{appendix/appendix_b.tex}
 	\newpage
-	\setappendixletter{Б}
 	\input{appendix/include_listings.tex}
 
 \end{document}
