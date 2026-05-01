@@ -16,7 +16,7 @@ for f in SRC.iterdir():
 
     try:
         subprocess.run(
-            f'mmdc -i "{f}" -o "{output_file}"',
+            f'mmdc -i "{f}" -o "{output_file}" -f',
             check=True,
             shell=True
         )    

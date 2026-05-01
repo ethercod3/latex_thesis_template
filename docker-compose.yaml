@@ -1,0 +1,10 @@
+services:
+  latex:
+    build: .
+    volumes:
+      - ./:/data
+      - ../vault_diploma:/vault_code
+    working_dir: /data
+    command: latexmk -lualatex -interaction=nonstopmode диплом.tex
+    env_file:
+      - ./.env
