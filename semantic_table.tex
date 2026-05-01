@@ -1,0 +1,30 @@
+\begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}X|}
+	\caption{Распределение модулей по семантическим слоям}
+	\label{tab:semantic} \\
+	\hline
+	\multicolumn{1}{|c|}{Семантическое значение} &
+	\multicolumn{1}{c|}{Модуль} \\
+	\hline
+	\multicolumn{1}{|c|}{1} &
+	\multicolumn{1}{c|}{2} \\			
+	\hline
+	\endfirsthead
+	
+	
+	\multicolumn{2}{r}{Продолжение таблицы \thetable} \\[0.5em]
+	\hline
+	\multicolumn{1}{|c|}{1} &
+	\multicolumn{1}{c|}{2}
+	\endhead			
+	
+	Точка входа & \texttt{main.py, vault/cli.py, vault/api.py} \\
+	\hline
+	Сервисный слой & \texttt{vault/crypto.py, vault/key\_manager.py, vault/auth.py} \\
+	\hline
+	Слой доступа к данным & \texttt{vault/db.py} (репозиторий и ORM-модели) \\
+	\hline
+	Слой валидации контрактов & \texttt{vault/schemas.py, vault/db\_schemas.py} \\
+	\hline
+	Конфигурационный слой & \texttt{vault/settings.py} и переменные окружения \\
+	\hline
+\end{tabularx}
