@@ -1,0 +1,1 @@
+$clean_full_cmd = 'rm -f *.log *.out *.toc *.fls *.fdb_latexmk *.synctex.gz *.bbl *.blg *.run.xml *.bcf *.nav *.snm *.lof *.lot *.lol *.pdf *.dvi *.ps';
