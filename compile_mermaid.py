@@ -1,14 +1,24 @@
 # Прогоняет mmdc по всем рисункам в папке mermaid
 
 from pathlib import Path
-from os import system
+import subprocess
 
-DST = "figures"
-SRC = "mermaid"
+SRC = Path("mermaid")
+DST = Path("figures")
 
-files = [f for f in Path(SRC).iterdir() if f.is_file()]
+DST.mkdir(parents=True, exist_ok=True)
 
-for f in files:
-    basename = f.stem
-    system(f"mmdc -i {str(f)} -o {DST}\\{basename}.pdf -f ")
-    print(f"{basename} done")
+for f in SRC.iterdir():
+    if not f.is_file():
+        continue
+
+    output_file = DST / f"{f.stem}.pdf"
+
+    try:
+        subprocess.run(
+            ["mmdc", "-i", str(f), "-o", str(output_file)],
+            check=True
+        )
+        print(f"{f.name} -> {output_file.name} done")
+    except subprocess.CalledProcessError as e:
+        print(f"Error processing {f.name}: {e}")
