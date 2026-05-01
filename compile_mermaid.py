@@ -16,9 +16,10 @@ for f in SRC.iterdir():
 
     try:
         subprocess.run(
-            ["mmdc", "-i", str(f), "-o", str(output_file)],
-            check=True
-        )
+            f'mmdc -i "{f}" -o "{output_file}"',
+            check=True,
+            shell=True
+        )    
         print(f"{f.name} -> {output_file.name} done")
     except subprocess.CalledProcessError as e:
         print(f"Error processing {f.name}: {e}")
