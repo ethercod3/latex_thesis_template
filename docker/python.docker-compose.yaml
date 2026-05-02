@@ -1,0 +1,10 @@
+services:
+  python_diagrams:
+    build:
+      context: ../
+      dockerfile: ./docker/python.dockerfile
+    env_file:
+      - ../.env
+    volumes:
+      - ../figures:/data/figures
+    command: ["sh", "compile_python.sh"]

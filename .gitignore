@@ -16,3 +16,4 @@ $*.docx
 *.fls
 .env
 .aux_files
+.venv
