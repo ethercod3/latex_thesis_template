@@ -5,6 +5,6 @@ services:
       - ./:/data
       - ${VAULT_OS_PATH}:${VAULT_PATH}
     working_dir: /data
-    command: sh -c "latexmk -lualatex -interaction=nonstopmode ${TARGET} && latexmk -c"
+    command: sh -c "latexmk ${TARGET}"
     env_file:
       - ./.env

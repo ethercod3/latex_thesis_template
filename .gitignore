@@ -15,3 +15,4 @@ $*.docx
 *latexmk
 *.fls
 .env
+.aux_files
