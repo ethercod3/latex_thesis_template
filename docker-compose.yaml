@@ -1,6 +1,9 @@
 services:
   latex:
-    build: .
+    profiles: ["latex"]
+    build:
+      context: .
+      dockerfile: ./docker/latex.dockerfile
     volumes:
       - ./:/data
       - ${VAULT_OS_PATH}:${VAULT_PATH}
@@ -8,3 +11,25 @@ services:
     command: sh -c "latexmk ${TARGET}"
     env_file:
       - ./.env
+
+  mermaid_diagrams:
+    profiles: ["mermaid"]
+    build:
+      context: .
+      dockerfile: ./docker/mermaid.dockerfile
+    env_file:
+      - ./.env
+    volumes:
+      - ./figures:/data/figures
+    command: ["python3", "compile_mermaid.py"]
+
+  python_diagrams:
+    profiles: ["python"]
+    build:
+      context: .
+      dockerfile: ./docker/python.dockerfile
+    env_file:
+      - ./.env
+    volumes:
+      - ./figures:/data/figures
+    command: ["sh", "compile_python.sh"]

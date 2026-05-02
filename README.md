@@ -36,9 +36,37 @@
     - `VAULT_OS_PATH`: где относительно текущей папки лежит код
     - `TARGET`: `.tex` файл
 
-2. Запустите компиляцию: `docker-compose up --build`
+2. Запустите компиляцию:
+
+    ```bash
+    docker compose --profile latex up --build
+    ```
 
 Первый билд будет долгим
+
+### Профили Docker Compose
+
+В проекте доступны профили:
+
+- `latex` - компиляция LaTeX-документа
+- `mermaid` - генерация Mermaid-диаграмм в `figures`
+- `python` - генерация Python-диаграмм в `figures`
+
+Запуск отдельных профилей:
+
+```bash
+docker compose --profile latex up --build
+docker compose --profile mermaid up --build
+docker compose --profile python up --build
+```
+
+Запуск всех профилей одной командой:
+
+```bash
+docker compose --profile mermaid --profile python --profile latex up --build
+```
+
+При запуске всех профилей Docker Compose стартует сервисы вместе. Если нужно гарантированно собрать документ уже со свежими диаграммами, сначала запустите профили `mermaid` и `python`, затем профиль `latex`.
 
 ## Проблемы с комплицией
 
@@ -100,7 +128,7 @@
 ### Сборка через Docker
 
 ```
-docker compose -f .\docker\mermaid.docker-compose.yaml up --build
+docker compose --profile mermaid up --build
 ```
 
 ## Генерация диаграмм Python вручную
@@ -112,5 +140,5 @@ docker compose -f .\docker\mermaid.docker-compose.yaml up --build
 ## Генерация диаграмм Python через Docker
 
 ```bash
-docker compose -f .\docker\python.docker-compose.yaml up --build
+docker compose --profile python up --build
 ```
