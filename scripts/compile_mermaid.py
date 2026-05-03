@@ -1,5 +1,6 @@
 import shutil
 import subprocess
+import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -12,16 +13,15 @@ EXTENSIONS = {".mmd", ".mermaid", ".mmdc"}
 MAX_WORKERS_LIMIT = 4
 TIMEOUT_SECONDS = 60
 
-def find_mmdc() -> str:
+def find_mmdc() -> list[str]:
     mmdc = shutil.which("mmdc") or shutil.which("mmdc.cmd")
-
     if mmdc is None:
         raise RuntimeError("mmdc or mmdc.cmd was not found in PATH")
 
-    return mmdc
+    return [mmdc]
 
 
-def process_file(f: Path, mmdc: str) -> str | None:
+def process_file(f: Path, mmdc: list[str]) -> str | None:
     if not f.is_file():
         return None
 
@@ -30,7 +30,7 @@ def process_file(f: Path, mmdc: str) -> str | None:
 
     output_file = DST / f"{f.stem}.pdf"
 
-    cmd = [mmdc, "-i", str(f), "-o", str(output_file), "-f"]
+    cmd = [*mmdc, "-i", str(f), "-o", str(output_file), "-f"]
 
     try:
         result = subprocess.run(

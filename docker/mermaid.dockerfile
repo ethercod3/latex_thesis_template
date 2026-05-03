@@ -3,9 +3,7 @@ FROM node:22-bookworm
 USER root
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV PUPPETEER_SKIP_DOWNLOAD=true
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+ENV PUPPETEER_CACHE_DIR=/usr/local/share/puppeteer
 
 RUN sed -i 's/Components: main/Components: main contrib non-free non-free-firmware/' /etc/apt/sources.list.d/debian.sources
 
@@ -33,6 +31,7 @@ RUN useradd -m appuser
 WORKDIR /data
 
 COPY ./mermaid ./mermaid
+COPY ./scripts/compile_mermaid.py .
 RUN mkdir -p scripts
 COPY ./scripts/compile_mermaid.py ./scripts/compile_mermaid.py
 
