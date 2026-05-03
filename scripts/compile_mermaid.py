@@ -1,24 +1,27 @@
-from pathlib import Path
 import shutil
 import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
 
 
-SRC = Path("mermaid")
-DST = Path("figures")
+PROJECT_DIR = Path(__file__).resolve().parents[1]
+SRC = PROJECT_DIR / "mermaid"
+DST = PROJECT_DIR / "figures"
 
 EXTENSIONS = {".mmd", ".mermaid", ".mmdc"}
 MAX_WORKERS_LIMIT = 4
 TIMEOUT_SECONDS = 60
 
-DST.mkdir(parents=True, exist_ok=True)
+def find_mmdc() -> str:
+    mmdc = shutil.which("mmdc") or shutil.which("mmdc.cmd")
+
+    if mmdc is None:
+        raise RuntimeError("mmdc or mmdc.cmd was not found in PATH")
+
+    return mmdc
 
 
-def quote_path(path: Path) -> str:
-    return f'"{path}"'
-
-
-def process_file(f: Path) -> str | None:
+def process_file(f: Path, mmdc: str) -> str | None:
     if not f.is_file():
         return None
 
@@ -27,13 +30,12 @@ def process_file(f: Path) -> str | None:
 
     output_file = DST / f"{f.stem}.pdf"
 
-    cmd = f"mmdc -i {quote_path(f)} -o {quote_path(output_file)} -f"
+    cmd = [mmdc, "-i", str(f), "-o", str(output_file), "-f"]
 
     try:
         result = subprocess.run(
             cmd,
             check=True,
-            shell=True,
             capture_output=True,
             text=True,
             timeout=TIMEOUT_SECONDS,
@@ -50,7 +52,7 @@ def process_file(f: Path) -> str | None:
 
         return (
             f"[ERROR] {f.name}\n"
-            f"Command: {cmd}\n"
+            f"Command: {' '.join(cmd)}\n"
             f"stdout:\n{stdout}\n"
             f"stderr:\n{stderr}"
         )
@@ -60,8 +62,7 @@ def main() -> None:
     if not SRC.exists():
         raise FileNotFoundError(f"Source directory does not exist: {SRC}")
 
-    if shutil.which("mmdc") is None and shutil.which("mmdc.cmd") is None:
-        raise RuntimeError("mmdc or mmdc.cmd was not found in PATH")
+    mmdc = find_mmdc()
 
     files = [
         f for f in SRC.iterdir()
@@ -76,7 +77,7 @@ def main() -> None:
 
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = {
-            executor.submit(process_file, f): f
+            executor.submit(process_file, f, mmdc): f
             for f in files
         }
 
@@ -91,4 +92,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    DST.mkdir(parents=True, exist_ok=True)
     main()

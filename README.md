@@ -72,16 +72,21 @@ docker compose --profile docx --profile mermaid --profile python --profile latex
 
 Последовательный запуск всех профилей уже вынесен в скрипты:
 
-```cmd
-.\scripts\build_all_windows.cmd
-```
-
 ```bash
-sh scripts/build_all_macos.sh
-sh scripts/build_all_linux.sh
+python scripts/build_all.py
 ```
 
 Скрипты запускают профили в порядке `docx` -> `mermaid` -> `python` -> `latex` и останавливаются на первой ошибке.
+
+Все вспомогательные скрипты проекта написаны на Python и запускаются одинаково в Windows, Linux и macOS:
+
+```bash
+python scripts/build_all.py
+python scripts/compile_mermaid.py
+python scripts/compile_python_diagrams.py
+```
+
+Скрипт `scripts/convert_docx_to_pdf.py` обычно запускается внутри Docker-профиля `docx`, потому что ему нужны LibreOffice, Ghostscript и qpdf.
 
 ## Проблемы с комплицией
 
@@ -152,7 +157,11 @@ docker compose --profile docx run --rm -e SKIP_BLANK_PAGES=0 docx_pdf
 
     ## Автоматическая сборка всех диаграмм
 
-    Запустите скрипт `compile_mermaid.py` в проекте. Этот скрипт автоматически прогонит все файлы из папки `mermaid` и положит результат в папку `figures`
+    Запустите скрипт `scripts/compile_mermaid.py` в проекте. Этот скрипт автоматически прогонит все файлы из папки `mermaid` и положит результат в папку `figures`
+
+    ```bash
+    python scripts/compile_mermaid.py
+    ```
 
 ### Сборка через Docker
 
@@ -165,6 +174,10 @@ docker compose --profile mermaid up --build
 1. Установите интерпретатор `python` (использовалась версия `3.13+`)
 2. Установите в окружение библиотеки: `pip install -r requirements.txt`
 3. Теперь вы можете запустить скрипт и получить на выходе файл диаграммы
+
+    ```bash
+    python scripts/compile_python_diagrams.py
+    ```
 
 ## Генерация диаграмм Python через Docker
 

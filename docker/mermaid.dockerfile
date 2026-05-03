@@ -25,7 +25,8 @@ RUN useradd -m appuser
 WORKDIR /data
 
 COPY ./mermaid ./mermaid
-COPY ./scripts/compile_mermaid.py .
+RUN mkdir -p scripts
+COPY ./scripts/compile_mermaid.py ./scripts/compile_mermaid.py
 
 RUN mkdir figures && \
     printf '%s\n' '{"executablePath":"/usr/bin/chromium","args":["--no-sandbox","--disable-setuid-sandbox"]}' > puppeteer-config.json && \

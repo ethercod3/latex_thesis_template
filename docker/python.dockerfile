@@ -24,12 +24,12 @@ WORKDIR /data
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY ./python_diagrams .
-COPY ./scripts/compile_python.sh .
+RUN mkdir -p figures scripts
 
-RUN chmod +x ./compile_python.sh
+COPY ./python_diagrams ./python_diagrams
+COPY ./scripts/compile_python_diagrams.py ./scripts/compile_python_diagrams.py
 
-RUN mkdir figures
+RUN chown -R appuser:appuser /data
 
 USER appuser
 

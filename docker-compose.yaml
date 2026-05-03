@@ -21,7 +21,7 @@ services:
       - ./.env
     volumes:
       - ./figures:/data/figures
-    command: ["python3", "compile_mermaid.py"]
+    command: ["python3", "scripts/compile_mermaid.py"]
 
   python_diagrams:
     profiles: ["python"]
@@ -32,7 +32,7 @@ services:
       - ./.env
     volumes:
       - ./figures:/data/figures
-    command: ["sh", "compile_python.sh"]
+    command: ["python", "scripts/compile_python_diagrams.py"]
 
   docx_pdf:
     profiles: ["docx"]
@@ -42,4 +42,4 @@ services:
     volumes:
       - ./:/data
     working_dir: /data
-    command: ["convert_docx_to_pdf.sh"]
+    command: ["python3", "/usr/local/bin/convert_docx_to_pdf.py"]

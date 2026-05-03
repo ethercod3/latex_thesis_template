@@ -17,3 +17,5 @@ $*.docx
 .env
 .aux_files
 .venv
+__pycache__/
+*.pyc

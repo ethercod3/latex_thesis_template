@@ -12,6 +12,7 @@ RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula sele
     libreoffice-writer \
     fontconfig \
     ghostscript \
+    python3 \
     fonts-crosextra-caladea \
     fonts-crosextra-carlito \
     fonts-dejavu \
@@ -31,10 +32,8 @@ ENV HOME=/home/appuser
 
 WORKDIR /data
 
-COPY ./scripts/convert_docx_to_pdf.sh /usr/local/bin/convert_docx_to_pdf.sh
-
-RUN chmod +x /usr/local/bin/convert_docx_to_pdf.sh
+COPY ./scripts/convert_docx_to_pdf.py /usr/local/bin/convert_docx_to_pdf.py
 
 USER appuser
 
-CMD ["convert_docx_to_pdf.sh"]
+CMD ["python3", "/usr/local/bin/convert_docx_to_pdf.py"]
