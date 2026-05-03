@@ -51,6 +51,7 @@
 - `latex` - компиляция LaTeX-документа
 - `mermaid` - генерация Mermaid-диаграмм в `figures`
 - `python` - генерация Python-диаграмм в `figures`
+- `docx` - конвертация файлов `docx/*.docx` в одноименные PDF в корне проекта
 
 Запуск отдельных профилей:
 
@@ -58,15 +59,16 @@
 docker compose --profile latex up --build
 docker compose --profile mermaid up --build
 docker compose --profile python up --build
+docker compose --profile docx up --build
 ```
 
 Запуск всех профилей одной командой:
 
 ```bash
-docker compose --profile mermaid --profile python --profile latex up --build
+docker compose --profile docx --profile mermaid --profile python --profile latex up --build
 ```
 
-При запуске всех профилей Docker Compose стартует сервисы вместе. Если нужно гарантированно собрать документ уже со свежими диаграммами, сначала запустите профили `mermaid` и `python`, затем профиль `latex`.
+При запуске всех профилей Docker Compose стартует сервисы вместе. Если нужно гарантированно собрать документ уже со свежими PDF из DOCX и диаграммами, сначала запустите профили `docx`, `mermaid` и `python`, затем профиль `latex`.
 
 ## Проблемы с комплицией
 
@@ -86,7 +88,21 @@ docker compose --profile mermaid --profile python --profile latex up --build
 
 ### О титульнике
 
-`Latex` вставит титульник из файла `титульник.pdf` в начало файла. Поэтому он должен быть в проекте перед комплицией (как и все рисунки, листинги). В проекте есть `титульник.docx`. Просто откройте его в Word, выберите `экспорт`, и выберите экспортировать только страницы `1-1`. Тоже самое относится и к файлу задания.
+`Latex` вставит титульник из файла `титульник.pdf` в начало файла. Поэтому он должен быть в проекте перед комплицией (как и все рисунки, листинги). В проекте есть `docx/титульник.docx` и `docx/задание.docx`; их можно конвертировать через Docker:
+
+```bash
+docker compose --profile docx up --build
+```
+
+Профиль берет все файлы `docx/*.docx` и складывает одноименные PDF в корень проекта, например `docx/титульник.docx` -> `титульник.pdf`.
+
+При конвертации профиль пропускает пустые страницы. Если нужно сохранить PDF как есть, запустите профиль с переменной `SKIP_BLANK_PAGES=0`:
+
+```bash
+docker compose --profile docx run --rm -e SKIP_BLANK_PAGES=0 docx_pdf
+```
+
+Альтернативный вариант - открыть DOCX в Microsoft Word и экспортировать его в PDF вручную: `Файл` -> `Экспорт` -> `Создать PDF/XPS`. Для титульника и задания нужно сохранить PDF в корень проекта с именами `титульник.pdf` и `задание.pdf`.
 
 ### Если нет кода
 

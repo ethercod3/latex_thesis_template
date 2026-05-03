@@ -33,3 +33,13 @@ services:
     volumes:
       - ./figures:/data/figures
     command: ["sh", "compile_python.sh"]
+
+  docx_pdf:
+    profiles: ["docx"]
+    build:
+      context: .
+      dockerfile: ./docker/docx.dockerfile
+    volumes:
+      - ./:/data
+    working_dir: /data
+    command: ["convert_docx_to_pdf.sh"]
