@@ -2,16 +2,24 @@ FROM node:22-bookworm
 
 USER root
 
+ENV DEBIAN_FRONTEND=noninteractive
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
-RUN apt-get update && apt-get install -y \
+RUN sed -i 's/Components: main/Components: main contrib non-free non-free-firmware/' /etc/apt/sources.list.d/debian.sources
+
+RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && \
+    apt-get update && apt-get install -y \
     python3 \
     chromium \
+    fontconfig \
     fonts-noto \
     fonts-noto-cjk \
     fonts-noto-color-emoji \
+    ttf-mscorefonts-installer \
+    && fc-cache -fv \
+    && fc-match "Trebuchet MS" \
     && rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g @mermaid-js/mermaid-cli
