@@ -6,6 +6,8 @@ import shutil
 import subprocess
 import sys
 
+from dotenv import dotenv_values
+
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_DIR = PROJECT_DIR / ".pdf_diff"
@@ -57,30 +59,17 @@ def docker_compose_command() -> list[str]:
     raise RuntimeError("Docker Compose was not found in PATH")
 
 
-def parse_env_value(name: str) -> str | None:
+def env_value(name: str) -> str | None:
     env_path = PROJECT_DIR / ".env"
     if not env_path.exists():
         return None
 
-    for raw_line in env_path.read_text(encoding="utf-8").splitlines():
-        line = raw_line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-
-        key, value = line.split("=", 1)
-        if key.strip() != name:
-            continue
-
-        value = value.strip()
-        if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
-            value = value[1:-1]
-        return value
-
-    return None
+    value = dotenv_values(env_path).get(name)
+    return value if value else None
 
 
 def target_pdf_name() -> str:
-    target = parse_env_value("TARGET")
+    target = env_value("TARGET")
     if target:
         return f"{Path(target).stem}.pdf"
 
