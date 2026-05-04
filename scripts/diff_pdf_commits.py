@@ -9,6 +9,11 @@ import sys
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_DIR = PROJECT_DIR / ".pdf_diff"
+FIGURES_DIR = PROJECT_DIR / "figures"
+BUILD_SCRIPT_CANDIDATES = [
+    PROJECT_DIR / "scripts" / "build_app.py",
+    PROJECT_DIR / "scripts" / "build_all.py",
+]
 
 
 def run(command: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -25,23 +30,6 @@ def run(command: list[str], *, check: bool = True) -> subprocess.CompletedProces
 
 def capture(command: list[str]) -> str:
     return subprocess.check_output(command, cwd=PROJECT_DIR, text=True).strip()
-
-
-def docker_compose_command() -> list[str]:
-    if shutil.which("docker") is not None:
-        result = subprocess.run(
-            ["docker", "compose", "version"],
-            cwd=PROJECT_DIR,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-        if result.returncode == 0:
-            return ["docker", "compose"]
-
-    if shutil.which("docker-compose") is not None:
-        return ["docker-compose"]
-
-    raise RuntimeError("Docker Compose was not found in PATH")
 
 
 def parse_env_value(name: str) -> str | None:
@@ -91,14 +79,57 @@ def safe_label(commit: str) -> str:
     return "".join(char if char.isalnum() or char in {"-", "_", "."} else "_" for char in commit)
 
 
-def build_pdf(commit: str, pdf_name: str, destination_dir: Path) -> Path:
+def build_script_path() -> Path:
+    for candidate in BUILD_SCRIPT_CANDIDATES:
+        if candidate.exists():
+            return candidate
+
+    names = ", ".join(str(path.relative_to(PROJECT_DIR)) for path in BUILD_SCRIPT_CANDIDATES)
+    raise RuntimeError(f"Build script was not found. Expected one of: {names}")
+
+
+def prepare_build_script() -> Path:
+    source = build_script_path()
+    destination = PROJECT_DIR / "scripts" / f".diff_pdf_{source.name}"
+    shutil.copy2(source, destination)
+    return destination
+
+
+def snapshot_generated_files(snapshot_dir: Path) -> None:
+    if snapshot_dir.exists():
+        shutil.rmtree(snapshot_dir)
+
+    root_pdfs_dir = snapshot_dir / "root_pdfs"
+    root_pdfs_dir.mkdir(parents=True)
+
+    for pdf_path in PROJECT_DIR.glob("*.pdf"):
+        shutil.copy2(pdf_path, root_pdfs_dir / pdf_path.name)
+
+    if FIGURES_DIR.exists():
+        shutil.copytree(FIGURES_DIR, snapshot_dir / "figures")
+
+
+def restore_generated_files(snapshot_dir: Path) -> None:
+    if FIGURES_DIR.exists():
+        shutil.rmtree(FIGURES_DIR)
+
+    saved_figures_dir = snapshot_dir / "figures"
+    if saved_figures_dir.exists():
+        shutil.copytree(saved_figures_dir, FIGURES_DIR)
+
+    for pdf_path in PROJECT_DIR.glob("*.pdf"):
+        pdf_path.unlink()
+
+    saved_root_pdfs_dir = snapshot_dir / "root_pdfs"
+    if saved_root_pdfs_dir.exists():
+        for pdf_path in saved_root_pdfs_dir.glob("*.pdf"):
+            shutil.copy2(pdf_path, PROJECT_DIR / pdf_path.name)
+
+
+def build_pdf(commit: str, pdf_name: str, destination_dir: Path, build_script: Path) -> Path:
     run(["git", "checkout", "--detach", commit])
 
-    compose = docker_compose_command()
-    try:
-        run([*compose, "--profile", "latex", "up", "--build"])
-    finally:
-        subprocess.run([*compose, "--profile", "latex", "down"], cwd=PROJECT_DIR)
+    run([sys.executable, str(build_script)])
 
     pdf_path = PROJECT_DIR / pdf_name
     if not pdf_path.exists():
@@ -143,6 +174,7 @@ def main() -> int:
     args = parse_args()
     original_head = capture(["git", "rev-parse", "--verify", "HEAD"])
     output_dir = DEFAULT_OUTPUT_DIR / f"{safe_label(args.left_commit)}__{safe_label(args.right_commit)}"
+    snapshot_dir = DEFAULT_OUTPUT_DIR / "_restore_snapshot"
     pdf_name = args.pdf or target_pdf_name()
 
     require_clean_worktree()
@@ -150,14 +182,23 @@ def main() -> int:
     if output_dir.exists():
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True)
+    build_script = prepare_build_script()
+    snapshot_generated_files(snapshot_dir)
 
     try:
-        left_pdf = build_pdf(args.left_commit, pdf_name, output_dir)
-        right_pdf = build_pdf(args.right_commit, pdf_name, output_dir)
+        left_pdf = build_pdf(args.left_commit, pdf_name, output_dir, build_script)
+        right_pdf = build_pdf(args.right_commit, pdf_name, output_dir, build_script)
         return open_diff_pdf(left_pdf, right_pdf)
     finally:
         print(f"==> git checkout {original_head}", flush=True)
         subprocess.run(["git", "checkout", original_head], cwd=PROJECT_DIR)
+
+        if build_script.exists():
+            build_script.unlink()
+
+        if snapshot_dir.exists():
+            restore_generated_files(snapshot_dir)
+            shutil.rmtree(snapshot_dir)
 
         if not args.keep and output_dir.exists():
             shutil.rmtree(output_dir)
