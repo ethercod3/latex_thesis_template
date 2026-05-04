@@ -88,6 +88,34 @@ python scripts/compile_python_diagrams.py
 
 Скрипт `scripts/convert_docx_to_pdf.py` обычно запускается внутри Docker-профиля `docx`, потому что ему нужны LibreOffice, Ghostscript и qpdf.
 
+### Сравнение PDF между коммитами
+
+Если нужно посмотреть визуальную разницу между двумя версиями диплома, используйте скрипт:
+
+```bash
+python scripts/diff_pdf_commits.py <commit_1> <commit_2>
+```
+
+Скрипт принимает 2 хэша коммита, по очереди переключается на каждый из них, собирает PDF через Docker, складывает две версии во временную папку и открывает `diff-pdf`.
+
+По умолчанию запускаются все профили в порядке `docx` -> `mermaid` -> `python` -> `latex`. Если нужно ограничить сборку, передайте опцию `--profiles`:
+
+```bash
+python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles all
+python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles docx
+python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid
+python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
+```
+
+Пояснение:
+
+- `all`: `docx` -> `mermaid` -> `python` -> `latex`
+- `docx`: `docx` -> `latex`
+- `mermaid`: `mermaid` -> `latex`
+- `latex`: только `latex`
+
+Перед запуском рабочее дерево Git должно быть чистым. После завершения скрипт возвращается на исходный `HEAD`, удаляет временные файлы и восстанавливает текущие файлы из `figures`, а также PDF в корне проекта, например `титульник.pdf` и `задание.pdf`.
+
 ## Проблемы с комплицией
 
 **ВАЖНО**: компилируйте по 2 раза минимум. В первую комплицую могут быть ошибки, так как `LaTeX` будет создавать вспомогательные файлы со счетчиками (счетчик библиографии, таблиц, рисунков.) Во вторую компиляцию `LaTeX` их подтянет.
