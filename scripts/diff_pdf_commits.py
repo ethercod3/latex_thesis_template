@@ -19,6 +19,7 @@ PROFILE_SERVICES = {
 PROFILE_GROUPS = {
     "all": ["docx", "mermaid", "python", "latex"],
     "docx": ["docx", "latex"],
+    "latex": ["latex"],
     "mermaid": ["mermaid", "latex"],
 }
 
@@ -189,7 +190,7 @@ def parse_args() -> argparse.Namespace:
         help=(
             "Docker profile group to run before comparing. "
             "all: docx, mermaid, python, latex; docx: docx, latex; "
-            "mermaid: mermaid, latex."
+            "mermaid: mermaid, latex; latex: latex only."
         ),
     )
     return parser.parse_args()
