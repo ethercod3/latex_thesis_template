@@ -10,10 +10,17 @@ import sys
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_DIR = PROJECT_DIR / ".pdf_diff"
 FIGURES_DIR = PROJECT_DIR / "figures"
-BUILD_SCRIPT_CANDIDATES = [
-    PROJECT_DIR / "scripts" / "build_app.py",
-    PROJECT_DIR / "scripts" / "build_all.py",
-]
+PROFILE_SERVICES = {
+    "docx": "docx_pdf",
+    "mermaid": "mermaid_diagrams",
+    "python": "python_diagrams",
+    "latex": "latex",
+}
+PROFILE_GROUPS = {
+    "all": ["docx", "mermaid", "python", "latex"],
+    "docx": ["docx", "latex"],
+    "mermaid": ["mermaid", "latex"],
+}
 
 
 def run(command: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -30,6 +37,23 @@ def run(command: list[str], *, check: bool = True) -> subprocess.CompletedProces
 
 def capture(command: list[str]) -> str:
     return subprocess.check_output(command, cwd=PROJECT_DIR, text=True).strip()
+
+
+def docker_compose_command() -> list[str]:
+    if shutil.which("docker") is not None:
+        result = subprocess.run(
+            ["docker", "compose", "version"],
+            cwd=PROJECT_DIR,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        if result.returncode == 0:
+            return ["docker", "compose"]
+
+    if shutil.which("docker-compose") is not None:
+        return ["docker-compose"]
+
+    raise RuntimeError("Docker Compose was not found in PATH")
 
 
 def parse_env_value(name: str) -> str | None:
@@ -79,22 +103,6 @@ def safe_label(commit: str) -> str:
     return "".join(char if char.isalnum() or char in {"-", "_", "."} else "_" for char in commit)
 
 
-def build_script_path() -> Path:
-    for candidate in BUILD_SCRIPT_CANDIDATES:
-        if candidate.exists():
-            return candidate
-
-    names = ", ".join(str(path.relative_to(PROJECT_DIR)) for path in BUILD_SCRIPT_CANDIDATES)
-    raise RuntimeError(f"Build script was not found. Expected one of: {names}")
-
-
-def prepare_build_script() -> Path:
-    source = build_script_path()
-    destination = PROJECT_DIR / "scripts" / f".diff_pdf_{source.name}"
-    shutil.copy2(source, destination)
-    return destination
-
-
 def snapshot_generated_files(snapshot_dir: Path) -> None:
     if snapshot_dir.exists():
         shutil.rmtree(snapshot_dir)
@@ -126,10 +134,17 @@ def restore_generated_files(snapshot_dir: Path) -> None:
             shutil.copy2(pdf_path, PROJECT_DIR / pdf_path.name)
 
 
-def build_pdf(commit: str, pdf_name: str, destination_dir: Path, build_script: Path) -> Path:
+def run_profiles(profile_group: str) -> None:
+    compose = docker_compose_command()
+    for profile in PROFILE_GROUPS[profile_group]:
+        service = PROFILE_SERVICES[profile]
+        run([*compose, "--profile", profile, "run", "--rm", "--build", service])
+
+
+def build_pdf(commit: str, pdf_name: str, destination_dir: Path, profile_group: str) -> Path:
     run(["git", "checkout", "--detach", commit])
 
-    run([sys.executable, str(build_script)])
+    run_profiles(profile_group)
 
     pdf_path = PROJECT_DIR / pdf_name
     if not pdf_path.exists():
@@ -167,6 +182,16 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Keep the temporary .pdf_diff directory after diff-pdf exits.",
     )
+    parser.add_argument(
+        "--profiles",
+        choices=sorted(PROFILE_GROUPS),
+        default="all",
+        help=(
+            "Docker profile group to run before comparing. "
+            "all: docx, mermaid, python, latex; docx: docx, latex; "
+            "mermaid: mermaid, latex."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -182,19 +207,15 @@ def main() -> int:
     if output_dir.exists():
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True)
-    build_script = prepare_build_script()
     snapshot_generated_files(snapshot_dir)
 
     try:
-        left_pdf = build_pdf(args.left_commit, pdf_name, output_dir, build_script)
-        right_pdf = build_pdf(args.right_commit, pdf_name, output_dir, build_script)
+        left_pdf = build_pdf(args.left_commit, pdf_name, output_dir, args.profiles)
+        right_pdf = build_pdf(args.right_commit, pdf_name, output_dir, args.profiles)
         return open_diff_pdf(left_pdf, right_pdf)
     finally:
         print(f"==> git checkout {original_head}", flush=True)
         subprocess.run(["git", "checkout", original_head], cwd=PROJECT_DIR)
-
-        if build_script.exists():
-            build_script.unlink()
 
         if snapshot_dir.exists():
             restore_generated_files(snapshot_dir)
