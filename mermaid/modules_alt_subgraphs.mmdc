@@ -1,0 +1,40 @@
+---
+config:
+  theme: default
+  flowchart:
+    curve: linear
+---
+flowchart TB
+    subgraph ENTRY[Слой входа]
+        MAIN[main.py<br/>Точка входа]
+        CLI[vault/cli.py<br/>CLI-команды]
+        API[vault/api.py<br/>FastAPI HTTPS]
+    end
+
+    subgraph CONTRACTS[Контракты и конфигурация]
+        SCHEMAS[vault/schemas.py<br/>Pydantic-схемы CLI/API]
+        DBS[vault/db_schemas.py<br/>Pydantic-схемы БД]
+        SETTINGS[vault/settings.py<br/>Конфигурация окружения]
+    end
+
+    subgraph SERVICES[Сервисный слой]
+        CRYPTO[vault/crypto.py<br/>Encrypt/Decrypt AEAD]
+        KEYM[vault/key_manager.py<br/>Wrap/Unwrap DEK, KEK utils]
+        AUTH[vault/auth.py<br/>Hash/Verify Bearer]
+    end
+
+    subgraph DATA[Слой хранения]
+        DB[vault/db.py<br/>SQLAlchemy Repository]
+        DBSTORE[(SQLite/PostgreSQL<br/>База данных)]
+    end
+
+    subgraph ENVIRONMENT[Окружение]
+        ENV[(VAULT_DB_URL<br/>VAULT_MASTER_KEK_HEX)]
+    end
+
+    ENTRY --> CONTRACTS
+    ENTRY --> SERVICES
+    ENTRY --> DATA
+    DATA --> CONTRACTS
+    DATA --> ENVIRONMENT
+    CONTRACTS --> ENVIRONMENT
