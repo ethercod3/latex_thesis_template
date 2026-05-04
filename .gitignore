@@ -20,3 +20,4 @@ $*.docx
 __pycache__/
 *.pyc
 node_modules/
+.pdf_diff
