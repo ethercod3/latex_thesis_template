@@ -58,10 +58,42 @@ python scripts/build_all.py
 
 1. Установить дистрибутив `LaTeX`. Под Windows рекомендуется установить `TexLive`. Установка долгая, но все пакеты сразу скачаются вместе с дистрибутивом. Компилятор в работе использовался `LuaTex`
 2. Клонировать репозиторий
-3. Скомпилировать файл: 
+3. Создать папку для вспомогательных файлов:
 
     ```bash
-    lualatex -synctex=1 -interaction=nonstopmode "<файл>".tex
+    mkdir .aux_files
+    ```
+
+    Если папка уже есть, этот шаг можно пропустить.
+
+4. Скомпилировать файл. Так как проект использует `biblatex` с backend `biber`, одного запуска `lualatex` недостаточно:
+
+    ```bash
+    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+    biber ".aux_files/<файл>.bcf"
+    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+    ```
+
+    Для основного файла проекта:
+
+    ```bash
+    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+    biber ".aux_files/Куприянов_И221_диплом.bcf"
+    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+    ```
+
+    После сборки итоговый PDF окажется в `.aux_files`. Его нужно перенести в корень проекта:
+
+    ```bash
+    mv ".aux_files/<файл>.pdf" .
+    ```
+
+    В Windows `cmd` для основного файла:
+
+    ```bat
+    move ".aux_files\Куприянов_И221_диплом.pdf" .
     ```
 
 ## Компиляция в Docker
