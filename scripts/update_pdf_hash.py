@@ -11,8 +11,27 @@ from dotenv import dotenv_values
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 README_PATH = PROJECT_DIR / "README.md"
 ENV_PATH = PROJECT_DIR / ".env"
-START_MARKER = "<!-- DIPLOMA_SHA256_START -->"
-END_MARKER = "<!-- DIPLOMA_SHA256_END -->"
+START_MARKER = "<!-- DIPLOMA_HASHES_START -->"
+END_MARKER = "<!-- DIPLOMA_HASHES_END -->"
+LEGACY_START_MARKER = "<!-- DIPLOMA_SHA256_START -->"
+LEGACY_END_MARKER = "<!-- DIPLOMA_SHA256_END -->"
+
+HASH_ALGORITHMS = (
+    ("md5", "MD5", None),
+    ("sha1", "SHA-1", None),
+    ("sha224", "SHA-224", None),
+    ("sha256", "SHA-256", None),
+    ("sha384", "SHA-384", None),
+    ("sha512", "SHA-512", None),
+    ("sha3_224", "SHA3-224", None),
+    ("sha3_256", "SHA3-256", None),
+    ("sha3_384", "SHA3-384", None),
+    ("sha3_512", "SHA3-512", None),
+    ("blake2s", "BLAKE2s", None),
+    ("blake2b", "BLAKE2b", None),
+    ("shake_128", "SHAKE-128 (256-bit output)", 32),
+    ("shake_256", "SHAKE-256 (512-bit output)", 64),
+)
 
 
 def env_value(name: str) -> str | None:
@@ -38,30 +57,36 @@ def target_pdf_path(pdf_arg: str | None) -> Path:
     raise RuntimeError("Cannot determine target PDF. Set TARGET in .env or pass --pdf.")
 
 
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
+def file_hashes(path: Path) -> list[tuple[str, str]]:
+    digests = [(label, output_size, hashlib.new(name)) for name, label, output_size in HASH_ALGORITHMS]
+
     with path.open("rb") as file:
         for chunk in iter(lambda: file.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+            for _, _, digest in digests:
+                digest.update(chunk)
+
+    return [
+        (label, digest.hexdigest(output_size) if output_size else digest.hexdigest())
+        for label, output_size, digest in digests
+    ]
 
 
-def readme_block(pdf_path: Path, digest: str) -> str:
-    relative_pdf = pdf_path.relative_to(PROJECT_DIR)
+def readme_block(hashes: list[tuple[str, str]]) -> str:
+    hash_lines = "\n".join(f"**{label}:** `{digest}`" for label, digest in hashes)
     return (
         f"{START_MARKER}\n"
-        "## Контрольная сумма PDF\n\n"
-        f"**Файл:** `{relative_pdf.as_posix()}`\n\n"
-        f"**SHA-256:** `{digest}`\n"
+        "## Контрольные суммы PDF\n\n"
+        f"{hash_lines}\n"
         f"{END_MARKER}"
     )
 
 
-def update_readme(pdf_path: Path, digest: str) -> bool:
+def update_readme(hashes: list[tuple[str, str]]) -> bool:
     content = README_PATH.read_text(encoding="utf-8")
-    block = readme_block(pdf_path, digest)
+    block = readme_block(hashes)
     pattern = re.compile(
-        rf"{re.escape(START_MARKER)}.*?{re.escape(END_MARKER)}",
+        rf"(?:{re.escape(START_MARKER)}.*?{re.escape(END_MARKER)}|"
+        rf"{re.escape(LEGACY_START_MARKER)}.*?{re.escape(LEGACY_END_MARKER)})",
         flags=re.DOTALL,
     )
 
@@ -82,7 +107,7 @@ def update_readme(pdf_path: Path, digest: str) -> bool:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Update README.md with SHA-256 of the latest diploma PDF.")
+    parser = argparse.ArgumentParser(description="Update README.md with hashes of the latest diploma PDF.")
     parser.add_argument("--pdf", default=None, help="PDF filename/path. Defaults to TARGET from .env with .pdf extension.")
     return parser.parse_args()
 
@@ -95,13 +120,13 @@ def main() -> int:
         print(f"PDF not found, keeping existing README hash: {pdf_path}")
         return 0
 
-    digest = sha256_file(pdf_path)
-    changed = update_readme(pdf_path, digest)
+    hashes = file_hashes(pdf_path)
+    changed = update_readme(hashes)
 
     if changed:
-        print(f"Updated README.md SHA-256 for {pdf_path.name}: {digest}")
+        print("Updated README.md hashes")
     else:
-        print(f"README.md SHA-256 is already up to date for {pdf_path.name}: {digest}")
+        print("README.md hashes are already up to date")
 
     return 0
 
