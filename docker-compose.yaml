@@ -42,4 +42,4 @@ services:
     volumes:
       - ./:/data
     working_dir: /data
-    command: ["python3", "/usr/local/bin/convert_docx_to_pdf.py"]
+    command: ["python3", "/data/scripts/convert_docx_to_pdf.py"]

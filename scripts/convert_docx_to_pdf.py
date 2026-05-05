@@ -14,6 +14,10 @@ PDF_EXPORT_FILTER = (
 SKIP_BLANK_PAGES = os.environ.get("SKIP_BLANK_PAGES", "1") == "1"
 
 
+def copy_pdf_contents(source: Path, destination: Path) -> None:
+    shutil.copyfile(source, destination)
+
+
 def require_command(command: str) -> bool:
     if shutil.which(command) is None:
         print(f"Required command was not found in PATH: {command}", file=sys.stderr)
@@ -55,12 +59,12 @@ def remove_blank_pages(input_file: Path, output_file: Path, tmp_dir: Path) -> No
             keep_pages.append(str(page))
 
     if page == 0 or len(keep_pages) == page:
-        shutil.copy2(input_file, output_file)
+        copy_pdf_contents(input_file, output_file)
         return
 
     if not keep_pages:
         print(f"All pages look blank in {input_file}; keeping original PDF", file=sys.stderr)
-        shutil.copy2(input_file, output_file)
+        copy_pdf_contents(input_file, output_file)
         return
 
     reduced_file = tmp_dir / f"{input_file.stem}.without_blank_pages.pdf"
@@ -70,7 +74,7 @@ def remove_blank_pages(input_file: Path, output_file: Path, tmp_dir: Path) -> No
         check=True,
     )
 
-    shutil.copy2(reduced_file, output_file)
+    copy_pdf_contents(reduced_file, output_file)
 
 
 def convert_docx(source_file: Path, tmp_dir: Path) -> Path:
@@ -134,7 +138,7 @@ def main() -> int:
             if SKIP_BLANK_PAGES:
                 remove_blank_pages(converted_file, output_file, tmp_dir)
             else:
-                shutil.copy2(converted_file, output_file)
+                copy_pdf_contents(converted_file, output_file)
 
             converted_file.unlink(missing_ok=True)
 
