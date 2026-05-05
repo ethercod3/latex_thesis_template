@@ -19,18 +19,10 @@ LEGACY_END_MARKER = "<!-- DIPLOMA_SHA256_END -->"
 HASH_ALGORITHMS = (
     ("md5", "MD5", None),
     ("sha1", "SHA-1", None),
-    ("sha224", "SHA-224", None),
     ("sha256", "SHA-256", None),
-    ("sha384", "SHA-384", None),
-    ("sha512", "SHA-512", None),
-    ("sha3_224", "SHA3-224", None),
     ("sha3_256", "SHA3-256", None),
-    ("sha3_384", "SHA3-384", None),
-    ("sha3_512", "SHA3-512", None),
     ("blake2s", "BLAKE2s", None),
-    ("blake2b", "BLAKE2b", None),
     ("shake_128", "SHAKE-128 (256-bit output)", 32),
-    ("shake_256", "SHAKE-256 (512-bit output)", 64),
 )
 
 
