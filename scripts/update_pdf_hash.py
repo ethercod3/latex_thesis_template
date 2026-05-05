@@ -64,7 +64,7 @@ def file_hashes(path: Path) -> list[tuple[str, str]]:
 
 
 def readme_block(hashes: list[tuple[str, str]]) -> str:
-    hash_lines = "\n".join(f"**{label}:** `{digest}`" for label, digest in hashes)
+    hash_lines = "\n".join(f"**{label}:** `{digest}`<br>" for label, digest in hashes)
     return (
         f"{START_MARKER}\n"
         "## Контрольные суммы PDF\n\n"
