@@ -21,3 +21,4 @@ __pycache__/
 *.pyc
 node_modules/
 .pdf_diff
+~$*.docx
