@@ -31,22 +31,6 @@
 | `scripts/` | Вспомогательные скрипты сборки, конвертации и сравнения PDF |
 | `docker/` | Dockerfile для отдельных профилей сборки |
 
-## Git hooks
-
-Чтобы перед каждым коммитом автоматически обновлялась SHA-256 итогового PDF в README, подключите локальные hooks:
-
-```bash
-git config core.hooksPath .githooks
-```
-
-Для работы hook нужен Python-пакет `python-dotenv`. Он уже указан в `requirements.txt`; если окружение еще не подготовлено, установите зависимости:
-
-```bash
-pip install -r requirements.txt
-```
-
-Hook считает hash текущего PDF. Если PDF отсутствует, README не меняется и коммит продолжается со старым значением.
-
 ## Быстрый старт
 
 ```bash
@@ -294,3 +278,19 @@ docker compose --profile mermaid up --build
 ```bash
 docker compose --profile python up --build
 ```
+
+## Git hooks
+
+Чтобы перед каждым коммитом автоматически обновлялась SHA-256 итогового PDF в README, подключите локальные hooks:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+Для работы hook нужен Python-пакет `python-dotenv`. Он уже указан в `requirements.txt`; если окружение еще не подготовлено, установите зависимости:
+
+```bash
+pip install -r requirements.txt
+```
+
+Hook считает hash текущего PDF. Если PDF отсутствует, README не меняется и коммит продолжается со старым значением.
