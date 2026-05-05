@@ -5,6 +5,8 @@ import hashlib
 from pathlib import Path
 import re
 
+from dotenv import dotenv_values
+
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 README_PATH = PROJECT_DIR / "README.md"
@@ -17,18 +19,8 @@ def env_value(name: str) -> str | None:
     if not ENV_PATH.exists():
         return None
 
-    for line in ENV_PATH.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-
-        key, value = line.split("=", 1)
-        if key.strip() != name:
-            continue
-
-        return value.strip().strip("\"'")
-
-    return None
+    value = dotenv_values(ENV_PATH).get(name)
+    return value if value else None
 
 
 def target_pdf_path(pdf_arg: str | None) -> Path:
