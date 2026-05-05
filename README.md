@@ -1,5 +1,13 @@
 # Исходники диплома
 
+<!-- DIPLOMA_SHA256_START -->
+## Контрольная сумма PDF
+
+**Файл:** `Куприянов_И221_диплом.pdf`
+
+**SHA-256:** `32a07f44efac636d8b4f280b3a2489e66bb257baf981e8963f0aa61ff33031c9`
+<!-- DIPLOMA_SHA256_END -->
+
 [![GitHub last commit](https://img.shields.io/github/last-commit/ethercod3/diploma_latex?style=flat-square&logo=github)](https://github.com/ethercod3/diploma_latex/commits)
 [![GitHub repo size](https://img.shields.io/github/repo-size/ethercod3/diploma_latex?style=flat-square&logo=github)](https://github.com/ethercod3/diploma_latex)
 ![LaTeX](https://img.shields.io/badge/LaTeX-LuaLaTeX-008080?style=flat-square&logo=latex)
@@ -23,6 +31,16 @@
 | `scripts/` | Вспомогательные скрипты сборки, конвертации и сравнения PDF |
 | `docker/` | Dockerfile для отдельных профилей сборки |
 
+## Git hooks
+
+Чтобы перед каждым коммитом автоматически обновлялась SHA-256 итогового PDF в README, подключите локальные hooks:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+Hook считает hash текущего PDF. Если PDF отсутствует, README не меняется и коммит продолжается со старым значением.
+
 ## Быстрый старт
 
 ```bash
@@ -37,6 +55,7 @@ python scripts/build_all.py
 
 - [Как скомпилировать проект вручную](#как-скомпилировать-проект-вручную)
 - [Компиляция в Docker](#компиляция-в-docker)
+- [Git hooks](#git-hooks)
 - [Сравнение PDF между коммитами](#сравнение-pdf-между-коммитами)
 - [Проблемы с компиляцией](#проблемы-с-компиляцией)
 - [Как работать с диаграммами](#как-работать-с-диаграммами)

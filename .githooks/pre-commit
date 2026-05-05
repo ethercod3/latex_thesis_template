@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+set -eu
+
+python scripts/update_pdf_hash.py
+git add README.md
