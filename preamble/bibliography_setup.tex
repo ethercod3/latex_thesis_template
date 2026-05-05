@@ -2,25 +2,31 @@
 %          НАСТРОЙКИ БИБЛИОГРАФИИ
 % --------------------------------------
 
-\makeatletter
-\renewenvironment{thebibliography}[1]
-  {%
-    \list{\@biblabel{\@arabic\c@enumiv}}%
-         {%
-           \settowidth\labelwidth{\@biblabel{#1}}%
-           \labelsep=0.5em
-           \leftmargin=0cm
-           \itemindent=2.2cm
-           \listparindent=0pt
-           \itemsep=0pt
-           \parsep=0pt
-           \topsep=0pt
-           \partopsep=0pt
-           \usecounter{enumiv}%
-         }%
-%    \raggedright
-%    \sloppy
+\addbibresource{bibliography.bib}
+
+\DeclareSortingTemplate{customsort}{
+  \sort{\field{sortkey}}
+}
+
+\DeclareBibliographyDriver{misc}{
+  \printfield{note}
+  \finentry
+}
+
+\DeclareFieldFormat{labelnumberwidth}{#1.}
+
+\defbibenvironment{bibliography}
+  {\list
+     {\printtext[labelnumberwidth]{\printfield{labelnumber}}}
+     {
+       \setlength{\labelwidth}{2em}
+       \setlength{\labelsep}{0.5em}
+       \setlength{\leftmargin}{0cm}
+       \setlength{\itemindent}{2.2cm}
+       \setlength{\listparindent}{0pt}
+       \setlength{\itemsep}{0pt}
+       \setlength{\parsep}{0pt}
+     }
   }
   {\endlist}
-\renewcommand{\@biblabel}[1]{#1.}
-\makeatother
+  {\item}

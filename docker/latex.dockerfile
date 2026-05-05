@@ -7,8 +7,10 @@ RUN echo "deb http://snapshot.debian.org/archive/debian/20260502T000000Z bookwor
 
 RUN apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y \
     texlive-full \
-    latexmk
+    latexmk \
+    biber
 
+RUN apt-get install -y texlive-bibtex-extra
 RUN apt-get install -y fonts-inconsolata fontconfig
 RUN apt-get install -y software-properties-common
 RUN apt-get install -y ttf-mscorefonts-installer
