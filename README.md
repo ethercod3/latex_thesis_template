@@ -1,16 +1,5 @@
 # Исходники диплома
 
-<!-- DIPLOMA_HASHES_START -->
-## Контрольные суммы PDF
-
-**MD5:** `740433db4b0a653e425ec6a009615937`<br>
-**SHA-1:** `4219b9abbb7952d04f2160b42c299e1a8c48dbf5`<br>
-**SHA-256:** `32a07f44efac636d8b4f280b3a2489e66bb257baf981e8963f0aa61ff33031c9`<br>
-**SHA3-256:** `b2ced9226320f0d6b66dc3b3348b1177ee8356a52fd8b656affb6aa64eb168f3`<br>
-**BLAKE2s:** `5b2ee6163d4abc7d7226d3749e897616c453642a4f7b71d4a923f454297172fe`<br>
-**SHAKE-128 (256-bit output):** `f3dcc478690f910b76ed355ece57d27a5bc4404fbecebbe4f330b180512cd3d5`<br>
-<!-- DIPLOMA_HASHES_END -->
-
 [![GitHub last commit](https://img.shields.io/github/last-commit/ethercod3/diploma_latex?style=flat-square&logo=github)](https://github.com/ethercod3/diploma_latex/commits)
 [![GitHub repo size](https://img.shields.io/github/repo-size/ethercod3/diploma_latex?style=flat-square&logo=github)](https://github.com/ethercod3/diploma_latex)
 ![LaTeX](https://img.shields.io/badge/LaTeX-LuaLaTeX-008080?style=flat-square&logo=latex)
@@ -19,6 +8,17 @@
 ![Python](https://img.shields.io/badge/Python-3.13+-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Plotly](https://img.shields.io/badge/Charts-Plotly-3F4F75?style=flat-square&logo=plotly&logoColor=white)
 ![Mermaid](https://img.shields.io/badge/Diagrams-Mermaid-FF3670?style=flat-square&logo=mermaid&logoColor=white)
+
+<!-- DIPLOMA_HASHES_START -->
+## Контрольные суммы PDF
+
+MD5: `740433db4b0a653e425ec6a009615937`<br>
+SHA-1: `4219b9abbb7952d04f2160b42c299e1a8c48dbf5`<br>
+SHA-256: `32a07f44efac636d8b4f280b3a2489e66bb257baf981e8963f0aa61ff33031c9`<br>
+SHA3-256: `b2ced9226320f0d6b66dc3b3348b1177ee8356a52fd8b656affb6aa64eb168f3`<br>
+BLAKE2s: `5b2ee6163d4abc7d7226d3749e897616c453642a4f7b71d4a923f454297172fe`<br>
+SHAKE-128 (256-bit output): `f3dcc478690f910b76ed355ece57d27a5bc4404fbecebbe4f330b180512cd3d5`<br>
+<!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
 
