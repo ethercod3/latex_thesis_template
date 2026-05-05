@@ -1,4 +1,40 @@
-# Исходники для диплома: `LaTex`-файлы, `Mermaid` диаграммы, и.т.д
+# Исходники диплома
+
+[![GitHub last commit](https://img.shields.io/github/last-commit/ethercod3/diploma_latex?style=flat-square&logo=github)](https://github.com/ethercod3/diploma_latex/commits)
+[![GitHub repo size](https://img.shields.io/github/repo-size/ethercod3/diploma_latex?style=flat-square&logo=github)](https://github.com/ethercod3/diploma_latex)
+![LaTeX](https://img.shields.io/badge/LaTeX-LuaLaTeX-008080?style=flat-square&logo=latex)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.13+-3776AB?style=flat-square&logo=python&logoColor=white)
+![Mermaid](https://img.shields.io/badge/Diagrams-Mermaid-FF3670?style=flat-square&logo=mermaid&logoColor=white)
+
+Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
+
+## Что внутри
+
+| Путь | Назначение |
+| --- | --- |
+| `*.tex`, `preamble/` | LaTeX-документы и настройки преамбулы |
+| `docx/` | DOCX-исходники титульника и задания |
+| `mermaid/` | Исходники Mermaid-диаграмм |
+| `python_diagrams/` | Python-скрипты генерации диаграмм |
+| `figures/` | Сгенерированные изображения и PDF для вставки в документ |
+| `scripts/` | Вспомогательные скрипты сборки, конвертации и сравнения PDF |
+| `docker/` | Dockerfile для отдельных профилей сборки |
+
+## Быстрый старт
+
+```bash
+python scripts/build_all.py
+```
+
+## Навигация
+
+- [Как скомпилировать проект вручную](#как-скомпилировать-проект-вручную)
+- [Компиляция в Docker](#компиляция-в-docker)
+- [Сравнение PDF между коммитами](#сравнение-pdf-между-коммитами)
+- [Проблемы с компиляцией](#проблемы-с-компиляцией)
+- [Как работать с диаграммами](#как-работать-с-диаграммами)
+- [Генерация диаграмм Python](#генерация-диаграмм-python-вручную)
 
 ## Как скомпилировать проект вручную
 
@@ -131,9 +167,9 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
 
 Перед запуском рабочее дерево Git должно быть чистым. После завершения скрипт возвращается на исходный `HEAD`, удаляет временные файлы и восстанавливает текущие файлы из `figures`, а также PDF в корне проекта, например `титульник.pdf` и `задание.pdf`.
 
-## Проблемы с комплицией
+## Проблемы с компиляцией
 
-**ВАЖНО**: компилируйте по 2 раза минимум. В первую комплицую могут быть ошибки, так как `LaTeX` будет создавать вспомогательные файлы со счетчиками (счетчик библиографии, таблиц, рисунков.) Во вторую компиляцию `LaTeX` их подтянет.
+**ВАЖНО**: компилируйте по 2 раза минимум. В первую компиляцию могут быть ошибки, так как `LaTeX` будет создавать вспомогательные файлы со счетчиками (счетчик библиографии, таблиц, рисунков.) Во вторую компиляцию `LaTeX` их подтянет.
 
 **ВАЖНО 2**: если не компилируется:
 
@@ -141,7 +177,7 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
 
 1. Переименуйте `.tex` файл в `main.tex` (или любое другое название на латинице)
 
-2. Используйте следуюущую команду для компиляции:
+2. Используйте следующую команду для компиляции:
 
     ```bash
     lualatex main.tex
@@ -149,7 +185,7 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
 
 ### О титульнике
 
-`Latex` вставит титульник из файла `титульник.pdf` в начало файла. Поэтому он должен быть в проекте перед комплицией (как и все рисунки, листинги). В проекте есть `docx/титульник.docx` и `docx/задание.docx`; их можно конвертировать через Docker:
+`LaTeX` вставит титульник из файла `титульник.pdf` в начало файла. Поэтому он должен быть в проекте перед компиляцией (как и все рисунки, листинги). В проекте есть `docx/титульник.docx` и `docx/задание.docx`; их можно конвертировать через Docker:
 
 ```bash
 docker compose --profile docx up --build
@@ -178,7 +214,7 @@ docker compose --profile docx run --rm -e SKIP_BLANK_PAGES=0 docx_pdf
 
 ### Если есть код
 
-Положите код на одном уровне с папкой `LaTeX` кода. При комплиляции `LaTeX` обращается по такому пути:
+Положите код на одном уровне с папкой `LaTeX` кода. При компиляции `LaTeX` обращается по такому пути:
 
 `../vault_diploma/<файл>`
 
@@ -198,13 +234,13 @@ docker compose --profile docx run --rm -e SKIP_BLANK_PAGES=0 docx_pdf
 
     флаг `-f` нужен для того, чтобы лист pdf обрезался под размер диаграммы
 
-    ## Автоматическая сборка всех диаграмм
+### Автоматическая сборка всех диаграмм
 
-    Запустите скрипт `scripts/compile_mermaid.py` в проекте. Этот скрипт автоматически прогонит все файлы из папки `mermaid` и положит результат в папку `figures`
+Запустите скрипт `scripts/compile_mermaid.py` в проекте. Этот скрипт автоматически прогонит все файлы из папки `mermaid` и положит результат в папку `figures`
 
-    ```bash
-    python scripts/compile_mermaid.py
-    ```
+```bash
+python scripts/compile_mermaid.py
+```
 
 ### Сборка через Docker
 
