@@ -98,6 +98,17 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2>
 
 Скрипт принимает 2 хэша коммита, по очереди переключается на каждый из них, собирает PDF через Docker, складывает две версии во временную папку и открывает `diff-pdf`.
 
+Результат можно только открыть, только сохранить или сделать оба действия:
+
+```bash
+python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view
+python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save
+python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view --save
+python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save path/to/diff.pdf
+```
+
+Без `--view` и `--save` скрипт работает как раньше и открывает diff. При `--save` без пути результат сохраняется в `.pdf_diff/saved`.
+
 Скачать `diff-pdf` можно в [репозитории](https://github.com/vslavik/diff-pdf/)
 
 По умолчанию запускаются все профили в порядке `docx` -> `mermaid` -> `python` -> `latex`. Если нужно ограничить сборку, передайте опцию `--profiles`:

@@ -11,6 +11,7 @@ from dotenv import dotenv_values
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_DIR = PROJECT_DIR / ".pdf_diff"
+DEFAULT_SAVED_DIFF_DIR = DEFAULT_OUTPUT_DIR / "saved"
 FIGURES_DIR = PROJECT_DIR / "figures"
 PROFILE_SERVICES = {
     "docx": "docx_pdf",
@@ -146,19 +147,45 @@ def build_pdf(commit: str, pdf_name: str, destination_dir: Path, profile_group: 
     return destination
 
 
-def open_diff_pdf(left_pdf: Path, right_pdf: Path) -> int:
+def require_diff_pdf() -> None:
     if shutil.which("diff-pdf") is None:
         raise RuntimeError("diff-pdf was not found in PATH")
 
+
+def open_diff_pdf(left_pdf: Path, right_pdf: Path) -> int:
+    require_diff_pdf()
     return subprocess.run(
         ["diff-pdf", "--view", str(left_pdf), str(right_pdf)],
         cwd=PROJECT_DIR,
     ).returncode
 
 
+def save_diff_pdf(left_pdf: Path, right_pdf: Path, output_pdf: Path) -> int:
+    require_diff_pdf()
+    output_pdf.parent.mkdir(parents=True, exist_ok=True)
+    result = subprocess.run(
+        ["diff-pdf", f"--output-diff={output_pdf}", str(left_pdf), str(right_pdf)],
+        cwd=PROJECT_DIR,
+    )
+    if result.returncode == 0:
+        print(f"No visual differences found: {output_pdf}", flush=True)
+    elif result.returncode == 1:
+        print(f"Saved diff {output_pdf}", flush=True)
+    return result.returncode
+
+
+def default_saved_diff_path(left_commit: str, right_commit: str, pdf_name: str) -> Path:
+    pdf_stem = Path(pdf_name).stem
+    filename = (
+        f"{pdf_stem}_diff_"
+        f"{safe_label(left_commit)}__{safe_label(right_commit)}.pdf"
+    )
+    return DEFAULT_SAVED_DIFF_DIR / filename
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build PDFs for two commits and open their visual diff in diff-pdf."
+        description="Build PDFs for two commits and compare them with diff-pdf."
     )
     parser.add_argument("left_commit", help="First commit hash/ref")
     parser.add_argument("right_commit", help="Second commit hash/ref")
@@ -173,6 +200,22 @@ def parse_args() -> argparse.Namespace:
         help="Keep the temporary .pdf_diff directory after diff-pdf exits.",
     )
     parser.add_argument(
+        "--view",
+        action="store_true",
+        help="Open the visual diff in diff-pdf. Default when neither --view nor --save is used.",
+    )
+    parser.add_argument(
+        "--save",
+        nargs="?",
+        const=True,
+        default=False,
+        metavar="PATH",
+        help=(
+            "Save the visual diff PDF instead of only viewing it. "
+            "With no PATH, saves under .pdf_diff/saved."
+        ),
+    )
+    parser.add_argument(
         "--profiles",
         choices=sorted(PROFILE_GROUPS),
         default="all",
@@ -182,7 +225,21 @@ def parse_args() -> argparse.Namespace:
             "mermaid: mermaid, latex; latex: latex only."
         ),
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+    if not args.view and not args.save:
+        args.view = True
+    return args
+
+
+def requested_save_path(save_arg: str | bool, left_commit: str, right_commit: str, pdf_name: str) -> Path | None:
+    if not save_arg:
+        return None
+    if save_arg is True:
+        return default_saved_diff_path(left_commit, right_commit, pdf_name)
+    path = Path(save_arg).expanduser()
+    if not path.is_absolute():
+        path = PROJECT_DIR / path
+    return path.resolve()
 
 
 def main() -> int:
@@ -191,6 +248,7 @@ def main() -> int:
     output_dir = DEFAULT_OUTPUT_DIR / f"{safe_label(args.left_commit)}__{safe_label(args.right_commit)}"
     snapshot_dir = DEFAULT_OUTPUT_DIR / "_restore_snapshot"
     pdf_name = args.pdf or target_pdf_name()
+    save_path = requested_save_path(args.save, args.left_commit, args.right_commit, pdf_name)
 
     require_clean_worktree()
 
@@ -202,7 +260,12 @@ def main() -> int:
     try:
         left_pdf = build_pdf(args.left_commit, pdf_name, output_dir, args.profiles)
         right_pdf = build_pdf(args.right_commit, pdf_name, output_dir, args.profiles)
-        return open_diff_pdf(left_pdf, right_pdf)
+        return_code = 0
+        if save_path is not None:
+            return_code = max(return_code, save_diff_pdf(left_pdf, right_pdf, save_path))
+        if args.view:
+            return_code = max(return_code, open_diff_pdf(left_pdf, right_pdf))
+        return return_code
     finally:
         print(f"==> git checkout {original_head}", flush=True)
         subprocess.run(["git", "checkout", original_head], cwd=PROJECT_DIR)
