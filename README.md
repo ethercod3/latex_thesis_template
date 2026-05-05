@@ -90,6 +90,8 @@ python scripts/compile_python_diagrams.py
 
 ### Сравнение PDF между коммитами
 
+![pdf_diff_example](./github_images/pdf_diff_example.png)
+
 Если нужно посмотреть визуальную разницу между двумя версиями диплома, используйте скрипт:
 
 ```bash
