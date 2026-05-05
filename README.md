@@ -37,6 +37,7 @@ SHAKE-128 (256-bit output): `dca744d46d1b5c9317683a9e8d2d35ff4696ea97e7c27a2579f
 ## Быстрый старт
 
 ```bash
+docker compose --profile docx --profile mermaid --profile python --profile latex build
 python scripts/build_all.py
 ```
 
@@ -53,6 +54,7 @@ python scripts/build_all.py
 - [Ручная компиляция без скрипта](#ручная-компиляция-без-скрипта)
 - [Настройка TeXstudio](#настройка-texstudio)
 - [Компиляция в Docker](#компиляция-в-docker)
+- [Сборка Docker-образов](#сборка-docker-образов)
 - [Профили Docker Compose](#профили-docker-compose)
 - [Сравнение PDF между коммитами](#сравнение-pdf-между-коммитами)
 - [Проблемы с компиляцией](#проблемы-с-компиляцией)
@@ -191,13 +193,38 @@ python scripts/build_all.py
     - `VAULT_OS_PATH`: где относительно текущей папки лежит код
     - `TARGET`: `.tex` файл
 
-2. Запустите компиляцию:
+2. Соберите LaTeX-образ:
 
     ```bash
-    docker compose --profile latex up --build
+    docker compose --profile latex build
     ```
 
-Первый билд будет долгим
+3. Запустите компиляцию:
+
+    ```bash
+    docker compose --profile latex up
+    ```
+
+Первый build будет долгим. Повторно выполнять `build` нужно только после изменения Dockerfile, зависимостей или базовых образов.
+
+### Сборка Docker-образов
+
+Собрать все Docker-образы проекта:
+
+```bash
+docker compose --profile docx --profile mermaid --profile python --profile latex build
+```
+
+Собрать образ отдельного профиля:
+
+```bash
+docker compose --profile latex build
+docker compose --profile mermaid build
+docker compose --profile python build
+docker compose --profile docx build
+```
+
+Скрипты `scripts/build_all.py` и `scripts/diff_pdf_commits.py` не пересобирают образы при каждом запуске. Если Docker-образов еще нет, сначала выполните `build`.
 
 ### Профили Docker Compose
 
@@ -211,16 +238,16 @@ python scripts/build_all.py
 Запуск отдельных профилей:
 
 ```bash
-docker compose --profile latex up --build
-docker compose --profile mermaid up --build
-docker compose --profile python up --build
-docker compose --profile docx up --build
+docker compose --profile latex up
+docker compose --profile mermaid up
+docker compose --profile python up
+docker compose --profile docx up
 ```
 
 Запуск всех профилей одной командой:
 
 ```bash
-docker compose --profile docx --profile mermaid --profile python --profile latex up --build
+docker compose --profile docx --profile mermaid --profile python --profile latex up
 ```
 
 При запуске всех профилей Docker Compose стартует сервисы вместе. Если нужно гарантированно собрать документ уже со свежими PDF из DOCX и диаграммами, сначала запустите профили `docx`, `mermaid` и `python`, затем профиль `latex`.
@@ -232,6 +259,7 @@ python scripts/build_all.py
 ```
 
 Скрипты запускают профили в порядке `docx` $\rightarrow$ `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex` и останавливаются на первой ошибке.
+Перед первым запуском скрипта соберите образы командой из раздела [Сборка Docker-образов](#сборка-docker-образов).
 
 Все вспомогательные скрипты проекта написаны на Python и запускаются одинаково в Windows, Linux и macOS:
 
@@ -307,7 +335,7 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
 `LaTeX` вставит титульник из файла `титульник.pdf` в начало файла. Поэтому он должен быть в проекте перед компиляцией (как и все рисунки, листинги). В проекте есть `docx/титульник.docx` и `docx/задание.docx`; их можно конвертировать через Docker:
 
 ```bash
-docker compose --profile docx up --build
+docker compose --profile docx up
 ```
 
 Профиль берет все файлы `docx/*.docx` и складывает одноименные PDF в корень проекта, например `docx/титульник.docx` $\rightarrow$ `титульник.pdf`.
@@ -364,7 +392,7 @@ python scripts/compile_mermaid.py
 ### Сборка через Docker
 
 ```
-docker compose --profile mermaid up --build
+docker compose --profile mermaid up
 ```
 
 ## Генерация диаграмм Python вручную
@@ -380,7 +408,7 @@ docker compose --profile mermaid up --build
 ## Генерация диаграмм Python через Docker
 
 ```bash
-docker compose --profile python up --build
+docker compose --profile python up
 ```
 
 ## Git hooks

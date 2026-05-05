@@ -25,7 +25,6 @@ def run_profile(profile: str, service: str) -> int:
             profile,
             "run",
             "--rm",
-            "--build",
             service,
         ],
         cwd=PROJECT_DIR,

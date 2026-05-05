@@ -129,7 +129,7 @@ def run_profiles(profile_group: str) -> None:
     compose = docker_compose_command()
     for profile in PROFILE_GROUPS[profile_group]:
         service = PROFILE_SERVICES[profile]
-        run([*compose, "--profile", profile, "run", "--rm", "--build", service])
+        run([*compose, "--profile", profile, "run", "--rm", service])
 
 
 def build_pdf(commit: str, pdf_name: str, destination_dir: Path, profile_group: str) -> Path:
