@@ -130,7 +130,7 @@ docker compose --profile docx --profile mermaid --profile python --profile latex
 python scripts/build_all.py
 ```
 
-Скрипты запускают профили в порядке `docx` -> `mermaid` -> `python` -> `latex` и останавливаются на первой ошибке.
+Скрипты запускают профили в порядке `docx` $\rightarrow$ `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex` и останавливаются на первой ошибке.
 
 Все вспомогательные скрипты проекта написаны на Python и запускаются одинаково в Windows, Linux и macOS:
 
@@ -167,7 +167,7 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save path/to/diff.pdf
 
 Скачать `diff-pdf` можно в [репозитории](https://github.com/vslavik/diff-pdf/)
 
-По умолчанию запускаются все профили в порядке `docx` -> `mermaid` -> `python` -> `latex`. Если нужно ограничить сборку, передайте опцию `--profiles`:
+По умолчанию запускаются все профили в порядке `docx` $\rightarrow$ `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex`. Если нужно ограничить сборку, передайте опцию `--profiles`:
 
 ```bash
 python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles all
@@ -178,9 +178,9 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
 
 Пояснение:
 
-- `all`: `docx` -> `mermaid` -> `python` -> `latex`
-- `docx`: `docx` -> `latex`
-- `mermaid`: `mermaid` -> `latex`
+- `all`: `docx` $\rightarrow$ `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex`
+- `docx`: `docx` $\rightarrow$ `latex`
+- `mermaid`: `mermaid` $\rightarrow$ `latex`
 - `latex`: только `latex`
 
 Перед запуском рабочее дерево Git должно быть чистым. После завершения скрипт возвращается на исходный `HEAD`, удаляет временные файлы и восстанавливает текущие файлы из `figures`, а также PDF в корне проекта, например `титульник.pdf` и `задание.pdf`.
@@ -209,7 +209,7 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
 docker compose --profile docx up --build
 ```
 
-Профиль берет все файлы `docx/*.docx` и складывает одноименные PDF в корень проекта, например `docx/титульник.docx` -> `титульник.pdf`.
+Профиль берет все файлы `docx/*.docx` и складывает одноименные PDF в корень проекта, например `docx/титульник.docx` $\rightarrow$ `титульник.pdf`.
 
 При конвертации профиль пропускает пустые страницы. Если нужно сохранить PDF как есть, запустите профиль с переменной `SKIP_BLANK_PAGES=0`:
 
@@ -217,7 +217,7 @@ docker compose --profile docx up --build
 docker compose --profile docx run --rm -e SKIP_BLANK_PAGES=0 docx_pdf
 ```
 
-Альтернативный вариант - открыть DOCX в Microsoft Word и экспортировать его в PDF вручную: `Файл` -> `Экспорт` -> `Создать PDF/XPS`. Для титульника и задания нужно сохранить PDF в корень проекта с именами `титульник.pdf` и `задание.pdf`.
+Альтернативный вариант - открыть DOCX в Microsoft Word и экспортировать его в PDF вручную: `Файл` $\rightarrow$ `Экспорт` $\rightarrow$ `Создать PDF/XPS`. Для титульника и задания нужно сохранить PDF в корень проекта с именами `титульник.pdf` и `задание.pdf`.
 
 ### Если нет кода
 
