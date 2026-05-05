@@ -12,12 +12,12 @@
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
-MD5: `3325859ffb3c91346f0b934fef5790ff`<br>
-SHA-1: `baca3a36bbc086cdc7cf2fa32501976ea15929c3`<br>
-SHA-256: `5d462de587aecf1d10bf24618370803fe81b4be7d1f7bae86389b9ffc4476ca8`<br>
-SHA3-256: `ad263d8e4d3f055769346529abc9359f5b6519b3c76e81ec7f81bf5d8b9052a9`<br>
-BLAKE2s: `908fb71c670227b5edd43a8ec9fab3fc9e1994b804db0b50bccd24f5e3413f68`<br>
-SHAKE-128 (256-bit output): `592fe38d21801dbe7db3a98cc55555954d1391fec03878c7b83d4082c1f13d35`<br>
+MD5: `735d28527f4122c5233117f6b8333184`<br>
+SHA-1: `48e6d86475e0dac1fdd1b69b30c2b26b9c582f01`<br>
+SHA-256: `45ff2d51a71f24329b793812d824c923f42f9343ecee90a26b9a21ead269479e`<br>
+SHA3-256: `60dc7d3db13063f8de5b138aee2a7944a7ad1a4c7f05e86831beae9d1fb7e259`<br>
+BLAKE2s: `4d48f4565d8184f5ad996442767eb1d2d425f0664b3a5e67e869a6070b8ae15c`<br>
+SHAKE-128 (256-bit output): `dca744d46d1b5c9317683a9e8d2d35ff4696ea97e7c27a2579faa79e6dd74e97`<br>
 <!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
@@ -58,7 +58,35 @@ python scripts/build_all.py
 
 1. Установить дистрибутив `LaTeX`. Под Windows рекомендуется установить `TexLive`. Установка долгая, но все пакеты сразу скачаются вместе с дистрибутивом. Компилятор в работе использовался `LuaTex`
 2. Клонировать репозиторий
-3. Создать папку для вспомогательных файлов:
+3. Установить Python-зависимости для скриптов:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4. Создать в корне проекта файл `.env` и указать в нем основной `.tex` файл:
+
+    ```env
+    TARGET="Куприянов_И221_диплом.tex"
+    ```
+
+5. Запустить ручную сборку через скрипт:
+
+    ```bash
+    python scripts/build_latex_manual.py
+    ```
+
+    Скрипт читает `TARGET` из `.env` через `python-dotenv`, создает `.aux_files`, запускает `lualatex`, затем `biber`, затем еще два раза `lualatex`. Итоговый PDF копируется из `.aux_files` в корень проекта.
+
+    Если нужно собрать другой файл без изменения `.env`, передайте его явно:
+
+    ```bash
+    python scripts/build_latex_manual.py --target "<файл>.tex"
+    ```
+
+### Ручная компиляция без скрипта
+
+1. Создать папку для вспомогательных файлов:
 
     ```bash
     mkdir .aux_files
@@ -66,7 +94,7 @@ python scripts/build_all.py
 
     Если папка уже есть, этот шаг можно пропустить.
 
-4. Скомпилировать файл. Так как проект использует `biblatex` с backend `biber`, одного запуска `lualatex` недостаточно:
+2. Скомпилировать файл. Так как проект использует `biblatex` с backend `biber`, одного запуска `lualatex` недостаточно:
 
     ```bash
     lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
