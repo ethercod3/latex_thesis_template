@@ -107,7 +107,7 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view --save
 python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save path/to/diff.pdf
 ```
 
-Без `--view` и `--save` скрипт работает как раньше и открывает diff. При `--save` без пути результат сохраняется в `.pdf_diff/saved`.
+Без `--view` и `--save` скрипт открывает diff. При `--save` без пути результат сохраняется в `.pdf_diff/saved`.
 
 Скачать `diff-pdf` можно в [репозитории](https://github.com/vslavik/diff-pdf/)
 
