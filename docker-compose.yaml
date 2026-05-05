@@ -8,7 +8,7 @@ services:
       - ./:/data
       - ${VAULT_OS_PATH}:${VAULT_PATH}
     working_dir: /data
-    command: sh -c "latexmk -g \"$TARGET\""
+    command: ["python3", "scripts/build_latex_docker.py"]
     env_file:
       - ./.env
 

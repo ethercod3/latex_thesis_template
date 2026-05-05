@@ -10,3 +10,10 @@
 _minted
 *.bkp
 *.minted
+.aux_files
+.aux_files_docker
+~$*.docx
+*.run.xml
+*.blg
+*.bcf
+*.bbl

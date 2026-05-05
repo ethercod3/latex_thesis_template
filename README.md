@@ -12,12 +12,12 @@
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
-MD5: `735d28527f4122c5233117f6b8333184`<br>
-SHA-1: `48e6d86475e0dac1fdd1b69b30c2b26b9c582f01`<br>
-SHA-256: `45ff2d51a71f24329b793812d824c923f42f9343ecee90a26b9a21ead269479e`<br>
-SHA3-256: `60dc7d3db13063f8de5b138aee2a7944a7ad1a4c7f05e86831beae9d1fb7e259`<br>
-BLAKE2s: `4d48f4565d8184f5ad996442767eb1d2d425f0664b3a5e67e869a6070b8ae15c`<br>
-SHAKE-128 (256-bit output): `dca744d46d1b5c9317683a9e8d2d35ff4696ea97e7c27a2579faa79e6dd74e97`<br>
+MD5: `fb6b945272d107e02b0f2cceeb7a943a`<br>
+SHA-1: `f7ba2b39a6893921bba8c767e8b73eb32548fd16`<br>
+SHA-256: `487f7aefdefff5dff1b6c76b0c904e051b336a9c9dd75fa00dd3a23d30b2a097`<br>
+SHA3-256: `5db87086b60b6514041f3e0f36d5312e8f06cb974fe2ecee3a7ccf52984bcd34`<br>
+BLAKE2s: `795d3a3e1ef99cd9cf30cc95fd1e22390ab1e7b9be3ae793cc6bdd1ff4607d59`<br>
+SHAKE-128 (256-bit output): `7b87baf090a96a39c88aaa03323aedff1665d5891500b3724a6abfbed04f9d07`<br>
 <!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
@@ -204,6 +204,8 @@ python scripts/build_all.py
     ```bash
     docker compose --profile latex up
     ```
+
+    Профиль `latex` запускает скрипт `scripts/build_latex_docker.py`. Он читает `TARGET` из переменных окружения, собирает документ через `lualatex`, `biber`, `lualatex`, `lualatex`, складывает временные файлы в `.aux_files_docker` и копирует готовый PDF в корень проекта.
 
 Первый build будет долгим. Повторно выполнять `build` нужно только после изменения Dockerfile, зависимостей или базовых образов.
 

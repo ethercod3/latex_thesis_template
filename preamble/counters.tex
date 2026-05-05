@@ -13,17 +13,6 @@
   \stepcounter{appendixcount}
 }
 
-%  ------------- СЧЕТЧИК БИБЛИОГРАФИИ ---------
-\makeatletter
-\AtEndDocument{%
-  \immediate\write\@auxout{%
-    \string\gdef\string\totalbibitems{\number\value{enumiv}}%
-  }%
-}
-\makeatother
-
-\providecommand{\totalbibitems}{0}
-
 %  ------------- СЧЕТЧИК ПРИЛОЖЕНИЙ ---------
 \makeatletter
 \AtEndDocument{%
@@ -33,18 +22,38 @@
 }
 \makeatother
 
-%  ------------- СЧЕТЧИК ТАБЛИЦ ---------
+%  ------------- СЧЕТЧИКИ ДО БИБЛИОГРАФИИ ---------
 \makeatletter
-\AtEndEnvironment{thebibliography}{%
-  \protected@write\@auxout{}{%
+\newcommand{\recordPreBibliographyCounters}{%
+  \immediate\write\@auxout{%
     \string\gdef\string\tablesBeforeBib{\number\value{table}}%
   }%
-  \protected@write\@auxout{}{%
+  \immediate\write\@auxout{%
     \string\gdef\string\listingsBeforeBib{\number\value{lstlisting}}%
   }%
 }
 \makeatother
 
+%  ------------- СЧЕТЧИК БИБЛИОГРАФИИ ---------
+\AtBeginBibliography{%
+  \setcounter{bibcount}{0}%
+  \recordPreBibliographyCounters%
+}
+
+\makeatletter
+\newcommand{\recordBibliographyTotals}{%
+  \immediate\write\@auxout{%
+    \string\gdef\string\totalbibitems{\number\value{bibcount}}%
+  }%
+}
+\makeatother
+
+\AtEveryBibitem{%
+  \stepcounter{bibcount}%
+  \recordBibliographyTotals%
+}
+
+\providecommand{\totalbibitems}{0}
 \providecommand{\tablesBeforeBib}{0}
 \providecommand{\listingsBeforeBib}{0}
 \providecommand{\totalappendices}{0}

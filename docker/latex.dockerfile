@@ -19,6 +19,4 @@ RUN fc-cache -fv
 
 WORKDIR /data
 
-COPY . .
-
 CMD ["latexmk", "-lualatex", "main.tex"]

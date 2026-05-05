@@ -16,6 +16,7 @@ $*.docx
 *.fls
 .env
 .aux_files
+.aux_files_docker
 .venv
 __pycache__/
 *.pyc
