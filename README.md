@@ -143,7 +143,7 @@ python scripts/build_all.py
 
 Проект использует `LuaLaTeX` и `biblatex` с backend `biber`, поэтому в TeXstudio нужно настроить сборку без `BibTeX` и без `latexmk`.
 
-1. Откройте `Options` -> `Configure TeXstudio` -> `Commands`.
+1. Откройте `Options` $\rightarrow$ `Configure TeXstudio` $\rightarrow$ `Commands`.
 2. В поле `LuaLaTeX` укажите:
 
     ```text
@@ -156,7 +156,7 @@ python scripts/build_all.py
     biber ".aux_files/%.bcf"
     ```
 
-4. Откройте `Options` -> `Configure TeXstudio` -> `Build`.
+4. Откройте `Options` $\rightarrow$ `Configure TeXstudio` $\rightarrow$ `Build`.
 5. В `Default Compiler` выберите `LuaLaTeX`.
 6. В `Default Bibliography Tool` выберите `Biber`.
 7. В `Build & View` выберите `User` и укажите последовательность:
