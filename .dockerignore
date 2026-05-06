@@ -12,6 +12,7 @@ _minted
 *.minted
 .aux_files
 .aux_files_docker
+docs-book/book
 ~$*.docx
 *.run.xml
 *.blg

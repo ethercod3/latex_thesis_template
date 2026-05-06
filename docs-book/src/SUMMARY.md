@@ -1,0 +1,15 @@
+# Summary
+
+- [Введение](README.md)
+- [Структура проекта](project-structure.md)
+- [Быстрый старт](quick-start.md)
+- [Ручная сборка](manual-build.md)
+- [Настройка TeXstudio](texstudio.md)
+- [Docker](docker.md)
+- [Документация mdBook](mdbook.md)
+- [Сравнение PDF между коммитами](pdf-diff.md)
+- [Проблемы с компиляцией](troubleshooting.md)
+- [Титульник и задание](title-pages.md)
+- [Код в приложениях](source-code.md)
+- [Диаграммы](diagrams.md)
+- [Git hooks](git-hooks.md)

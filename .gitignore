@@ -22,6 +22,7 @@ __pycache__/
 *.pyc
 node_modules/
 .pdf_diff
+docs-book/book/
 ~$*.docx
 *.run.xml
 *.blg

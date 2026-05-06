@@ -1,0 +1,14 @@
+[book]
+title = "Документация проекта диплома"
+authors = ["Artem"]
+language = "ru"
+src = "src"
+
+[build]
+build-dir = "book"
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "navy"
+git-repository-url = "https://github.com/ethercod3/diploma_latex"
+mathjax-support = true
