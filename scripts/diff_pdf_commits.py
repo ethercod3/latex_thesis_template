@@ -19,6 +19,7 @@ PROFILE_SERVICES = {
     "python": "python_diagrams",
     "latex": "latex",
 }
+PROFILE_ORDER = ["docx", "mermaid", "python", "latex"]
 PROFILE_GROUPS = {
     "all": ["docx", "mermaid", "python", "latex"],
     "docx": ["docx", "latex"],
@@ -131,17 +132,44 @@ def restore_generated_files(snapshot_dir: Path) -> None:
             shutil.copy2(pdf_path, PROJECT_DIR / pdf_path.name)
 
 
-def run_profiles(profile_group: str) -> None:
+def parse_profiles(value: str) -> list[str]:
+    if "," not in value and value in PROFILE_GROUPS:
+        return PROFILE_GROUPS[value]
+
+    requested = [profile.strip() for profile in value.split(",") if profile.strip()]
+    if not requested:
+        raise argparse.ArgumentTypeError("Укажите хотя бы один Docker-профиль.")
+
+    unknown = [profile for profile in requested if profile not in PROFILE_SERVICES]
+    if unknown:
+        available = ", ".join(PROFILE_ORDER)
+        raise argparse.ArgumentTypeError(
+            f"Неизвестный Docker-профиль: {', '.join(unknown)}. "
+            f"Доступные профили: {available}."
+        )
+
+    if "latex" not in requested:
+        requested.append("latex")
+
+    return [profile for profile in PROFILE_ORDER if profile in requested]
+
+
+def format_profiles(profiles: list[str]) -> str:
+    return " -> ".join(profiles)
+
+
+def run_profiles(profiles: list[str]) -> None:
     compose = docker_compose_command()
-    for profile in PROFILE_GROUPS[profile_group]:
+    print(f"Профили сборки: {format_profiles(profiles)}", flush=True)
+    for profile in profiles:
         service = PROFILE_SERVICES[profile]
         run([*compose, "--profile", profile, "run", "--rm", service])
 
 
-def build_pdf(commit: str, pdf_name: str, destination_dir: Path, profile_group: str) -> Path:
+def build_pdf(commit: str, pdf_name: str, destination_dir: Path, profiles: list[str]) -> Path:
     run(["git", "checkout", "--detach", commit])
 
-    run_profiles(profile_group)
+    run_profiles(profiles)
 
     pdf_path = PROJECT_DIR / pdf_name
     if not pdf_path.exists():
@@ -229,12 +257,13 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--profiles",
-        choices=sorted(PROFILE_GROUPS),
-        default="all",
+        type=parse_profiles,
+        default=parse_profiles("all"),
+        metavar="PROFILES",
         help=(
-            "Группа Docker-профилей для запуска перед сравнением. "
-            "all: docx, mermaid, python, latex; docx: docx, latex; "
-            "mermaid: mermaid, latex; latex: только latex."
+            "Профили Docker для запуска перед сравнением. Можно указать готовую группу "
+            "all, docx, mermaid, latex или список через запятую, например mermaid,python. "
+            "Профиль latex добавляется автоматически, если его нет в списке."
         ),
     )
     args = parser.parse_args()

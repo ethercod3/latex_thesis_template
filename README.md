@@ -295,6 +295,8 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save path/to/diff.pdf
 python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles all
 python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles docx
 python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid
+python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles python
+python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid,python
 python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
 ```
 
@@ -304,6 +306,10 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
 - `docx`: `docx` $\rightarrow$ `latex`
 - `mermaid`: `mermaid` $\rightarrow$ `latex`
 - `latex`: только `latex`
+- `python`: `python` $\rightarrow$ `latex`
+- `mermaid,python`: `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex`
+
+В `--profiles` можно передать несколько профилей через запятую: `docx,python`, `mermaid,python`, `docx,mermaid,python`. Скрипт запускает их в порядке `docx` $\rightarrow$ `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex`. Если `latex` не указан явно, он добавляется автоматически, потому что именно этот профиль собирает итоговый PDF для сравнения.
 
 Перед запуском рабочее дерево Git должно быть чистым. После завершения скрипт возвращается на исходный `HEAD`, удаляет временные файлы и восстанавливает текущие файлы из `figures`, а также PDF в корне проекта, например `титульник.pdf` и `задание.pdf`.
 
