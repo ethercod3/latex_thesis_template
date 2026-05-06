@@ -5,15 +5,27 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN echo "deb http://deb.debian.org/debian bookworm contrib non-free" | tee /etc/apt/sources.list.d/contrib.list
 RUN echo "deb http://snapshot.debian.org/archive/debian/20260502T000000Z bookworm main contrib non-free" > /etc/apt/sources.list
 
-RUN apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y \
-    texlive-full \
+RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && \
+    apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y --no-install-recommends \
+    python3 \
     latexmk \
-    biber
-
-RUN apt-get install -y texlive-bibtex-extra
-RUN apt-get install -y fonts-inconsolata fontconfig
-RUN apt-get install -y software-properties-common
-RUN apt-get install -y ttf-mscorefonts-installer
+    biber \
+    texlive-base \
+    texlive-luatex \
+    texlive-latex-base \
+    texlive-latex-recommended \
+    texlive-latex-extra \
+    texlive-lang-cyrillic \
+    texlive-bibtex-extra \
+    texlive-pictures \
+    texlive-plain-generic \
+    texlive-fonts-recommended \
+    texlive-fonts-extra \
+    fonts-paratype \
+    fonts-inconsolata \
+    fontconfig \
+    ttf-mscorefonts-installer \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN fc-cache -fv
 
