@@ -57,7 +57,10 @@ def docker_compose_command() -> list[str]:
     if shutil.which("docker-compose") is not None:
         return ["docker-compose"]
 
-    raise RuntimeError("Docker Compose was not found in PATH")
+    raise RuntimeError(
+        "Не найден Docker Compose. Установите Docker Desktop или docker-compose и убедитесь, "
+        "что команда доступна в терминале."
+    )
 
 
 def env_value(name: str) -> str | None:
@@ -78,15 +81,18 @@ def target_pdf_name() -> str:
     if len(tex_files) == 1:
         return f"{tex_files[0].stem}.pdf"
 
-    raise RuntimeError("Cannot determine target PDF. Set TARGET in .env or pass --pdf.")
+    raise RuntimeError(
+        "Не удалось понять, какой PDF нужно сравнить. "
+        "Укажите TARGET в файле .env или передайте имя PDF через --pdf."
+    )
 
 
 def require_clean_worktree() -> None:
     status = capture(["git", "status", "--porcelain"])
     if status:
         raise RuntimeError(
-            "Git worktree is not clean. Commit, stash, or remove local changes before "
-            "running this script."
+            "В проекте есть несохраненные изменения Git. Перед запуском сравнения "
+            "закоммитьте, временно спрячьте через git stash или уберите локальные изменения."
         )
 
 
@@ -139,17 +145,23 @@ def build_pdf(commit: str, pdf_name: str, destination_dir: Path, profile_group: 
 
     pdf_path = PROJECT_DIR / pdf_name
     if not pdf_path.exists():
-        raise RuntimeError(f"Expected PDF was not created: {pdf_path}")
+        raise RuntimeError(
+            f"PDF-файл не был создан там, где ожидалось: {pdf_path}. "
+            "Проверьте сообщения сборки выше."
+        )
 
     destination = destination_dir / f"{safe_label(commit)}_{pdf_name}"
     shutil.copy2(pdf_path, destination)
-    print(f"Saved {destination}", flush=True)
+    print(f"Сохранен PDF: {destination}", flush=True)
     return destination
 
 
 def require_diff_pdf() -> None:
     if shutil.which("diff-pdf") is None:
-        raise RuntimeError("diff-pdf was not found in PATH")
+        raise RuntimeError(
+            "Не найдена программа diff-pdf. Установите diff-pdf и убедитесь, "
+            "что команда доступна в терминале."
+        )
 
 
 def open_diff_pdf(left_pdf: Path, right_pdf: Path) -> int:
@@ -168,9 +180,9 @@ def save_diff_pdf(left_pdf: Path, right_pdf: Path, output_pdf: Path) -> int:
         cwd=PROJECT_DIR,
     )
     if result.returncode == 0:
-        print(f"No visual differences found: {output_pdf}", flush=True)
+        print(f"Визуальные отличия не найдены: {output_pdf}", flush=True)
     elif result.returncode == 1:
-        print(f"Saved diff {output_pdf}", flush=True)
+        print(f"PDF с отличиями сохранен: {output_pdf}", flush=True)
     return result.returncode
 
 
@@ -185,24 +197,24 @@ def default_saved_diff_path(left_commit: str, right_commit: str, pdf_name: str) 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build PDFs for two commits and compare them with diff-pdf."
+        description="Собрать PDF для двух коммитов и сравнить их через diff-pdf."
     )
-    parser.add_argument("left_commit", help="First commit hash/ref")
-    parser.add_argument("right_commit", help="Second commit hash/ref")
+    parser.add_argument("left_commit", help="Первый коммит, тег или ветка")
+    parser.add_argument("right_commit", help="Второй коммит, тег или ветка")
     parser.add_argument(
         "--pdf",
         default=None,
-        help="PDF filename to compare. Defaults to TARGET from .env with .pdf extension.",
+        help="Имя PDF-файла для сравнения. По умолчанию берется TARGET из .env с расширением .pdf.",
     )
     parser.add_argument(
         "--keep",
         action="store_true",
-        help="Keep the temporary .pdf_diff directory after diff-pdf exits.",
+        help="Оставить временную папку .pdf_diff после завершения diff-pdf.",
     )
     parser.add_argument(
         "--view",
         action="store_true",
-        help="Open the visual diff in diff-pdf. Default when neither --view nor --save is used.",
+        help="Открыть визуальное сравнение в diff-pdf. Используется по умолчанию, если не указан --save.",
     )
     parser.add_argument(
         "--save",
@@ -211,8 +223,8 @@ def parse_args() -> argparse.Namespace:
         default=False,
         metavar="PATH",
         help=(
-            "Save the visual diff PDF instead of only viewing it. "
-            "With no PATH, saves under .pdf_diff/saved."
+            "Сохранить PDF с визуальными отличиями вместо простого просмотра. "
+            "Если PATH не указан, файл сохраняется в .pdf_diff/saved."
         ),
     )
     parser.add_argument(
@@ -220,9 +232,9 @@ def parse_args() -> argparse.Namespace:
         choices=sorted(PROFILE_GROUPS),
         default="all",
         help=(
-            "Docker profile group to run before comparing. "
+            "Группа Docker-профилей для запуска перед сравнением. "
             "all: docx, mermaid, python, latex; docx: docx, latex; "
-            "mermaid: mermaid, latex; latex: latex only."
+            "mermaid: mermaid, latex; latex: только latex."
         ),
     )
     args = parser.parse_args()
@@ -282,5 +294,13 @@ if __name__ == "__main__":
     try:
         raise SystemExit(main())
     except (RuntimeError, subprocess.CalledProcessError) as error:
-        print(f"error: {error}", file=sys.stderr)
+        if isinstance(error, subprocess.CalledProcessError):
+            print(
+                f"Команда завершилась с ошибкой (код {error.returncode}): {' '.join(error.cmd)}",
+                file=sys.stderr,
+            )
+            print("Проверьте сообщения выше: там обычно указана причина ошибки.", file=sys.stderr)
+            raise SystemExit(error.returncode)
+
+        print(f"Ошибка: {error}", file=sys.stderr)
         raise SystemExit(1)

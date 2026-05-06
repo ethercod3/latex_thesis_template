@@ -17,7 +17,7 @@ def run_diagram(script_name: str) -> int:
     script_path = SOURCE_DIR / script_name
 
     if not script_path.is_file():
-        print(f"[ERROR] Python diagram script not found: {script_path}", file=sys.stderr)
+        print(f"[ОШИБКА] Не найден скрипт для диаграммы: {script_path}", file=sys.stderr)
         return 1
 
     print(f"==> {script_name}", flush=True)
@@ -35,7 +35,7 @@ def run_diagram(script_name: str) -> int:
 
 def main() -> int:
     if not SOURCE_DIR.is_dir():
-        print(f"Source directory does not exist: {SOURCE_DIR}", file=sys.stderr)
+        print(f"Папка со скриптами диаграмм не найдена: {SOURCE_DIR}", file=sys.stderr)
         return 1
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

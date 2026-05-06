@@ -16,7 +16,10 @@ TIMEOUT_SECONDS = 60
 def find_mmdc() -> list[str]:
     mmdc = shutil.which("mmdc") or shutil.which("mmdc.cmd")
     if mmdc is None:
-        raise RuntimeError("mmdc or mmdc.cmd was not found in PATH")
+        raise RuntimeError(
+            "Не найдена программа mmdc для сборки Mermaid-диаграмм. "
+            "Установите Mermaid CLI и убедитесь, что команда 'mmdc' доступна в терминале."
+        )
 
     return [mmdc]
 
@@ -44,23 +47,23 @@ def process_file(f: Path, mmdc: list[str]) -> str | None:
         return f"[OK] {f.name} -> {output_file.name}"
 
     except subprocess.TimeoutExpired:
-        return f"[TIMEOUT] {f.name}: exceeded {TIMEOUT_SECONDS}s"
+        return f"[ОШИБКА] {f.name}: сборка заняла больше {TIMEOUT_SECONDS} секунд"
 
     except subprocess.CalledProcessError as e:
-        stdout = e.stdout.strip() if e.stdout else "no stdout"
-        stderr = e.stderr.strip() if e.stderr else "no stderr"
+        stdout = e.stdout.strip() if e.stdout else "вывода нет"
+        stderr = e.stderr.strip() if e.stderr else "вывода ошибок нет"
 
         return (
-            f"[ERROR] {f.name}\n"
-            f"Command: {' '.join(cmd)}\n"
-            f"stdout:\n{stdout}\n"
-            f"stderr:\n{stderr}"
+            f"[ОШИБКА] Не удалось собрать диаграмму {f.name}\n"
+            f"Команда: {' '.join(cmd)}\n"
+            f"Обычный вывод:\n{stdout}\n"
+            f"Вывод ошибок:\n{stderr}"
         )
 
 
 def main() -> None:
     if not SRC.exists():
-        raise FileNotFoundError(f"Source directory does not exist: {SRC}")
+        raise FileNotFoundError(f"Папка с Mermaid-диаграммами не найдена: {SRC}")
 
     mmdc = find_mmdc()
 
@@ -70,7 +73,7 @@ def main() -> None:
     ]
 
     if not files:
-        print(f"No Mermaid files found in {SRC}")
+        print(f"В папке {SRC} не найдены Mermaid-файлы для сборки.")
         return
 
     max_workers = min(MAX_WORKERS_LIMIT, len(files))
@@ -88,9 +91,13 @@ def main() -> None:
                     print(result)
             except Exception as e:
                 f = futures[future]
-                print(f"[ERROR] {f.name}: unexpected error: {e}")
+                print(f"[ОШИБКА] Не удалось обработать {f.name}: {e}")
 
 
 if __name__ == "__main__":
-    DST.mkdir(parents=True, exist_ok=True)
-    main()
+    try:
+        DST.mkdir(parents=True, exist_ok=True)
+        main()
+    except (RuntimeError, FileNotFoundError) as error:
+        print(f"Ошибка: {error}", file=sys.stderr)
+        raise SystemExit(1)

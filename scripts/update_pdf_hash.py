@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-from pathlib import Path
 import re
+import sys
+from pathlib import Path
 
 from dotenv import dotenv_values
 
@@ -46,7 +47,10 @@ def target_pdf_path(pdf_arg: str | None) -> Path:
     if len(tex_files) == 1:
         return (PROJECT_DIR / f"{tex_files[0].stem}.pdf").resolve()
 
-    raise RuntimeError("Cannot determine target PDF. Set TARGET in .env or pass --pdf.")
+    raise RuntimeError(
+        "Не удалось понять, для какого PDF нужно обновить хеши. "
+        "Укажите TARGET в файле .env или передайте путь через --pdf."
+    )
 
 
 def file_hashes(path: Path) -> list[tuple[str, str]]:
@@ -99,8 +103,12 @@ def update_readme(hashes: list[tuple[str, str]]) -> bool:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Update README.md with hashes of the latest diploma PDF.")
-    parser.add_argument("--pdf", default=None, help="PDF filename/path. Defaults to TARGET from .env with .pdf extension.")
+    parser = argparse.ArgumentParser(description="Обновить хеши PDF-файла в README.md.")
+    parser.add_argument(
+        "--pdf",
+        default=None,
+        help="Имя или путь к PDF-файлу. По умолчанию берется TARGET из .env с расширением .pdf.",
+    )
     return parser.parse_args()
 
 
@@ -109,19 +117,23 @@ def main() -> int:
     pdf_path = target_pdf_path(args.pdf)
 
     if not pdf_path.is_file():
-        print(f"PDF not found, keeping existing README hash: {pdf_path}")
+        print(f"PDF-файл не найден, хеши в README.md оставлены без изменений: {pdf_path}")
         return 0
 
     hashes = file_hashes(pdf_path)
     changed = update_readme(hashes)
 
     if changed:
-        print("Updated README.md hashes")
+        print("Хеши в README.md обновлены.")
     else:
-        print("README.md hashes are already up to date")
+        print("Хеши в README.md уже актуальны.")
 
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except RuntimeError as error:
+        print(f"Ошибка: {error}", file=sys.stderr)
+        raise SystemExit(1)

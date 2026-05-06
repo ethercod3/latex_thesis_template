@@ -34,12 +34,18 @@ def target_tex_path(target_arg: str | None) -> Path:
     if len(tex_files) == 1:
         return tex_files[0].resolve()
 
-    raise RuntimeError("Cannot determine target .tex file. Set TARGET in .env or pass --target.")
+    raise RuntimeError(
+        "Не удалось понять, какой .tex-файл нужно собрать. "
+        "Укажите TARGET в файле .env или передайте путь через --target."
+    )
 
 
 def require_command(command: str) -> None:
     if shutil.which(command) is None:
-        raise RuntimeError(f"{command} was not found in PATH")
+        raise RuntimeError(
+            f"Не найдена команда '{command}'. Установите нужную программу и убедитесь, "
+            "что она доступна в терминале."
+        )
 
 
 def run_command(command: list[str]) -> None:
@@ -59,7 +65,7 @@ def lualatex_command(target: Path) -> list[str]:
 
 def build(target: Path) -> Path:
     if not target.is_file():
-        raise RuntimeError(f"Target .tex file was not found: {target}")
+        raise RuntimeError(f"Указанный .tex-файл не найден: {target}")
 
     AUX_DIR.mkdir(exist_ok=True)
 
@@ -72,7 +78,10 @@ def build(target: Path) -> Path:
     output_pdf = PROJECT_DIR / f"{target.stem}.pdf"
 
     if not aux_pdf.is_file():
-        raise RuntimeError(f"Expected PDF was not produced: {aux_pdf}")
+        raise RuntimeError(
+            f"PDF-файл не был создан там, где ожидалось: {aux_pdf}. "
+            "Проверьте сообщения LaTeX выше."
+        )
 
     shutil.copy2(aux_pdf, output_pdf)
     return output_pdf
@@ -80,12 +89,12 @@ def build(target: Path) -> Path:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build the LaTeX document manually with lualatex and biber."
+        description="Собрать LaTeX-документ вручную через lualatex и biber."
     )
     parser.add_argument(
         "--target",
         default=None,
-        help="Target .tex file. Defaults to TARGET from .env.",
+        help="Путь к .tex-файлу. По умолчанию берется TARGET из .env.",
     )
     return parser.parse_args()
 
@@ -98,11 +107,18 @@ def main() -> int:
         require_command("biber")
         target = target_tex_path(args.target)
         output_pdf = build(target)
-    except (RuntimeError, subprocess.CalledProcessError) as error:
+    except RuntimeError as error:
         print(error, file=sys.stderr)
         return 1
+    except subprocess.CalledProcessError as error:
+        print(
+            f"Команда завершилась с ошибкой (код {error.returncode}): {' '.join(error.cmd)}",
+            file=sys.stderr,
+        )
+        print("Проверьте сообщения выше: там обычно указана причина ошибки сборки.", file=sys.stderr)
+        return error.returncode
 
-    print(f"\nBuilt {output_pdf.relative_to(PROJECT_DIR)}")
+    print(f"\nГотово: {output_pdf.relative_to(PROJECT_DIR)}")
     return 0
 
 

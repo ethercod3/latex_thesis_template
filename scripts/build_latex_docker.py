@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 
@@ -19,7 +20,7 @@ def run(command: list[str], *, allow_failure: bool = False) -> None:
 def main() -> None:
     target = os.environ.get("TARGET")
     if not target:
-        raise SystemExit("TARGET is not set. Define TARGET in .env.")
+        raise SystemExit("Не задан TARGET. Укажите TARGET в файле .env.")
 
     target_path = Path(target)
     base = target_path.name.removesuffix(".tex")
@@ -42,8 +43,26 @@ def main() -> None:
     run(lualatex)
     run(lualatex)
 
-    shutil.copy2(AUX_DIR / f"{base}.pdf", Path(".") / f"{base}.pdf")
+    aux_pdf = AUX_DIR / f"{base}.pdf"
+    if not aux_pdf.is_file():
+        raise FileNotFoundError(
+            f"PDF-файл не был создан там, где ожидалось: {aux_pdf}. "
+            "Проверьте сообщения LaTeX выше."
+        )
+
+    shutil.copy2(aux_pdf, Path(".") / f"{base}.pdf")
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except FileNotFoundError as error:
+        print(f"Ошибка: {error}", file=sys.stderr)
+        raise SystemExit(1)
+    except subprocess.CalledProcessError as error:
+        print(
+            f"Команда завершилась с ошибкой (код {error.returncode}): {' '.join(error.cmd)}",
+            file=sys.stderr,
+        )
+        print("Проверьте сообщения выше: там обычно указана причина ошибки сборки.", file=sys.stderr)
+        raise SystemExit(error.returncode)

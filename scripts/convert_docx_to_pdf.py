@@ -20,7 +20,11 @@ def copy_pdf_contents(source: Path, destination: Path) -> None:
 
 def require_command(command: str) -> bool:
     if shutil.which(command) is None:
-        print(f"Required command was not found in PATH: {command}", file=sys.stderr)
+        print(
+            f"Не найдена обязательная команда '{command}'. Установите нужную программу "
+            "и убедитесь, что она доступна в терминале.",
+            file=sys.stderr,
+        )
         return False
 
     return True
@@ -54,7 +58,7 @@ def remove_blank_pages(input_file: Path, output_file: Path, tmp_dir: Path) -> No
         page += 1
 
         if is_blank_bbox_line(line):
-            print(f"Skipping blank page {page} in {input_file}")
+            print(f"Пропускаю пустую страницу {page} в файле {input_file}")
         else:
             keep_pages.append(str(page))
 
@@ -63,7 +67,10 @@ def remove_blank_pages(input_file: Path, output_file: Path, tmp_dir: Path) -> No
         return
 
     if not keep_pages:
-        print(f"All pages look blank in {input_file}; keeping original PDF", file=sys.stderr)
+        print(
+            f"Все страницы выглядят пустыми в файле {input_file}; оставляю исходный PDF.",
+            file=sys.stderr,
+        )
         copy_pdf_contents(input_file, output_file)
         return
 
@@ -78,7 +85,7 @@ def remove_blank_pages(input_file: Path, output_file: Path, tmp_dir: Path) -> No
 
 
 def convert_docx(source_file: Path, tmp_dir: Path) -> Path:
-    print(f"Converting {source_file}")
+    print(f"Конвертирую {source_file}")
 
     subprocess.run(
         [
@@ -100,7 +107,9 @@ def convert_docx(source_file: Path, tmp_dir: Path) -> Path:
     converted_file = tmp_dir / f"{source_file.stem}.pdf"
 
     if not converted_file.is_file():
-        raise FileNotFoundError(f"LibreOffice did not produce expected file: {converted_file}")
+        raise FileNotFoundError(
+            f"LibreOffice не создал ожидаемый PDF-файл: {converted_file}"
+        )
 
     return converted_file
 
@@ -115,7 +124,7 @@ def main() -> int:
         return 1
 
     if not INPUT_DIR.is_dir():
-        print(f"Input directory not found: {INPUT_DIR}", file=sys.stderr)
+        print(f"Папка с DOCX-файлами не найдена: {INPUT_DIR}", file=sys.stderr)
         return 1
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -123,7 +132,7 @@ def main() -> int:
     source_files = sorted(INPUT_DIR.glob("*.docx"))
 
     if not source_files:
-        print(f"No .docx files found in {INPUT_DIR}", file=sys.stderr)
+        print(f"В папке {INPUT_DIR} не найдены .docx-файлы для конвертации.", file=sys.stderr)
         return 1
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -133,7 +142,7 @@ def main() -> int:
             output_file = OUTPUT_DIR / f"{source_file.stem}.pdf"
             converted_file = convert_docx(source_file, tmp_dir)
 
-            print(f"Writing {output_file}")
+            print(f"Записываю {output_file}")
 
             if SKIP_BLANK_PAGES:
                 remove_blank_pages(converted_file, output_file, tmp_dir)
@@ -148,6 +157,13 @@ def main() -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
+    except FileNotFoundError as error:
+        print(f"Ошибка: {error}", file=sys.stderr)
+        raise SystemExit(1)
     except subprocess.CalledProcessError as error:
-        print(f"Command failed with exit code {error.returncode}: {error.cmd}", file=sys.stderr)
+        print(
+            f"Команда завершилась с ошибкой (код {error.returncode}): {' '.join(error.cmd)}",
+            file=sys.stderr,
+        )
+        print("Проверьте сообщения выше: там обычно указана причина ошибки.", file=sys.stderr)
         raise SystemExit(error.returncode)
