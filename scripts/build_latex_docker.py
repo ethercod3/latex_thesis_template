@@ -31,7 +31,7 @@ def main() -> None:
 
     lualatex = [
         "lualatex",
-        "-synctex=1",
+        "-synctex=0",
         "-interaction=nonstopmode",
         f"-output-directory={AUX_DIR}",
         target,
