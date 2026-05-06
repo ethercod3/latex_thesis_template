@@ -40,7 +40,7 @@ docker compose --profile latex build
 docker compose --profile latex up
 ```
 
-Профиль `latex` запускает `scripts/build_latex_docker.py`. Скрипт читает `TARGET` из переменных окружения, собирает документ через `lualatex`, `biber`, `lualatex`, `lualatex`, складывает временные файлы в `.aux_files_docker` и копирует готовый PDF в корень проекта.
+Профиль `latex` запускает `scripts/build_latex_docker.py`. Скрипт читает `TARGET` из переменных окружения и собирает документ через `latexmk`. Вспомогательные файлы складываются в `.aux_files_docker`, а готовый PDF остается в корне проекта.
 
 ## Сборка образов
 

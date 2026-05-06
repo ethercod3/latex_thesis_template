@@ -14,12 +14,12 @@
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
-MD5: `cbc6d9690e9b375bb228ab3d8e1037bd`<br>
-SHA-1: `23952bbe153d6e37757b21dc7cf446c8df6ec5e1`<br>
-SHA-256: `b01abe388aa709b0ee20654c2ca9ee40d185c25663953a037452297f2132c7ae`<br>
-SHA3-256: `99d102d5d38ab1d701cb10735cbc8746d94fdbdae5779de1113a35568dc68402`<br>
-BLAKE2s: `24901f3e04c79468efabc8e2be384075baa7009405e69baba4464d4c4facdd39`<br>
-SHAKE-128 (256-bit output): `651fb8adca4d01947e2853a8cae3acc19db5164f6c39b884bf0eda119123fc66`<br>
+MD5: `6e59dae3adccdd8dd7337a527a858b22`<br>
+SHA-1: `2bcc79bf3c9ac4f6ac263f479e58cb0669e78c67`<br>
+SHA-256: `d04d9c6dfad4a1df17a9835adb31ae2fc5a1b96c8a32146ad8c21e40370850cb`<br>
+SHA3-256: `e17fae5d3c315d552797f9540ad2f14e880245fca1bc36bf197290d6da3032a6`<br>
+BLAKE2s: `8a8570de57c6d9b02cae2498cd221039fcefaeee65e5b06a1a0536f62cc8d4df`<br>
+SHAKE-128 (256-bit output): `6b561808a7512629f47afa8dc62ee2e9c7bebfb7edee72cd39527953d816f65b`<br>
 <!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
@@ -46,12 +46,12 @@ python scripts/build_all.py
 
 Макисмальная воспроизводимость с оригиналом будет, если вы будете собирать `Mermaid`-диаграммы из-под `Windows`. Если собирать их Docker-ом, то шрифт для `KaTeX` (математических) выражений будет отличаться от оригинала. Если это для вас неважно, просто пользуйтесь скриптом выше.
 
-Для запуска скрипта потребуется Docker. Если вы не планируете использовать Docker, для вас есть инструкции по ручной сборке всего, что есть в проекте.
+Для запуска скрипта потребуется Docker. Если вы не планируете использовать Docker, рекомендуемый вариант сборки LaTeX-документа - `latexmk`.
 
 ## Навигация
 
 - [Документация mdBook](#документация-mdbook)
-- [Как скомпилировать проект вручную](#как-скомпилировать-проект-вручную)
+- [Сборка без Docker](#сборка-без-docker)
 - [Настройка TeXstudio](#настройка-texstudio)
 - [Компиляция в Docker](#компиляция-в-docker)
 - [Сравнение PDF между коммитами](#сравнение-pdf-между-коммитами)
@@ -60,6 +60,7 @@ python scripts/build_all.py
 - [Если нет кода](#если-нет-кода)
 - [Если есть код](#если-есть-код)
 - [Как работать с диаграммами](#как-работать-с-диаграммами)
+- [Полностью ручная компиляция LaTeX](#полностью-ручная-компиляция-latex)
 - [Git hooks](#git-hooks)
 
 ## Документация mdBook
@@ -95,9 +96,11 @@ http://localhost:3000
 docker compose --profile docs pull
 ```
 
-## Как скомпилировать проект вручную
+## Сборка без Docker
 
-1. Установить дистрибутив `LaTeX`. Под Windows рекомендуется установить `TexLive`. Установка долгая, но все пакеты сразу скачаются вместе с дистрибутивом. Компилятор в работе использовался `LuaTex`
+Рекомендуемый способ сборки без Docker - `latexmk`. Он сам запускает `lualatex` и `biber` нужное количество раз по правилам из `.latexmkrc`.
+
+1. Установить дистрибутив `LaTeX`. Под Windows рекомендуется установить `TeX Live`. Установка долгая, но все пакеты сразу скачаются вместе с дистрибутивом. `latexmk` обычно поставляется вместе с установкой `TeX Live`, поэтому отдельно его ставить не нужно. Компилятор в работе использовался `LuaLaTeX`.
 2. Клонировать репозиторий
 3. Установить Python-зависимости для скриптов:
 
@@ -111,87 +114,49 @@ docker compose --profile docs pull
     TARGET="Куприянов_И221_диплом.tex"
     ```
 
-5. Запустить ручную сборку через скрипт:
+5. Собрать основной документ через `latexmk`:
 
     ```bash
-    python scripts/build_latex_manual.py
+    latexmk "Куприянов_И221_диплом.tex"
     ```
 
-    Скрипт читает `TARGET` из `.env` через `python-dotenv`, создает `.aux_files`, запускает `lualatex`, затем `biber`, затем еще два раза `lualatex`. Итоговый PDF копируется из `.aux_files` в корень проекта.
+    Конфигурация находится в `.latexmkrc`: используется `LuaLaTeX`, `biber`, вспомогательные файлы складываются в `.aux_files`, а готовый PDF остается в корне проекта.
 
-    Если нужно собрать другой файл без изменения `.env`, передайте его явно:
+    Для другого `.tex` файла:
 
     ```bash
-    python scripts/build_latex_manual.py --target "<файл>.tex"
+    latexmk "<файл>.tex"
     ```
 
-### Ручная компиляция без скрипта
+### Сборка через Python-скрипт
 
-1. Создать папку для вспомогательных файлов:
+Если удобнее читать `TARGET` из `.env`, можно использовать скрипт:
 
-    ```bash
-    mkdir .aux_files
-    ```
+```bash
+python scripts/build_latex_manual.py
+```
 
-    Если папка уже есть, этот шаг можно пропустить.
+Если нужно собрать другой файл без изменения `.env`, передайте его явно:
 
-2. Скомпилировать файл. Так как проект использует `biblatex` с backend `biber`, одного запуска `lualatex` недостаточно:
-
-    ```bash
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
-    biber ".aux_files/<файл>.bcf"
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
-    ```
-
-    Для основного файла проекта:
-
-    ```bash
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
-    biber ".aux_files/Куприянов_И221_диплом.bcf"
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
-    ```
-
-    После сборки итоговый PDF окажется в `.aux_files`. Его нужно перенести в корень проекта:
-
-    ```bash
-    mv ".aux_files/<файл>.pdf" .
-    ```
-
-    В Windows `cmd` для основного файла:
-
-    ```bat
-    move ".aux_files\Куприянов_И221_диплом.pdf" .
-    ```
+```bash
+python scripts/build_latex_manual.py --target "<файл>.tex"
+```
 
 ## Настройка TeXstudio
 
-Проект использует `LuaLaTeX` и `biblatex` с backend `biber`, поэтому в TeXstudio нужно настроить сборку без `BibTeX` и без `latexmk`.
+Проект использует `LuaLaTeX` и `biblatex` с backend `biber`. Рекомендуемый вариант для TeXstudio - запускать `latexmk`, который читает настройки из `.latexmkrc`.
 
 1. Откройте `Options` $\rightarrow$ `Configure TeXstudio` $\rightarrow$ `Commands`.
-2. В поле `LuaLaTeX` укажите:
+2. В поле `Latexmk` укажите:
 
     ```text
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" %.tex
+    latexmk %.tex
     ```
 
-3. В поле `Biber` укажите:
+3. Откройте `Options` $\rightarrow$ `Configure TeXstudio` $\rightarrow$ `Build`.
+4. В `Default Compiler` выберите `Latexmk`.
 
-    ```text
-    biber ".aux_files/%.bcf"
-    ```
-
-4. Откройте `Options` $\rightarrow$ `Configure TeXstudio` $\rightarrow$ `Build`.
-5. В `Default Compiler` выберите `LuaLaTeX`.
-6. В `Default Bibliography Tool` выберите `Biber`.
-7. В `Build & View` выберите `User` и укажите последовательность:
-
-    ```text
-    txs:///lualatex | txs:///biber | txs:///lualatex | txs:///lualatex | txs:///view-pdf
-    ```
-
-Перед первой сборкой создайте папку `.aux_files` в корне проекта, если ее еще нет. Если TeXstudio не открывает PDF автоматически, откройте файл из `.aux_files` или перенесите его в корень проекта так же, как описано в ручной сборке.
+Перед первой сборкой убедитесь, что `latexmk`, `lualatex` и `biber` доступны в `PATH`. При установке `TeX Live` они обычно уже доступны вместе с дистрибутивом. Готовый PDF будет создан в корне проекта, вспомогательные файлы - в `.aux_files`.
 
 ## Компиляция в Docker
 
@@ -231,7 +196,7 @@ docker compose --profile docs pull
     docker compose --profile latex up
     ```
 
-    Профиль `latex` запускает скрипт `scripts/build_latex_docker.py`. Он читает `TARGET` из переменных окружения, собирает документ через `lualatex`, `biber`, `lualatex`, `lualatex`, складывает временные файлы в `.aux_files_docker` и копирует готовый PDF в корень проекта.
+    Профиль `latex` запускает скрипт `scripts/build_latex_docker.py`. Он читает `TARGET` из переменных окружения и собирает документ через `latexmk`. Вспомогательные файлы складываются в `.aux_files_docker`, а готовый PDF остается в корне проекта.
 
 Первый build будет долгим. Повторно выполнять `build` нужно только после изменения Dockerfile, зависимостей или базовых образов.
 
@@ -350,9 +315,9 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
 
 ## Проблемы с компиляцией
 
-**ВАЖНО**: компилируйте по 2 раза минимум. В первую компиляцию могут быть ошибки, так как `LaTeX` будет создавать вспомогательные файлы со счетчиками (счетчик библиографии, таблиц, рисунков.) Во вторую компиляцию `LaTeX` их подтянет.
+Если вы используете `latexmk`, вручную повторять компиляцию не нужно: он сам запускает `lualatex` и `biber` столько раз, сколько требуется. Повторные ручные запуски нужны только при полностью ручной компиляции из последнего раздела README.
 
-**ВАЖНО 2**: если не компилируется:
+Если не компилируется:
 
 Запустите команду из `cmd`, не из `powershell`. Если не сработало:
 
@@ -361,7 +326,7 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
 2. Используйте следующую команду для компиляции:
 
     ```bash
-    lualatex main.tex
+    latexmk main.tex
     ```
 
 ### О титульнике
@@ -447,6 +412,46 @@ docker compose --profile mermaid up
 
 ```bash
 docker compose --profile python up
+```
+
+## Полностью ручная компиляция LaTeX
+
+Этот способ нужен только для диагностики или если `latexmk` недоступен. В обычной сборке без Docker используйте `latexmk`, потому что он сам определяет нужное количество запусков `lualatex` и `biber`.
+
+Создайте папку для вспомогательных файлов:
+
+```bash
+mkdir .aux_files
+```
+
+Так как проект использует `biblatex` с backend `biber`, одного запуска `lualatex` недостаточно:
+
+```bash
+lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+biber ".aux_files/<файл>.bcf"
+lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+```
+
+Для основного файла проекта:
+
+```bash
+lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+biber ".aux_files/Куприянов_И221_диплом.bcf"
+lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+```
+
+После сборки итоговый PDF окажется в `.aux_files`. Его нужно перенести в корень проекта:
+
+```bash
+mv ".aux_files/<файл>.pdf" .
+```
+
+В Windows `cmd` для основного файла:
+
+```bat
+move ".aux_files\Куприянов_И221_диплом.pdf" .
 ```
 
 ## Git hooks

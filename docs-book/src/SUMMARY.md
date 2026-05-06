@@ -3,7 +3,7 @@
 - [Введение](README.md)
 - [Структура проекта](project-structure.md)
 - [Быстрый старт](quick-start.md)
-- [Ручная сборка](manual-build.md)
+- [Сборка без Docker](manual-build.md)
 - [Настройка TeXstudio](texstudio.md)
 - [Docker](docker.md)
 - [Документация mdBook](mdbook.md)

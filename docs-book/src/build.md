@@ -5,5 +5,5 @@
 Актуальные разделы:
 
 - [Быстрый старт](quick-start.md)
-- [Ручная сборка](manual-build.md)
+- [Сборка без Docker](manual-build.md)
 - [Docker](docker.md)
