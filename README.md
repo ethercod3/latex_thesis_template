@@ -373,12 +373,12 @@ docker compose --profile docx run --rm -e SKIP_BLANK_PAGES=0 docx_pdf
 
 Чтобы пересобрать диаграмму в `pdf`:
 
-1. Отредактируйте нужную диаграмму (они содержатся в файлах `.mmdc`)
+1. Отредактируйте нужную диаграмму (они содержатся в файлах `.mmd`)
 2. Установите инструмент командой строки `mmdc` : https://github.com/mermaid-js/mermaid-cli
 3. Пересоберите диаграмму:
     
     ```bash
-    mmdc -i <file.mmdc> -o <file.pdf> -f
+    mmdc -i <file.mmd> -o <file.pdf> -f
     ```
 
     флаг `-f` нужен для того, чтобы лист pdf обрезался под размер диаграммы
