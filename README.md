@@ -4,6 +4,8 @@
 [![GitHub repo size](https://img.shields.io/github/repo-size/ethercod3/diploma_latex?style=flat-square&logo=github)](https://github.com/ethercod3/diploma_latex)
 ![LaTeX](https://img.shields.io/badge/LaTeX-LuaLaTeX-008080?style=flat-square&logo=latex)
 ![latexmk](https://img.shields.io/badge/Build-latexmk-008080?style=flat-square&logo=latex)
+![biblatex](https://img.shields.io/badge/Bibliography-biblatex-008080?style=flat-square&logo=latex)
+![biber](https://img.shields.io/badge/Backend-biber-008080?style=flat-square&logo=latex)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.13+-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Plotly](https://img.shields.io/badge/Charts-Plotly-3F4F75?style=flat-square&logo=plotly&logoColor=white)
@@ -62,6 +64,7 @@ python scripts/build_all.py
 - [Если нет кода](#если-нет-кода)
 - [Если есть код](#если-есть-код)
 - [Как работать с диаграммами](#как-работать-с-диаграммами)
+- [Просмотр Mermaid-файлов на GitHub](#просмотр-mermaid-файлов-на-github)
 - [Сборка Mermaid вручную](#сборка-вручную)
 - [Автоматическая сборка всех диаграмм](#автоматическая-сборка-всех-диаграмм)
 - [Сборка Mermaid через Docker](#сборка-через-docker)
@@ -368,6 +371,10 @@ docker compose --profile docx run --rm -e SKIP_BLANK_PAGES=0 docx_pdf
 `../vault_diploma/<файл>`
 
 ## Как работать с диаграммами
+
+### Просмотр Mermaid-файлов на GitHub
+
+GitHub не всегда показывает содержимое файлов Mermaid с расширением `.mmd` как обычный текстовый код. Если вместо исходника отображается предпросмотр или файл не открывается удобным образом, нажмите кнопку `View raw` на странице файла. Так GitHub откроет исходный `.mmd`-код диаграммы без обработки.
 
 ### Сборка вручную
 
