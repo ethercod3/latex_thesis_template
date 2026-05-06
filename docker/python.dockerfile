@@ -1,20 +1,27 @@
-FROM python:3.13.1
+FROM python:3.13.1-slim-bookworm@sha256:4888fbac5737c749d34214356d2350ec0faa1c9df871fec5fe420d38085b0e7d
 
 USER root
 
-RUN apt-get update && apt-get install -y \
-    libnss3 \
-    libatk-bridge2.0-0 \
-    libcups2 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxfixes3 \
-    libxrandr2 \
-    libgbm1 \
-    libxkbcommon0 \
-    libpango-1.0-0 \
-    libcairo2 \
-    libasound2 \
+ENV DEBIAN_FRONTEND=noninteractive
+ENV BROWSER_PATH=/usr/bin/chromium
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    chromium=147.0.7727.137-1~deb12u1 \
+    fontconfig=2.14.1-4 \
+    fonts-noto-core=20201225-1 \
+    libnss3=2:3.87.1-1+deb12u2 \
+    libatk-bridge2.0-0=2.46.0-5 \
+    libcups2=2.4.2-3+deb12u9 \
+    libxcomposite1=1:0.4.5-1 \
+    libxdamage1=1:1.1.6-1 \
+    libxfixes3=1:6.0.0-2 \
+    libxrandr2=2:1.5.2-2+b1 \
+    libgbm1=22.3.6-1+deb12u1 \
+    libxkbcommon0=1.5.0-1 \
+    libpango-1.0-0=1.50.12+ds-1 \
+    libcairo2=1.16.0-7 \
+    libasound2=1.2.8-1+b1 \
+    && fc-cache -fv \
     && rm -rf /var/lib/apt/lists/*
 
 RUN useradd -m appuser
@@ -22,7 +29,7 @@ RUN useradd -m appuser
 WORKDIR /data
 
 COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 RUN mkdir -p figures scripts
 
@@ -32,6 +39,3 @@ COPY ./scripts/compile_python_diagrams.py ./scripts/compile_python_diagrams.py
 RUN chown -R appuser:appuser /data
 
 USER appuser
-
-RUN yes | plotly_get_chrome
-RUN kaleido_get_chrome
