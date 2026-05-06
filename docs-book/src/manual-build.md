@@ -37,7 +37,7 @@ latexmk "<файл>.tex"
 
 ## Сборка через Python-скрипт
 
-Если удобнее читать `TARGET` из `.env`, можно использовать скрипт:
+Если удобнее читать `TARGET` из `.env`, можно использовать скрипт. По умолчанию он тоже собирает документ через `latexmk`:
 
 ```bash
 python scripts/build_latex_manual.py
@@ -49,9 +49,15 @@ python scripts/build_latex_manual.py
 python scripts/build_latex_manual.py --target "<файл>.tex"
 ```
 
+Если нужно отключить `latexmk` и запустить старую ручную цепочку `lualatex`, `biber`, `lualatex`, `lualatex`, передайте флаг:
+
+```bash
+python scripts/build_latex_manual.py --no-latexmk
+```
+
 ## Полностью ручная компиляция
 
-Этот способ нужен только для диагностики или если `latexmk` недоступен. В обычной сборке без Docker используйте `latexmk`.
+Этот способ нужен только для диагностики или если `latexmk` недоступен. В обычной сборке без Docker используйте `latexmk`. В скрипте `scripts/build_latex_manual.py` этот режим включается флагом `--no-latexmk`.
 
 Создайте папку для вспомогательных файлов:
 

@@ -130,7 +130,7 @@ docker compose --profile docs pull
 
 ### Сборка через Python-скрипт
 
-Если удобнее читать `TARGET` из `.env`, можно использовать скрипт:
+Если удобнее читать `TARGET` из `.env`, можно использовать скрипт. По умолчанию он тоже собирает документ через `latexmk`:
 
 ```bash
 python scripts/build_latex_manual.py
@@ -140,6 +140,12 @@ python scripts/build_latex_manual.py
 
 ```bash
 python scripts/build_latex_manual.py --target "<файл>.tex"
+```
+
+Если нужно отключить `latexmk` и запустить старую ручную цепочку `lualatex`, `biber`, `lualatex`, `lualatex`, передайте флаг:
+
+```bash
+python scripts/build_latex_manual.py --no-latexmk
 ```
 
 ## Настройка TeXstudio
@@ -416,7 +422,7 @@ docker compose --profile python up
 
 ## Полностью ручная компиляция LaTeX
 
-Этот способ нужен только для диагностики или если `latexmk` недоступен. В обычной сборке без Docker используйте `latexmk`, потому что он сам определяет нужное количество запусков `lualatex` и `biber`.
+Этот способ нужен только для диагностики или если `latexmk` недоступен. В обычной сборке без Docker используйте `latexmk`, потому что он сам определяет нужное количество запусков `lualatex` и `biber`. В скрипте `scripts/build_latex_manual.py` этот режим включается флагом `--no-latexmk`.
 
 Создайте папку для вспомогательных файлов:
 

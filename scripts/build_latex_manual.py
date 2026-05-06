@@ -63,19 +63,45 @@ def lualatex_command(target: Path) -> list[str]:
     ]
 
 
-def build(target: Path) -> Path:
+def latexmk_command(target: Path) -> list[str]:
+    return [
+        "latexmk",
+        str(target.relative_to(PROJECT_DIR)),
+    ]
+
+
+def output_pdf_path(target: Path) -> Path:
+    return PROJECT_DIR / f"{target.stem}.pdf"
+
+
+def build_with_latexmk(target: Path) -> Path:
+    if not target.is_file():
+        raise RuntimeError(f"Указанный .tex-файл не найден: {target}")
+
+    run_command(latexmk_command(target))
+
+    output_pdf = output_pdf_path(target)
+    if not output_pdf.is_file():
+        raise RuntimeError(
+            f"PDF-файл не был создан там, где ожидалось: {output_pdf}. "
+            "Проверьте сообщения latexmk выше."
+        )
+
+    return output_pdf
+
+
+def build_without_latexmk(target: Path) -> Path:
     if not target.is_file():
         raise RuntimeError(f"Указанный .tex-файл не найден: {target}")
 
     AUX_DIR.mkdir(exist_ok=True)
-
     run_command(lualatex_command(target))
     run_command(["biber", str(AUX_DIR / f"{target.stem}.bcf")])
     run_command(lualatex_command(target))
     run_command(lualatex_command(target))
 
     aux_pdf = AUX_DIR / f"{target.stem}.pdf"
-    output_pdf = PROJECT_DIR / f"{target.stem}.pdf"
+    output_pdf = output_pdf_path(target)
 
     if not aux_pdf.is_file():
         raise RuntimeError(
@@ -89,12 +115,20 @@ def build(target: Path) -> Path:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Собрать LaTeX-документ вручную через lualatex и biber."
+        description="Собрать LaTeX-документ через latexmk."
     )
     parser.add_argument(
         "--target",
         default=None,
         help="Путь к .tex-файлу. По умолчанию берется TARGET из .env.",
+    )
+    parser.add_argument(
+        "--no-latexmk",
+        action="store_true",
+        help=(
+            "Не использовать latexmk. Запустить старую ручную цепочку: "
+            "lualatex, biber, lualatex, lualatex."
+        ),
     )
     return parser.parse_args()
 
@@ -103,10 +137,14 @@ def main() -> int:
     args = parse_args()
 
     try:
-        require_command("lualatex")
-        require_command("biber")
         target = target_tex_path(args.target)
-        output_pdf = build(target)
+        if args.no_latexmk:
+            require_command("lualatex")
+            require_command("biber")
+            output_pdf = build_without_latexmk(target)
+        else:
+            require_command("latexmk")
+            output_pdf = build_with_latexmk(target)
     except RuntimeError as error:
         print(error, file=sys.stderr)
         return 1
