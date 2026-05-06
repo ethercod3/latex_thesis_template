@@ -96,6 +96,15 @@ http://localhost:3000
 docker compose --profile docs pull
 ```
 
+Без Docker `mdbook` можно взять как готовый бинарник на странице релизов или установить через Cargo:
+
+```bash
+cargo install mdbook
+mdbook serve docs-book
+```
+
+Официальная инструкция: <https://rust-lang.github.io/mdBook/guide/installation.html>
+
 ## Сборка без Docker
 
 Рекомендуемый способ сборки без Docker - `latexmk`. Он сам запускает `lualatex` и `biber` нужное количество раз по правилам из `.latexmkrc`.
