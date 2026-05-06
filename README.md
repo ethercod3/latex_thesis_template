@@ -264,7 +264,7 @@ python scripts/compile_python_diagrams.py
 
 Скрипт `scripts/convert_docx_to_pdf.py` обычно запускается внутри Docker-профиля `docx`, потому что ему нужны LibreOffice, Ghostscript и qpdf.
 
-### Сравнение PDF между коммитами
+## Сравнение PDF между коммитами
 
 ![pdf_diff_example](./github_images/pdf_diff_example.png)
 
@@ -378,7 +378,7 @@ GitHub не всегда показывает содержимое файлов 
 
     флаг `-f` нужен для того, чтобы лист pdf обрезался под размер диаграммы
 
-### Автоматическая сборка всех диаграмм
+### Автоматическая сборка всех Mermaid диаграмм
 
 Запустите скрипт `scripts/compile_mermaid.py` в проекте. Этот скрипт автоматически прогонит все файлы из папки `mermaid` и положит результат в папку `figures`
 
@@ -386,13 +386,13 @@ GitHub не всегда показывает содержимое файлов 
 python scripts/compile_mermaid.py
 ```
 
-### Сборка через Docker
+### Сборка Mermaid через Docker
 
 ```
 docker compose --profile mermaid up
 ```
 
-## Генерация диаграмм Python вручную
+### Генерация диаграмм Python вручную
 
 1. Установите интерпретатор `python` (использовалась версия `3.13+`)
 2. Установите в окружение библиотеки: `pip install -r requirements.txt`
@@ -402,7 +402,7 @@ docker compose --profile mermaid up
     python scripts/compile_python_diagrams.py
     ```
 
-## Генерация диаграмм Python через Docker
+### Генерация диаграмм Python через Docker
 
 ```bash
 docker compose --profile python up
