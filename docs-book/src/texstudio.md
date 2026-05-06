@@ -4,7 +4,7 @@
 
 1. Откройте `Options` \\(\\rightarrow\\) `Configure TeXstudio` \\(\\rightarrow\\) `Commands`.
 
-<img src="../src/assets/texstudio_conf.png" height=500>
+<img src="./assets/texstudio_conf.png" height=500>
 
 2. В поле `LuaLaTeX` укажите:
 
@@ -12,7 +12,7 @@
 lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" %.tex
 ```
 
-<img src="../src/assets/texstudio_lualatex_biber.png" height=500>
+<img src="./assets/texstudio_lualatex_biber.png" height=500>
 
 3. В поле `Biber` укажите:
 
@@ -24,7 +24,7 @@ biber ".aux_files/%.bcf"
 
 5. В `Default Compiler` выберите `LuaLaTeX`.
 
-<img src="../src/assets/texstudio_build.png" height=500>
+<img src="./assets/texstudio_build.png" height=500>
 
 6. В `Default Bibliography Tool` выберите `Biber`.
 
