@@ -14,12 +14,12 @@
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
-MD5: `6e59dae3adccdd8dd7337a527a858b22`<br>
-SHA-1: `2bcc79bf3c9ac4f6ac263f479e58cb0669e78c67`<br>
-SHA-256: `d04d9c6dfad4a1df17a9835adb31ae2fc5a1b96c8a32146ad8c21e40370850cb`<br>
-SHA3-256: `e17fae5d3c315d552797f9540ad2f14e880245fca1bc36bf197290d6da3032a6`<br>
-BLAKE2s: `8a8570de57c6d9b02cae2498cd221039fcefaeee65e5b06a1a0536f62cc8d4df`<br>
-SHAKE-128 (256-bit output): `6b561808a7512629f47afa8dc62ee2e9c7bebfb7edee72cd39527953d816f65b`<br>
+MD5: `35f4b1ffb5e308835eb76a15f19cbd89`<br>
+SHA-1: `d969d3724fe02483b8884ae9c4c85230c41f1c5d`<br>
+SHA-256: `332ebc54660417470e2ceaae6e4d9bf3626194739aaae106485264c103893026`<br>
+SHA3-256: `50f9555a8a9b3a9b22d1ca6165e5cd3f166b58037b3bb2d12076fabf7880d19f`<br>
+BLAKE2s: `287dcee2e87ad3200e8036e458ba4cb82ee86584f30fc16debbf18f98c6eddff`<br>
+SHAKE-128 (256-bit output): `9aa1e96bbbe80dd728d5504c24ce55318869cc7972fe3c6949443ea5e778ccb9`<br>
 <!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
@@ -100,6 +100,8 @@ docker compose --profile docs pull
 
 Рекомендуемый способ сборки без Docker - `latexmk`. Он сам запускает `lualatex` и `biber` нужное количество раз по правилам из `.latexmkrc`.
 
+> **Важно:** в этом проекте `latexmk` заметно сокращает время компиляции. Типичный запуск через `latexmk` занимает около 18 секунд, а режим `--no-latexmk` с ручной цепочкой - около 53 секунд.
+
 1. Установить дистрибутив `LaTeX`. Под Windows рекомендуется установить `TeX Live`. Установка долгая, но все пакеты сразу скачаются вместе с дистрибутивом. `latexmk` обычно поставляется вместе с установкой `TeX Live`, поэтому отдельно его ставить не нужно. Компилятор в работе использовался `LuaLaTeX`.
 2. Клонировать репозиторий
 3. Установить Python-зависимости для скриптов:
@@ -147,6 +149,8 @@ python scripts/build_latex_manual.py --target "<файл>.tex"
 ```bash
 python scripts/build_latex_manual.py --no-latexmk
 ```
+
+Этот режим медленнее: в текущем проекте около 53 секунд против примерно 18 секунд через `latexmk`.
 
 ## Настройка TeXstudio
 
@@ -422,7 +426,7 @@ docker compose --profile python up
 
 ## Полностью ручная компиляция LaTeX
 
-Этот способ нужен только для диагностики или если `latexmk` недоступен. В обычной сборке без Docker используйте `latexmk`, потому что он сам определяет нужное количество запусков `lualatex` и `biber`. В скрипте `scripts/build_latex_manual.py` этот режим включается флагом `--no-latexmk`.
+Этот способ нужен только для диагностики или если `latexmk` недоступен. В обычной сборке без Docker используйте `latexmk`, потому что он сам определяет нужное количество запусков `lualatex` и `biber` и в этом проекте сокращает время компиляции примерно с 53 до 18 секунд. В скрипте `scripts/build_latex_manual.py` этот режим включается флагом `--no-latexmk`.
 
 Создайте папку для вспомогательных файлов:
 
