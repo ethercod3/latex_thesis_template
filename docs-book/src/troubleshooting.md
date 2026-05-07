@@ -9,8 +9,10 @@
 3. Попробуйте минимальную команду:
 
 ```bash
-latexmk main.tex
+task build:manual -- --target main.tex
 ```
+
+Или напрямую через `latexmk`: `latexmk main.tex`.
 
 Если сборка падает из-за библиографии, проверьте, что используется `biber`, а не `bibtex`.
 

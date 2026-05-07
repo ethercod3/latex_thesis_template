@@ -12,7 +12,7 @@
 
 - `титульник.pdf` и `задание.pdf` должны лежать в корне проекта. Их можно получить из `docx/*.docx` вручную через Microsoft Word или LibreOffice, см. [Титульники](title-pages.md)
 - Mermaid-диаграммы из `mermaid/*.mmd` нужно заранее сгенерировать в `figures/`, см. [Диаграммы](diagrams.md).
-- Python-диаграммы нужно заранее сгенерировать командой `python scripts/compile_python_diagrams.py`.
+- Python-диаграммы нужно заранее сгенерировать командой `task diagrams` или вручную `python scripts/compile_python_diagrams.py`.
 - Если в приложениях подключается код, он должен лежать по ожидаемому пути, см. [Код в приложениях](source-code.md).
 
 Если эти файлы не подготовлены, `latexmk` может завершиться ошибкой из-за отсутствующих PDF, изображений или листингов.
@@ -25,8 +25,10 @@
 4. Установите Python-зависимости для вспомогательных скриптов:
 
 ```bash
-pip install -r requirements.txt
+task deps
 ```
+
+Или вручную: `pip install -r requirements.txt`.
 
 5. Создайте в корне проекта файл `.env` и укажите основной `.tex` файл:
 
@@ -39,14 +41,18 @@ TARGET="Куприянов_И221_диплом.tex"
 Соберите основной документ:
 
 ```bash
-latexmk "Куприянов_И221_диплом.tex"
+task build:manual
 ```
+
+Или напрямую через `latexmk`: `latexmk "Куприянов_И221_диплом.tex"`.
 
 Для другого `.tex` файла:
 
 ```bash
-latexmk "<файл>.tex"
+task build:manual -- --target "<файл>.tex"
 ```
+
+Или напрямую через `latexmk`: `latexmk "<файл>.tex"`.
 
 Конфигурация находится в `.latexmkrc`: используется `LuaLaTeX`, `biber`, вспомогательные файлы складываются в `.aux_files`, а готовый PDF остается в корне проекта.
 
@@ -55,20 +61,26 @@ latexmk "<файл>.tex"
 Если удобнее читать `TARGET` из `.env`, можно использовать скрипт. По умолчанию он тоже собирает документ через `latexmk`:
 
 ```bash
-python scripts/build_latex_manual.py
+task build:manual
 ```
+
+Или вручную: `python scripts/build_latex_manual.py`.
 
 Если нужно собрать другой файл без изменения `.env`, передайте его явно:
 
 ```bash
-python scripts/build_latex_manual.py --target "<файл>.tex"
+task build:manual -- --target "<файл>.tex"
 ```
+
+Или вручную: `python scripts/build_latex_manual.py --target "<файл>.tex"`.
 
 Если нужно отключить `latexmk` и запустить старую ручную цепочку `lualatex`, `biber`, `lualatex`, `lualatex`, передайте флаг:
 
 ```bash
-python scripts/build_latex_manual.py --no-latexmk
+task build:manual-chain
 ```
+
+Или вручную: `python scripts/build_latex_manual.py --no-latexmk`.
 
 Этот режим медленнее на повторных сборках: в текущем проекте около 53-54 секунд каждый раз против примерно 18 секунд при повторном запуске через `latexmk`.
 

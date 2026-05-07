@@ -32,8 +32,10 @@ mmdc -i <file.mmd> -o <file.pdf> -f
 Запустите скрипт:
 
 ```bash
-python scripts/compile_mermaid.py
+task mermaid
 ```
+
+Или вручную: `python scripts/compile_mermaid.py`.
 
 Скрипт прогоняет все файлы из `mermaid/` и кладет результат в `figures/`.
 
@@ -42,8 +44,10 @@ python scripts/compile_mermaid.py
 Сборка Mermaid через Docker:
 
 ```bash
-docker compose --profile mermaid up
+task mermaid:docker
 ```
+
+Или вручную: `docker compose --profile mermaid up`.
 
 ## Python-диаграммы
 
@@ -55,17 +59,23 @@ Python-диаграммы лежат в папке `python_diagrams/`.
 2. Установите зависимости:
 
 ```bash
-pip install -r requirements.txt
+task deps
 ```
+
+Или вручную: `pip install -r requirements.txt`.
 
 3. Запустите генерацию:
 
 ```bash
-python scripts/compile_python_diagrams.py
+task diagrams
 ```
+
+Или вручную: `python scripts/compile_python_diagrams.py`.
 
 Сборка через Docker:
 
 ```bash
-docker compose --profile python up
+task diagrams:docker
 ```
+
+Или вручную: `docker compose --profile python up`.

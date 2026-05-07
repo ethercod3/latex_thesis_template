@@ -5,19 +5,23 @@
 Если нужно посмотреть визуальную разницу между двумя версиями диплома, используйте скрипт:
 
 ```bash
-python scripts/diff_pdf_commits.py <commit_1> <commit_2>
+task diff -- <commit_1> <commit_2>
 ```
+
+Или вручную: `python scripts/diff_pdf_commits.py <commit_1> <commit_2>`.
 
 Скрипт принимает два хэша коммита, по очереди переключается на каждый из них, собирает PDF через Docker, складывает две версии во временную папку и открывает `diff-pdf`.
 
 Результат можно только открыть, только сохранить или сделать оба действия:
 
 ```bash
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view --save
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save path/to/diff.pdf
+task diff -- <commit_1> <commit_2> --view
+task diff -- <commit_1> <commit_2> --save
+task diff -- <commit_1> <commit_2> --view --save
+task diff -- <commit_1> <commit_2> --save path/to/diff.pdf
 ```
+
+Для ручного запуска замените начало команды на `python scripts/diff_pdf_commits.py`.
 
 Без `--view` и `--save` скрипт открывает diff. При `--save` без пути результат сохраняется в `.pdf_diff/saved`.
 
@@ -30,12 +34,12 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save path/to/diff.pdf
 Если нужно ограничить сборку, передайте опцию `--profiles`:
 
 ```bash
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles all
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles docx
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles python
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid,python
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
+task diff -- <commit_1> <commit_2> --profiles all
+task diff -- <commit_1> <commit_2> --profiles docx
+task diff -- <commit_1> <commit_2> --profiles mermaid
+task diff -- <commit_1> <commit_2> --profiles python
+task diff -- <commit_1> <commit_2> --profiles mermaid,python
+task diff -- <commit_1> <commit_2> --profiles latex
 ```
 
 Значения:

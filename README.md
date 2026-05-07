@@ -151,7 +151,7 @@ mdbook serve docs-book
 
 - `титульник.pdf` и `задание.pdf` должны лежать в корне проекта. Их можно получить из `docx/*.docx` вручную через Microsoft Word или LibreOffice. см [О титульнике](#о-титульнике)
 - Mermaid-диаграммы из `mermaid/*.mmd` нужно заранее сгенерировать в `figures/`, см. [Как работать с диаграммами](#как-работать-с-диаграммами).
-- Python-диаграммы нужно заранее сгенерировать командой `python scripts/compile_python_diagrams.py`.
+- Python-диаграммы нужно заранее сгенерировать командой `task diagrams` или вручную `python scripts/compile_python_diagrams.py`.
 - Если в приложениях подключается код, он должен лежать по пути, на который указывает проект, см. [Если есть код](#если-есть-код).
 
 Если эти файлы не подготовлены, `latexmk` может завершиться ошибкой из-за отсутствующих PDF, изображений или листингов.
@@ -159,6 +159,12 @@ mdbook serve docs-book
 1. Установить дистрибутив `LaTeX`. Под Windows рекомендуется установить `TeX Live`. Установка долгая, но все пакеты сразу скачаются вместе с дистрибутивом. `latexmk` обычно поставляется вместе с установкой `TeX Live`, поэтому отдельно его ставить не нужно. Компилятор в работе использовался `LuaLaTeX`.
 2. Клонировать репозиторий
 3. Установить Python-зависимости для скриптов:
+
+    ```bash
+    task deps
+    ```
+
+    Или вручную:
 
     ```bash
     pip install -r requirements.txt
@@ -173,36 +179,46 @@ mdbook serve docs-book
 5. Собрать основной документ через `latexmk`:
 
     ```bash
-    latexmk "Куприянов_И221_диплом.tex"
+    task build:manual
     ```
+
+    Или напрямую через `latexmk`: `latexmk "Куприянов_И221_диплом.tex"`.
 
     Конфигурация находится в `.latexmkrc`: используется `LuaLaTeX`, `biber`, вспомогательные файлы складываются в `.aux_files`, а готовый PDF остается в корне проекта.
 
     Для другого `.tex` файла:
 
     ```bash
-    latexmk "<файл>.tex"
+    task build:manual -- --target "<файл>.tex"
     ```
+
+    Или напрямую через `latexmk`: `latexmk "<файл>.tex"`.
 
 ### Сборка через Python-скрипт
 
 Если удобнее читать `TARGET` из `.env`, можно использовать скрипт. По умолчанию он тоже собирает документ через `latexmk`:
 
 ```bash
-python scripts/build_latex_manual.py
+task build:manual
 ```
+
+Или вручную: `python scripts/build_latex_manual.py`.
 
 Если нужно собрать другой файл без изменения `.env`, передайте его явно:
 
 ```bash
-python scripts/build_latex_manual.py --target "<файл>.tex"
+task build:manual -- --target "<файл>.tex"
 ```
+
+Или вручную: `python scripts/build_latex_manual.py --target "<файл>.tex"`.
 
 Если нужно отключить `latexmk` и запустить старую ручную цепочку `lualatex`, `biber`, `lualatex`, `lualatex`, передайте флаг:
 
 ```bash
-python scripts/build_latex_manual.py --no-latexmk
+task build:manual-chain
 ```
+
+Или вручную: `python scripts/build_latex_manual.py --no-latexmk`.
 
 Этот режим медленнее на повторных сборках: в текущем проекте около 53-54 секунд каждый раз против примерно 18 секунд при повторном запуске через `latexmk`.
 
@@ -251,14 +267,18 @@ python scripts/build_latex_manual.py --no-latexmk
 2. Соберите LaTeX-образ:
 
     ```bash
-    docker compose --profile latex build
+    task build:image -- latex
     ```
+
+    Или вручную: `docker compose --profile latex build`.
 
 3. Запустите компиляцию:
 
     ```bash
-    docker compose --profile latex up
+    task latex
     ```
+
+    Или вручную: `docker compose --profile latex up`.
 
     Профиль `latex` запускает скрипт `scripts/build_latex_docker.py`. Он читает `TARGET` из переменных окружения и собирает документ через `latexmk`. Вспомогательные файлы складываются в `.aux_files_docker`, а готовый PDF остается в корне проекта.
 
@@ -275,13 +295,22 @@ task build:images
 Собрать образ отдельного профиля:
 
 ```bash
+task build:image -- latex
+task build:image -- mermaid
+task build:image -- python
+task build:image -- docx
+```
+
+Или вручную:
+
+```bash
 docker compose --profile latex build
 docker compose --profile mermaid build
 docker compose --profile python build
 docker compose --profile docx build
 ```
 
-Скрипты `scripts/build_all.py` и `scripts/diff_pdf_commits.py` не пересобирают образы при каждом запуске. Если Docker-образов еще нет, сначала выполните `build`.
+Скрипты `scripts/build_all.py` и `scripts/diff_pdf_commits.py` не пересобирают образы при каждом запуске. Если Docker-образов еще нет, сначала выполните `task build:images` или ручную сборку нужных образов.
 
 ### Профили Docker Compose
 
@@ -295,6 +324,15 @@ docker compose --profile docx build
 Запуск отдельных профилей:
 
 ```bash
+task latex
+task mermaid:docker
+task diagrams:docker
+task docx
+```
+
+Или вручную:
+
+```bash
 docker compose --profile latex up
 docker compose --profile mermaid up
 docker compose --profile python up
@@ -304,8 +342,10 @@ docker compose --profile docx up
 Запуск всех профилей одной командой:
 
 ```bash
-docker compose --profile docx --profile mermaid --profile python --profile latex up
+task compose:up
 ```
+
+Или вручную: `docker compose --profile docx --profile mermaid --profile python --profile latex up`.
 
 При запуске всех профилей Docker Compose стартует сервисы вместе. Если нужно гарантированно собрать документ уже со свежими PDF из DOCX и диаграммами, сначала запустите профили `docx`, `mermaid` и `python`, затем профиль `latex`.
 
@@ -319,6 +359,14 @@ task build
 Перед первым запуском скрипта соберите образы командой из раздела [Сборка Docker-образов](#сборка-docker-образов).
 
 Все вспомогательные скрипты проекта написаны на Python и запускаются одинаково в Windows, Linux и macOS:
+
+```bash
+task build
+task mermaid
+task diagrams
+```
+
+Или вручную:
 
 ```bash
 python scripts/build_all.py
@@ -335,19 +383,23 @@ python scripts/compile_python_diagrams.py
 Если нужно посмотреть визуальную разницу между двумя версиями диплома, используйте скрипт:
 
 ```bash
-python scripts/diff_pdf_commits.py <commit_1> <commit_2>
+task diff -- <commit_1> <commit_2>
 ```
+
+Или вручную: `python scripts/diff_pdf_commits.py <commit_1> <commit_2>`.
 
 Скрипт принимает 2 хэша коммита, по очереди переключается на каждый из них, собирает PDF через Docker, складывает две версии во временную папку и открывает `diff-pdf`.
 
 Результат можно только открыть, только сохранить или сделать оба действия:
 
 ```bash
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view --save
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save path/to/diff.pdf
+task diff -- <commit_1> <commit_2> --view
+task diff -- <commit_1> <commit_2> --save
+task diff -- <commit_1> <commit_2> --view --save
+task diff -- <commit_1> <commit_2> --save path/to/diff.pdf
 ```
+
+Для ручного запуска замените начало команды на `python scripts/diff_pdf_commits.py`.
 
 Без `--view` и `--save` скрипт открывает diff. При `--save` без пути результат сохраняется в `.pdf_diff/saved`.
 
@@ -356,12 +408,12 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save path/to/diff.pdf
 По умолчанию запускаются все профили в порядке `docx` $\rightarrow$ `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex`. Если нужно ограничить сборку, передайте опцию `--profiles`:
 
 ```bash
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles all
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles docx
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles python
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid,python
-python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
+task diff -- <commit_1> <commit_2> --profiles all
+task diff -- <commit_1> <commit_2> --profiles docx
+task diff -- <commit_1> <commit_2> --profiles mermaid
+task diff -- <commit_1> <commit_2> --profiles python
+task diff -- <commit_1> <commit_2> --profiles mermaid,python
+task diff -- <commit_1> <commit_2> --profiles latex
 ```
 
 Пояснение:
@@ -390,24 +442,30 @@ python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
 2. Используйте следующую команду для компиляции:
 
     ```bash
-    latexmk main.tex
+    task build:manual -- --target main.tex
     ```
+
+    Или напрямую через `latexmk`: `latexmk main.tex`.
 
 ### О титульнике
 
 `LaTeX` вставит титульник из файла `титульник.pdf` в начало файла. Поэтому он должен быть в проекте перед компиляцией (как и все рисунки, листинги). В проекте есть `docx/титульник.docx` и `docx/задание.docx`; их можно конвертировать через Docker:
 
 ```bash
-docker compose --profile docx up
+task docx
 ```
+
+Или вручную: `docker compose --profile docx up`.
 
 Профиль берет все файлы `docx/*.docx` и складывает одноименные PDF в корень проекта, например `docx/титульник.docx` $\rightarrow$ `титульник.pdf`.
 
 При конвертации профиль пропускает пустые страницы. Если нужно сохранить PDF как есть, запустите профиль с переменной `SKIP_BLANK_PAGES=0`:
 
 ```bash
-docker compose --profile docx run --rm -e SKIP_BLANK_PAGES=0 docx_pdf
+task docx:keep-blank
 ```
+
+Или вручную: `docker compose --profile docx run --rm -e SKIP_BLANK_PAGES=0 docx_pdf`.
 
 Альтернативный вариант - открыть DOCX в Microsoft Word и экспортировать его в PDF вручную: `Файл` $\rightarrow$ `Экспорт` $\rightarrow$ `Создать PDF/XPS`. Для титульника и задания нужно сохранить PDF в корень проекта с именами `титульник.pdf` и `задание.pdf`.
 
@@ -453,30 +511,38 @@ GitHub не всегда показывает содержимое файлов 
 Запустите скрипт `scripts/compile_mermaid.py` в проекте. Этот скрипт автоматически прогонит все файлы из папки `mermaid` и положит результат в папку `figures`
 
 ```bash
-python scripts/compile_mermaid.py
+task mermaid
 ```
+
+Или вручную: `python scripts/compile_mermaid.py`.
 
 ### Сборка Mermaid через Docker
 
 ```
-docker compose --profile mermaid up
+task mermaid:docker
 ```
+
+Или вручную: `docker compose --profile mermaid up`.
 
 ### Генерация диаграмм Python вручную
 
 1. Установите интерпретатор `python` (использовалась версия `3.13+`)
-2. Установите в окружение библиотеки: `pip install -r requirements.txt`
+2. Установите в окружение библиотеки: `task deps` или вручную `pip install -r requirements.txt`
 3. Теперь вы можете запустить скрипт и получить на выходе файл диаграммы
 
     ```bash
-    python scripts/compile_python_diagrams.py
+    task diagrams
     ```
+
+    Или вручную: `python scripts/compile_python_diagrams.py`.
 
 ### Генерация диаграмм Python через Docker
 
 ```bash
-docker compose --profile python up
+task diagrams:docker
 ```
+
+Или вручную: `docker compose --profile python up`.
 
 ## Полностью ручная компиляция LaTeX
 
@@ -523,13 +589,17 @@ move ".aux_files\Куприянов_И221_диплом.pdf" .
 Чтобы перед каждым коммитом автоматически обновлялись контрольные суммы итогового PDF в README, подключите локальные hooks:
 
 ```bash
-git config core.hooksPath .githooks
+task hooks
 ```
+
+Или вручную: `git config core.hooksPath .githooks`.
 
 Для работы hook нужен Python-пакет `python-dotenv`. Он уже указан в `requirements.txt`; если окружение еще не подготовлено, установите зависимости:
 
 ```bash
-pip install -r requirements.txt
+task deps
 ```
+
+Или вручную: `pip install -r requirements.txt`.
 
 Hook считает хэши текущего PDF алгоритмами из стандартного `hashlib`. Если PDF отсутствует, README не меняется и коммит продолжается со старым значением.

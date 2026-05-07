@@ -33,6 +33,11 @@ tasks:
     cmds:
       - docker compose {{.COMPOSE_BUILD_PROFILES}} build
 
+  build:image:
+    desc: 'Собрать Docker-образ одного профиля: task build:image -- latex'
+    cmds:
+      - docker compose --profile {{.CLI_ARGS}} build
+
   build:manual:
     desc: Собрать LaTeX локально через latexmk; дополнительные аргументы передаются после --
     cmds:

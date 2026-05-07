@@ -8,6 +8,8 @@
 task docs
 ```
 
+Или вручную: `docker compose --profile docs up`.
+
 После запуска книга доступна в браузере:
 
 ```text
@@ -20,11 +22,15 @@ http://localhost:3000
 task docs:down
 ```
 
+Или вручную: `docker compose --profile docs down`.
+
 Заранее скачать Docker-образ документации:
 
 ```bash
 task docs:pull
 ```
+
+Или вручную: `docker compose --profile docs pull`.
 
 ## Образ
 
