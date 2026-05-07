@@ -31,11 +31,25 @@ mmdc -i <file.mmd> -o <file.pdf> -f
 
 Запустите скрипт:
 
+{{#tabs global="runmode"}}
+
+{{#tab name="Task"}}
+
 ```bash
 task mermaid
 ```
 
-Или вручную: `python scripts/compile_mermaid.py`.
+{{#endtab}}
+
+{{#tab name="Ручной"}}
+
+```bash
+python scripts/compile_mermaid.py
+```
+
+{{#endtab}}
+
+{{#endtabs}}
 
 Скрипт прогоняет все файлы из `mermaid/` и кладет результат в `figures/`.
 
@@ -43,11 +57,25 @@ task mermaid
 
 Сборка Mermaid через Docker:
 
+{{#tabs global="runmode"}}
+
+{{#tab name="Task"}}
+
 ```bash
 task mermaid:docker
 ```
 
-Или вручную: `docker compose --profile mermaid up`.
+{{#endtab}}
+
+{{#tab name="Ручной"}}
+
+```bash
+docker compose --profile mermaid up
+```
+
+{{#endtab}}
+
+{{#endtabs}}
 
 ## Python-диаграммы
 
@@ -58,24 +86,66 @@ Python-диаграммы лежат в папке `python_diagrams/`.
 1. Установите Python. В проекте использовалась версия `3.13+`.
 2. Установите зависимости:
 
+{{#tabs global="runmode"}}
+
+{{#tab name="Task"}}
+
 ```bash
 task deps
 ```
 
-Или вручную: `pip install -r requirements.txt`.
+{{#endtab}}
+
+{{#tab name="Ручной"}}
+
+```bash
+pip install -r requirements.txt
+```
+
+{{#endtab}}
+
+{{#endtabs}}
 
 3. Запустите генерацию:
+
+{{#tabs global="runmode"}}
+
+{{#tab name="Task"}}
 
 ```bash
 task diagrams
 ```
 
-Или вручную: `python scripts/compile_python_diagrams.py`.
+{{#endtab}}
+
+{{#tab name="Ручной"}}
+
+```bash
+python scripts/compile_python_diagrams.py
+```
+
+{{#endtab}}
+
+{{#endtabs}}
 
 Сборка через Docker:
+
+{{#tabs global="runmode"}}
+
+{{#tab name="Task"}}
 
 ```bash
 task diagrams:docker
 ```
 
-Или вручную: `docker compose --profile python up`.
+{{#endtab}}
+
+{{#tab name="Ручной"}}
+
+```bash
+docker compose --profile python up
+```
+
+{{#endtab}}
+
+{{#endtabs}}

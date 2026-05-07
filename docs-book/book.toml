@@ -7,8 +7,13 @@ src = "src"
 [build]
 build-dir = "book"
 
+[preprocessor.tabs]
+command = "mdbook-tabs"
+
 [output.html]
 default-theme = "light"
 preferred-dark-theme = "navy"
 git-repository-url = "https://github.com/ethercod3/diploma_latex"
 mathjax-support = true
+additional-css = ["theme/tabs.css"]
+additional-js = ["theme/tabs.js"]

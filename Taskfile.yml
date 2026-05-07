@@ -98,10 +98,21 @@ tasks:
     cmds:
       - docker compose --profile docs up
 
-  docs:pull:
-    desc: Скачать Docker-образ mdBook
+  docs:build:
+    desc: Собрать Docker-образ mdBook с mdbook-tabs
     cmds:
-      - docker compose --profile docs pull
+      - docker compose --profile docs build
+
+  docs:tabs:
+    desc: Подготовить ассеты mdbook-tabs локально
+    dir: docs-book
+    cmds:
+      - mdbook-tabs install
+
+  docs:pull:
+    desc: Скачать базовый Docker-образ mdBook
+    cmds:
+      - docker pull peaceiris/mdbook@sha256:a82fd90af897238521c17e4b64479f5d56b578e4776198788256086b3a59617a
 
   docs:down:
     desc: Остановить mdBook

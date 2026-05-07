@@ -22,6 +22,8 @@ __pycache__/
 *.pyc
 node_modules/
 .pdf_diff
+docs-book/theme/tabs.css
+docs-book/theme/tabs.js
 docs-book/book/
 ~$*.docx
 *.run.xml

@@ -8,11 +8,25 @@
 2. Если не сработало, переименуйте `.tex` файл в `main.tex` или другое название на латинице.
 3. Попробуйте минимальную команду:
 
+{{#tabs global="runmode"}}
+
+{{#tab name="Task"}}
+
 ```bash
 task build:manual -- --target main.tex
 ```
 
-Или напрямую через `latexmk`: `latexmk main.tex`.
+{{#endtab}}
+
+{{#tab name="Ручной"}}
+
+```bash
+latexmk main.tex
+```
+
+{{#endtab}}
+
+{{#endtabs}}
 
 Если сборка падает из-за библиографии, проверьте, что используется `biber`, а не `bibtex`.
 

@@ -134,6 +134,8 @@ task docs:pull
 
 ```bash
 cargo install mdbook
+cargo install mdbook-tabs
+task docs:tabs
 mdbook serve docs-book
 ```
 

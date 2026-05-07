@@ -27,10 +27,27 @@ task --version
 task --list
 ```
 
+{{#tabs global="runmode"}}
+
+{{#tab name="Task"}}
+
 ```bash
 task build:images
 task build
 ```
+
+{{#endtab}}
+
+{{#tab name="Ручной"}}
+
+```bash
+docker compose --profile docx --profile mermaid --profile python --profile latex build
+python scripts/build_all.py
+```
+
+{{#endtab}}
+
+{{#endtabs}}
 
 Максимальная воспроизводимость с оригиналом будет, если собирать `Mermaid`-диаграммы из-под Windows. При сборке Mermaid через Docker шрифт для `KaTeX`-выражений может отличаться от оригинала.
 
