@@ -14,12 +14,12 @@
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
-MD5: `e7f17e5c9b26143a3bb378c81f214bd3`<br>
-SHA-1: `5c84b39c4a4ae434af3b94786c64448200ac0140`<br>
-SHA-256: `cdf925fe630c7b1e204cc6fc69e98e9a6d5b44c847a0611994f41a2bafa5192e`<br>
-SHA3-256: `a60d96bf6a627a54f067d9dc76359ada8d7689d797774406161b92778661e115`<br>
-BLAKE2s: `7a01f15b4b7ecb3e07c0e2dacb4d3ae4a656a0f2ce1620b344bfd401b9f542c3`<br>
-SHAKE-128 (256-bit output): `b7ba6fb9ebe2a46133bd790b5e242adf3013a55dc8991f111c384703a44ca76f`<br>
+MD5: `462950b484ef57bdf43eea1a8be02dc1`<br>
+SHA-1: `72e154166d377a110392d1b87208687a1e366829`<br>
+SHA-256: `afd910389ebc5601a503b04cbc8e9eb493b955c335372d58a382621e163b7319`<br>
+SHA3-256: `670ee8c98d27d3add608c712a1b79f4e1e20d494ef6f557a0d20060a657270c3`<br>
+BLAKE2s: `081660f5b1ad427db34bd63c676e614d1d03a2b5a638249df46c8cd10b9ad755`<br>
+SHAKE-128 (256-bit output): `3c8feb7e9988b8d3084bd6aecda0ee328c6c8ee8b38f3a15fbefcaaa86bf3a06`<br>
 <!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
@@ -36,21 +36,55 @@ SHAKE-128 (256-bit output): `b7ba6fb9ebe2a46133bd790b5e242adf3013a55dc8991f111c3
 | `scripts/` | Вспомогательные скрипты сборки, конвертации и сравнения PDF |
 | `docker/` | Dockerfile для отдельных профилей сборки |
 | `docs-book/` | mdBook-документация проекта |
+| `Taskfile.yml` | Единая точка входа для сборки, Docker-профилей и документации |
+
+## Установка Task
+
+Проект использует [Task](https://taskfile.dev/docs/installation) как единую точку входа для сборки и вспомогательных команд.
+
+Windows:
+
+```powershell
+winget install Task.Task
+```
+
+macOS или Linux с Homebrew:
+
+```bash
+brew install go-task/tap/go-task
+```
+
+Любая платформа с Node.js:
+
+```bash
+npm install -g @go-task/cli
+```
+
+Если эти варианты не подходят, используйте официальную инструкцию установки: <https://taskfile.dev/docs/installation>.
+
+Проверить установку:
+
+```bash
+task --version
+task --list
+```
 
 ## Быстрый старт
 
 ```bash
-docker compose --profile docx --profile mermaid --profile python --profile latex build
-python scripts/build_all.py
+task build:images
+task build
 ```
 
 Макисмальная воспроизводимость с оригиналом будет, если вы будете собирать `Mermaid`-диаграммы из-под `Windows`. Если собирать их Docker-ом, то шрифт для `KaTeX` (математических) выражений будет отличаться от оригинала. Если это для вас неважно, просто пользуйтесь скриптом выше.
 
 Для запуска скрипта потребуется Docker. Если вы не планируете использовать Docker, рекомендуемый вариант сборки LaTeX-документа - `latexmk`.
+Если `task` не установлен, используйте исходные команды напрямую: `docker compose --profile docx --profile mermaid --profile python --profile latex build` и `python scripts/build_all.py`.
 
 ## Навигация
 
 - [Документация mdBook](#документация-mdbook)
+- [Установка Task](#установка-task)
 - [Сборка без Docker](#сборка-без-docker)
 - [Настройка TeXstudio](#настройка-texstudio)
 - [Компиляция в Docker](#компиляция-в-docker)
@@ -81,7 +115,7 @@ mdBook предоставляет:
 Запустить локальную документацию:
 
 ```bash
-docker compose --profile docs up
+task docs
 ```
 
 После запуска книга доступна в браузере:
@@ -93,7 +127,7 @@ http://localhost:3000
 Заранее скачать Docker-образ документации:
 
 ```bash
-docker compose --profile docs pull
+task docs:pull
 ```
 
 Без Docker `mdbook` можно взять как готовый бинарник на странице релизов или установить через Cargo:
@@ -235,7 +269,7 @@ python scripts/build_latex_manual.py --no-latexmk
 Собрать все Docker-образы проекта:
 
 ```bash
-docker compose --profile docx --profile mermaid --profile python --profile latex build
+task build:images
 ```
 
 Собрать образ отдельного профиля:
@@ -278,7 +312,7 @@ docker compose --profile docx --profile mermaid --profile python --profile latex
 Последовательный запуск всех профилей уже вынесен в скрипты:
 
 ```bash
-python scripts/build_all.py
+task build
 ```
 
 Скрипты запускают профили в порядке `docx` $\rightarrow$ `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex` и останавливаются на первой ошибке.

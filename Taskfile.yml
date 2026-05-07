@@ -1,0 +1,114 @@
+version: '3'
+
+dotenv:
+  - .env
+
+vars:
+  COMPOSE_BUILD_PROFILES: --profile docx --profile mermaid --profile python --profile latex
+  COMPOSE_ALL_PROFILES: --profile docx --profile mermaid --profile python --profile latex
+
+tasks:
+  default:
+    desc: Показать доступные задачи
+    cmds:
+      - task --list
+
+  deps:
+    desc: Установить Python-зависимости для локальных скриптов
+    cmds:
+      - python -m pip install -r requirements.txt
+
+  hooks:
+    desc: Подключить локальные Git hooks проекта
+    cmds:
+      - git config core.hooksPath .githooks
+
+  build:
+    desc: Полная последовательная сборка через Docker (docx -> mermaid -> python -> latex)
+    cmds:
+      - python scripts/build_all.py
+
+  build:images:
+    desc: Собрать все Docker-образы проекта
+    cmds:
+      - docker compose {{.COMPOSE_BUILD_PROFILES}} build
+
+  build:manual:
+    desc: Собрать LaTeX локально через latexmk; дополнительные аргументы передаются после --
+    cmds:
+      - python scripts/build_latex_manual.py {{.CLI_ARGS}}
+
+  build:manual-chain:
+    desc: Собрать LaTeX локально ручной цепочкой lualatex/biber
+    cmds:
+      - python scripts/build_latex_manual.py --no-latexmk {{.CLI_ARGS}}
+
+  latex:
+    desc: Собрать итоговый PDF в Docker
+    cmds:
+      - docker compose --profile latex run --rm latex
+
+  docx:
+    desc: Конвертировать docx/*.docx в PDF через Docker
+    cmds:
+      - docker compose --profile docx run --rm docx_pdf
+
+  docx:keep-blank:
+    desc: Конвертировать DOCX в PDF без удаления пустых страниц
+    cmds:
+      - docker compose --profile docx run --rm -e SKIP_BLANK_PAGES=0 docx_pdf
+
+  mermaid:
+    desc: Сгенерировать Mermaid-диаграммы локально
+    cmds:
+      - python scripts/compile_mermaid.py
+
+  mermaid:docker:
+    desc: Сгенерировать Mermaid-диаграммы в Docker
+    cmds:
+      - docker compose --profile mermaid run --rm mermaid_diagrams
+
+  diagrams:
+    desc: Сгенерировать Python-диаграммы локально
+    cmds:
+      - python scripts/compile_python_diagrams.py
+
+  diagrams:docker:
+    desc: Сгенерировать Python-диаграммы в Docker
+    cmds:
+      - docker compose --profile python run --rm python_diagrams
+
+  compose:up:
+    desc: Запустить все основные Docker-профили параллельно
+    cmds:
+      - docker compose {{.COMPOSE_ALL_PROFILES}} up
+
+  compose:down:
+    desc: Остановить сервисы Docker Compose
+    cmds:
+      - docker compose down
+
+  docs:
+    desc: Запустить mdBook на http://localhost:3000
+    cmds:
+      - docker compose --profile docs up
+
+  docs:pull:
+    desc: Скачать Docker-образ mdBook
+    cmds:
+      - docker compose --profile docs pull
+
+  docs:down:
+    desc: Остановить mdBook
+    cmds:
+      - docker compose --profile docs down
+
+  hash:
+    desc: Обновить контрольные суммы PDF в README.md
+    cmds:
+      - python scripts/update_pdf_hash.py {{.CLI_ARGS}}
+
+  diff:
+    desc: Сравнить PDF между коммитами; аргументы передаются после --
+    cmds:
+      - python scripts/diff_pdf_commits.py {{.CLI_ARGS}}

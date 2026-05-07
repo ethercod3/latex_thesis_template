@@ -6,9 +6,30 @@
 
 ## Основной сценарий
 
+Установите Task:
+
+```powershell
+winget install Task.Task
+```
+
+Для macOS или Linux с Homebrew:
+
 ```bash
-docker compose --profile docx --profile mermaid --profile python --profile latex build
-python scripts/build_all.py
+brew install go-task/tap/go-task
+```
+
+Если эти варианты не подходят, используйте официальную инструкцию установки: <https://taskfile.dev/docs/installation>.
+
+Проверить установку:
+
+```bash
+task --version
+task --list
+```
+
+```bash
+task build:images
+task build
 ```
 
 Максимальная воспроизводимость с оригиналом будет, если собирать `Mermaid`-диаграммы из-под Windows. При сборке Mermaid через Docker шрифт для `KaTeX`-выражений может отличаться от оригинала.

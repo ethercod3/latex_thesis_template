@@ -5,7 +5,7 @@
 Запустить документацию:
 
 ```bash
-docker compose --profile docs up
+task docs
 ```
 
 После запуска книга доступна в браузере:
@@ -17,13 +17,13 @@ http://localhost:3000
 Остановить сервис:
 
 ```bash
-docker compose --profile docs down
+task docs:down
 ```
 
 Заранее скачать Docker-образ документации:
 
 ```bash
-docker compose --profile docs pull
+task docs:pull
 ```
 
 ## Образ

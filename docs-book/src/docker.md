@@ -37,7 +37,7 @@ docker compose --profile latex build
 Запустите компиляцию:
 
 ```bash
-docker compose --profile latex up
+task latex
 ```
 
 Профиль `latex` запускает `scripts/build_latex_docker.py`. Скрипт читает `TARGET` из переменных окружения и собирает документ через `latexmk`. Вспомогательные файлы складываются в `.aux_files_docker`, а готовый PDF остается в корне проекта.
@@ -47,7 +47,7 @@ docker compose --profile latex up
 Собрать все Docker-образы проекта:
 
 ```bash
-docker compose --profile docx --profile mermaid --profile python --profile latex build
+task build:images
 ```
 
 Собрать образ отдельного профиля:
@@ -93,5 +93,5 @@ docker compose --profile docx --profile mermaid --profile python --profile latex
 Последовательный запуск всех профилей вынесен в скрипт:
 
 ```bash
-python scripts/build_all.py
+task build
 ```
