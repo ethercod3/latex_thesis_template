@@ -1,5 +1,20 @@
 # Структура проекта
 
+```mermaid
+flowchart LR
+    TEX["*.tex<br/>preamble/"] --> PDF["Итоговый PDF"]
+    DOCX["docx/*.docx"] --> TITLE["титульник.pdf<br/>задание.pdf"]
+    MMD["mermaid/*.mmd"] --> FIGURES["figures/*.pdf"]
+    PYD["python_diagrams/*.py"] --> FIGURES
+    TITLE --> TEX
+    FIGURES --> TEX
+    SCRIPTS["scripts/*.py"] --> DOCX
+    SCRIPTS --> MMD
+    SCRIPTS --> PYD
+    DOCKER["docker/<br/>docker-compose.yaml"] --> SCRIPTS
+    DOCS["docs/*.md"] --> SITE["docs-site/"]
+```
+
 | Путь | Назначение |
 | --- | --- |
 | `*.tex`, `preamble/` | LaTeX-документы и настройки преамбулы |

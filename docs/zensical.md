@@ -24,7 +24,7 @@
 http://localhost:8000
 ```
 
-Изменения Markdown-файлов в `docs/` подхватывает `zensical serve`. После изменений в `zensical.toml` или `docs/docs_macros.py` перезапустите контейнер.
+Изменения Markdown-файлов в `docs/` подхватывает `zensical serve`. После изменений в `zensical.toml` или `docs/macros/docs_macros.py` перезапустите контейнер.
 
 Остановить сервис:
 

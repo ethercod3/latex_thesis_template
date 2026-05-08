@@ -1,5 +1,14 @@
 # Docker-профили
 
+```mermaid
+flowchart LR
+    DOCX["docx<br/>DOCX -> PDF"] --> LATEX["latex<br/>сборка диплома"]
+    MERMAID["mermaid<br/>.mmd -> figures/*.pdf"] --> LATEX
+    PYTHON["python<br/>python_diagrams -> figures/"] --> LATEX
+    LATEX --> PDF["Куприянов_И221_диплом.pdf"]
+    DOCS["docs<br/>Zensical serve"] --> SITE["http://localhost:8000"]
+```
+
 ## Переменные окружения
 
 Создайте в корне проекта файл `.env`:
@@ -205,6 +214,15 @@ TARGET="Куприянов_И221_диплом.tex"
 При запуске всех профилей Docker Compose стартует сервисы вместе. Если нужно гарантированно собрать документ уже со свежими PDF из DOCX и диаграммами, сначала запустите профили `docx`, `mermaid` и `python`, затем профиль `latex`.
 
 Последовательный запуск всех профилей вынесен в скрипт:
+
+```mermaid
+flowchart LR
+    START["task build"] --> DOCX["docx"]
+    DOCX --> MERMAID["mermaid"]
+    MERMAID --> PYTHON["python"]
+    PYTHON --> LATEX["latex"]
+    LATEX --> PDF["готовый PDF"]
+```
 
 
 
