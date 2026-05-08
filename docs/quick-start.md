@@ -59,7 +59,7 @@ task --list
 
 
 
-Скрипт `scripts/build_all.py` запускает профили в порядке: `docx` \(\rightarrow\) `mermaid` \(\rightarrow\) `python` \(\rightarrow\) `latex`.
+Скрипт `scripts/build_all.py` запускает профили в порядке: `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex`.
 
 Первый `build` будет долгим. Повторно выполнять `build` нужно только после изменения Dockerfile, зависимостей или базовых образов.
 
@@ -110,3 +110,4 @@ task --list
     python scripts/compile_mermaid.py
     python scripts/compile_python_diagrams.py
     ```
+

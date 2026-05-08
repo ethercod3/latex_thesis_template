@@ -64,7 +64,7 @@
 
 ## Профили сборки
 
-По умолчанию запускаются все профили в порядке: `docx` \(\rightarrow\) `mermaid` \(\rightarrow\) `python` \(\rightarrow\) `latex`.
+По умолчанию запускаются все профили в порядке: `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex`.
 
 Если нужно ограничить сборку, передайте опцию `--profiles`:
 
@@ -104,15 +104,16 @@
 
 | Значение | Что запускается |
 | --- | --- |
-| `all` | `docx` \(\rightarrow\) `mermaid` \(\rightarrow\) `python` \(\rightarrow\) `latex` |
-| `docx` | `docx` \(\rightarrow\) `latex` |
-| `mermaid` | `mermaid` \(\rightarrow\) `latex` |
-| `python` | `python` \(\rightarrow\) `latex` |
+| `all` | `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex` |
+| `docx` | `docx` {{ arrow }} `latex` |
+| `mermaid` | `mermaid` {{ arrow }} `latex` |
+| `python` | `python` {{ arrow }} `latex` |
 | `latex` | Только `latex` |
-| `mermaid,python` | `mermaid` \(\rightarrow\) `python` \(\rightarrow\) `latex` |
+| `mermaid,python` | `mermaid` {{ arrow }} `python` {{ arrow }} `latex` |
 
-В `--profiles` можно передать несколько профилей через запятую: `docx,python`, `mermaid,python`, `docx,mermaid,python`. Скрипт запускает их в порядке `docx` \(\rightarrow\) `mermaid` \(\rightarrow\) `python` \(\rightarrow\) `latex`.
+В `--profiles` можно передать несколько профилей через запятую: `docx,python`, `mermaid,python`, `docx,mermaid,python`. Скрипт запускает их в порядке `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex`.
 
 Если `latex` не указан явно, он добавляется автоматически, потому что именно этот профиль собирает итоговый PDF для сравнения.
 
 Перед запуском рабочее дерево Git должно быть чистым. После завершения скрипт возвращается на исходный `HEAD`, удаляет временные файлы и восстанавливает текущие файлы из `figures`, а также PDF в корне проекта, например `титульник.pdf` и `задание.pdf`.
+

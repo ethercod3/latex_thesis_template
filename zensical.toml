@@ -4,10 +4,6 @@ site_author = "Artem"
 docs_dir = "docs"
 site_dir = "docs-site"
 dev_addr = "0.0.0.0:8000"
-extra_javascript = [
-  "javascripts/mathjax.js",
-  "https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"
-]
 nav = [
   {"Введение" = "README.md"},
   {"Структура проекта" = "project-structure.md"},
@@ -54,5 +50,5 @@ custom_fences = [
 [project.markdown_extensions.pymdownx.tabbed]
 alternate_style = true
 
-[project.markdown_extensions.pymdownx.arithmatex]
-generic = true
+[project.markdown_extensions.zensical.extensions.macros]
+module_name = "docs_macros"
