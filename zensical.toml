@@ -55,3 +55,15 @@ alternate_style = true
 
 [project.markdown_extensions.zensical.extensions.macros]
 module_name = "docs_macros"
+
+[project.markdown_extensions.attr_list]
+[project.markdown_extensions.pymdownx.emoji]
+
+
+[[project.extra.social]]
+icon = "fontawesome/brands/telegram"
+link = "https://t.me/eth3ria1"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/ethercod3"
