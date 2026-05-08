@@ -54,7 +54,7 @@ custom_fences = [
 alternate_style = true
 
 [project.markdown_extensions.zensical.extensions.macros]
-module_name = "docs_macros"
+module_name = "docs.docs_macros"
 
 [project.markdown_extensions.attr_list]
 [project.markdown_extensions.pymdownx.emoji]

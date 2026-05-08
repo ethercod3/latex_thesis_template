@@ -115,7 +115,7 @@ task docs
 http://localhost:8000
 ```
 
-Изменения Markdown-файлов в `docs/` подхватывает `zensical serve`. После изменений в `zensical.toml` или `docs_macros.py` перезапустите контейнер.
+Изменения Markdown-файлов в `docs/` подхватывает `zensical serve`. После изменений в `zensical.toml` или `docs/docs_macros.py` перезапустите контейнер.
 
 Заранее скачать Docker-образ документации:
 
@@ -594,4 +594,3 @@ task deps
 Или вручную: `pip install -r requirements.txt`.
 
 Hook считает хэши текущего PDF алгоритмами из стандартного `hashlib`. Если PDF отсутствует, README не меняется и коммит продолжается со старым значением.
-
