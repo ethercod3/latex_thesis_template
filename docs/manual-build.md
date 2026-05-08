@@ -5,18 +5,19 @@
 !!! warning "Важно"
     В этом проекте `latexmk` заметно сокращает время повторной компиляции. Первый запуск через `latexmk` занимает около 74 секунд, повторный - около 18 секунд. Режим `--no-latexmk` с ручной цепочкой каждый раз занимает примерно 53-54 секунды.
 
-Первый запуск `latexmk` может быть дольше ручной сборки, потому что он строит свое служебное состояние, анализирует зависимости, создает `.fdb_latexmk` и выполняет полный цикл сборки. На следующих запусках `latexmk` использует эту информацию и пересобирает только то, что действительно изменилось.
+Первый запуск `latexmk` может быть дольше ручной сборки, потому что он строит свое служебное состояние, анализирует зависимости, создает `.fdb_latexmk` и выполняет полный цикл сборки.[^latexmk-cache] На следующих запусках `latexmk` использует эту информацию и пересобирает только то, что действительно изменилось.
 
 ## Что нужно подготовить отдельно
 
-`latexmk` собирает только LaTeX-документ. Перед сборкой без Docker нужно отдельно подготовить все внешние артефакты, которые подключаются в `.tex`:
+!!! warning "Внешние артефакты"
+    `latexmk` собирает только LaTeX-документ. Перед сборкой без Docker нужно отдельно подготовить все внешние артефакты, которые подключаются в `.tex`:
 
-- `титульник.pdf` и `задание.pdf` должны лежать в корне проекта. Их можно получить из `docx/*.docx` вручную через Microsoft Word или LibreOffice, см. [Титульники](title-pages.md)
-- Mermaid-диаграммы из `mermaid/*.mmd` нужно заранее сгенерировать в `figures/`, см. [Диаграммы](diagrams.md).
-- Python-диаграммы нужно заранее сгенерировать командой `task diagrams` или вручную `python scripts/compile_python_diagrams.py`.
-- Если в приложениях подключается код, он должен лежать по ожидаемому пути, см. [Код в приложениях](source-code.md).
+    - `титульник.pdf` и `задание.pdf` должны лежать в корне проекта. Их можно получить из `docx/*.docx` вручную через Microsoft Word или LibreOffice, см. [Титульники](/title-pages/).
+    - Mermaid-диаграммы из `mermaid/*.mmd` нужно заранее сгенерировать в `figures/`, см. [Диаграммы](/diagrams/).
+    - Python-диаграммы нужно заранее сгенерировать командой `task diagrams` или вручную `python scripts/compile_python_diagrams.py`.
+    - Если в приложениях подключается код, он должен лежать по ожидаемому пути, см. [Код в приложениях](/source-code/).
 
-Если эти файлы не подготовлены, `latexmk` может завершиться ошибкой из-за отсутствующих PDF, изображений или листингов.
+    Если эти файлы не подготовлены, `latexmk` может завершиться ошибкой из-за отсутствующих PDF, изображений или листингов.
 
 ## Подготовка
 
@@ -179,7 +180,8 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
 
-Этот режим медленнее на повторных сборках: в текущем проекте около 53-54 секунд каждый раз против примерно 18 секунд при повторном запуске через `latexmk`.
+!!! note "Когда нужен ручной режим"
+    Этот режим медленнее на повторных сборках: в текущем проекте около 53-54 секунд каждый раз против примерно 18 секунд при повторном запуске через `latexmk`.
 
 ## Полностью ручная компиляция
 
@@ -193,21 +195,23 @@ mkdir .aux_files
 
 Так как проект использует `biblatex` с backend `biber`, одного запуска `lualatex` недостаточно:
 
-```bash
-lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
-biber ".aux_files/<файл>.bcf"
-lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
-lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
-```
+??? example "Ручная цепочка для произвольного `.tex` файла"
+    ```bash
+    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+    biber ".aux_files/<файл>.bcf"
+    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+    ```
 
 Для основного файла проекта:
 
-```bash
-lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
-biber ".aux_files/Куприянов_И221_диплом.bcf"
-lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
-lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
-```
+??? example "Ручная цепочка для основного файла проекта"
+    ```bash
+    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+    biber ".aux_files/Куприянов_И221_диплом.bcf"
+    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+    ```
 
 После сборки итоговый PDF окажется в `.aux_files`. Его нужно перенести в корень проекта:
 
@@ -220,3 +224,5 @@ mv ".aux_files/<файл>.pdf" .
 ```bat
 move ".aux_files\Куприянов_И221_диплом.pdf" .
 ```
+
+[^latexmk-cache]: Служебные файлы `latexmk` помогают понять, какие зависимости документа изменились: библиография, подключенные `.tex`-файлы, изображения и вспомогательные LaTeX-артефакты. Поэтому повторная сборка обычно короче полной ручной цепочки.
