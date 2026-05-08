@@ -14,12 +14,12 @@
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
-MD5: `462950b484ef57bdf43eea1a8be02dc1`<br>
-SHA-1: `72e154166d377a110392d1b87208687a1e366829`<br>
-SHA-256: `afd910389ebc5601a503b04cbc8e9eb493b955c335372d58a382621e163b7319`<br>
-SHA3-256: `670ee8c98d27d3add608c712a1b79f4e1e20d494ef6f557a0d20060a657270c3`<br>
-BLAKE2s: `081660f5b1ad427db34bd63c676e614d1d03a2b5a638249df46c8cd10b9ad755`<br>
-SHAKE-128 (256-bit output): `3c8feb7e9988b8d3084bd6aecda0ee328c6c8ee8b38f3a15fbefcaaa86bf3a06`<br>
+MD5: `985a48812bee0b3adebf810aff8dcc60`<br>
+SHA-1: `dbffdae1f4e902fb3f5c1881f21b21ccd4be8fa6`<br>
+SHA-256: `b17943da65c9efb04e3bc45cf4b2f59fe534b5474f50c6f674a0bd5063a25907`<br>
+SHA3-256: `c0a6d3117d41d9cb15c53d3aececb189ec6140b4ef90ec7e5feab82517d1c16c`<br>
+BLAKE2s: `fa2d567fc713437a41dca655342bc482133c648ad805fab084b327c4f8713166`<br>
+SHAKE-128 (256-bit output): `08b8228ba94435f74788dcad3c9ed5f2f731f89ab9c987194a05f086703528e6`<br>
 <!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
@@ -170,7 +170,7 @@ zensical serve --config-file zensical.toml
 5. Собрать основной документ через `latexmk`:
 
     ```bash
-    task build:local
+    task latex:local
     ```
 
     Или напрямую через `latexmk`: `latexmk "Куприянов_И221_диплом.tex"`.
@@ -180,7 +180,7 @@ zensical serve --config-file zensical.toml
     Для другого `.tex` файла:
 
     ```bash
-    task build:local -- --target "<файл>.tex"
+    task latex:local -- --target "<файл>.tex"
     ```
 
     Или напрямую через `latexmk`: `latexmk "<файл>.tex"`.
@@ -190,7 +190,7 @@ zensical serve --config-file zensical.toml
 Если удобнее читать `TARGET` из `.env`, можно использовать скрипт. По умолчанию он тоже собирает документ через `latexmk`:
 
 ```bash
-task build:local
+task latex:local
 ```
 
 Или вручную: `python scripts/build_latex_manual.py`.
@@ -198,7 +198,7 @@ task build:local
 Если нужно собрать другой файл без изменения `.env`, передайте его явно:
 
 ```bash
-task build:local -- --target "<файл>.tex"
+task latex:local -- --target "<файл>.tex"
 ```
 
 Или вручную: `python scripts/build_latex_manual.py --target "<файл>.tex"`.
@@ -206,7 +206,7 @@ task build:local -- --target "<файл>.tex"
 Если нужно отключить `latexmk` и запустить старую ручную цепочку `lualatex`, `biber`, `lualatex`, `lualatex`, передайте флаг:
 
 ```bash
-task build:manual-chain
+task latex:manual_chain
 ```
 
 Или вручную: `python scripts/build_latex_manual.py --no-latexmk`.
@@ -266,7 +266,7 @@ task build:manual-chain
 3. Запустите компиляцию:
 
     ```bash
-    task latex
+    task latex:docker
     ```
 
     Или вручную: `docker compose --profile latex up`.
@@ -315,7 +315,7 @@ docker compose --profile docx build
 Запуск отдельных профилей:
 
 ```bash
-task latex
+task latex:docker
 task mermaid:docker
 task diagrams:docker
 task docx
@@ -433,7 +433,7 @@ task diff -- <commit_1> <commit_2> --profiles latex
 2. Используйте следующую команду для компиляции:
 
     ```bash
-    task build:local -- --target main.tex
+    task latex:local -- --target main.tex
     ```
 
     Или напрямую через `latexmk`: `latexmk main.tex`.
