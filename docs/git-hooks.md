@@ -2,48 +2,52 @@
 
 Чтобы перед каждым коммитом автоматически обновлялись контрольные суммы итогового PDF в README, подключите локальные hooks:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task hooks
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task hooks
+    ```
 
-```bash
-git config core.hooksPath .githooks
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
+
+
+    ```bash
+    git config core.hooksPath .githooks
+    ```
+
+
+
+
 
 Для работы hook нужен Python-пакет `python-dotenv`. Он указан в `requirements.txt`.
 
 Если окружение еще не подготовлено, установите зависимости:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task deps
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task deps
+    ```
 
-```bash
-pip install -r requirements.txt
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
+
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+
+
+
 
 Hook считает хэши текущего PDF алгоритмами из стандартного `hashlib`. Если PDF отсутствует, README не меняется и коммит продолжается со старым значением.

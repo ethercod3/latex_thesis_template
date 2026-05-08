@@ -94,28 +94,17 @@ tasks:
       - docker compose down
 
   docs:
-    desc: Запустить mdBook на http://localhost:3000
+    desc: Запустить Zensical на http://localhost:8000
     cmds:
       - docker compose --profile docs up
 
-  docs:build:
-    desc: Собрать Docker-образ mdBook с mdbook-tabs
-    cmds:
-      - docker compose --profile docs build
-
-  docs:tabs:
-    desc: Подготовить ассеты mdbook-tabs локально
-    dir: docs-book
-    cmds:
-      - mdbook-tabs install
-
   docs:pull:
-    desc: Скачать базовый Docker-образ mdBook
+    desc: Скачать официальный Docker-образ Zensical
     cmds:
-      - docker pull peaceiris/mdbook@sha256:a82fd90af897238521c17e4b64479f5d56b578e4776198788256086b3a59617a
+      - docker compose --profile docs pull docs
 
   docs:down:
-    desc: Остановить mdBook
+    desc: Остановить Zensical
     cmds:
       - docker compose --profile docs down
 

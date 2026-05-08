@@ -13,53 +13,57 @@ LaTeX вставляет титульник из файла `титульник.
 
 Конвертация через Docker:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task docx
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task docx
+    ```
 
-```bash
-docker compose --profile docx up
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
+
+
+    ```bash
+    docker compose --profile docx up
+    ```
+
+
+
+
 
 Профиль берет все файлы `docx/*.docx` и складывает одноименные PDF в корень проекта, например:
 
 
-`docx/титульник.docx` \\(\\rightarrow\\) `титульник.pdf`
+`docx/титульник.docx` \(\rightarrow\) `титульник.pdf`
 
 При конвертации профиль пропускает пустые страницы. Если нужно сохранить PDF как есть, запустите профиль с переменной `SKIP_BLANK_PAGES=0`:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task docx:keep-blank
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task docx:keep-blank
+    ```
 
-```bash
-docker compose --profile docx run --rm -e SKIP_BLANK_PAGES=0 docx_pdf
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
 
-Альтернативный вариант - открыть DOCX в Microsoft Word и экспортировать его в PDF вручную: `Файл` \\(\\rightarrow\\) `Экспорт` \\(\\rightarrow\\) `Создать PDF/XPS`.
+
+    ```bash
+    docker compose --profile docx run --rm -e SKIP_BLANK_PAGES=0 docx_pdf
+    ```
+
+
+
+
+
+Альтернативный вариант - открыть DOCX в Microsoft Word и экспортировать его в PDF вручную: `Файл` \(\rightarrow\) `Экспорт` \(\rightarrow\) `Создать PDF/XPS`.
 
 Для титульника и задания нужно сохранить PDF в корень проекта с именами `титульник.pdf` и `задание.pdf`.

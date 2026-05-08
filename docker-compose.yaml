@@ -46,13 +46,11 @@ services:
 
   docs:
     profiles: ["docs"]
-    build:
-      context: .
-      dockerfile: ./docker/docs.dockerfile
+    image: zensical/zensical:0.0.40
     volumes:
-      - ./docs-book:/book
-    working_dir: /book
+      - ./:/data
+    working_dir: /data
     ports:
-      - "3000:3000"
+      - "8000:8000"
     entrypoint: ["sh", "-lc"]
-    command: ["mdbook-tabs install && mdbook serve --hostname 0.0.0.0 --port 3000"]
+    command: ["zensical serve --config-file zensical.toml"]

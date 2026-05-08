@@ -35,7 +35,7 @@ SHAKE-128 (256-bit output): `3c8feb7e9988b8d3084bd6aecda0ee328c6c8ee8b38f3a15fbe
 | `figures/` | Сгенерированные изображения и PDF для вставки в документ |
 | `scripts/` | Вспомогательные скрипты сборки, конвертации и сравнения PDF |
 | `docker/` | Dockerfile для отдельных профилей сборки |
-| `docs-book/` | mdBook-документация проекта |
+| `docs/` | Zensical-документация проекта |
 | `Taskfile.yml` | Единая точка входа для сборки, Docker-профилей и документации |
 
 ## Установка Task
@@ -83,7 +83,7 @@ task build
 
 ## Навигация
 
-- [Документация mdBook](#документация-mdbook)
+- [Документация](#документация)
 - [Установка Task](#установка-task)
 - [Сборка без Docker](#сборка-без-docker)
 - [Настройка TeXstudio](#настройка-texstudio)
@@ -97,20 +97,9 @@ task build
 - [Полностью ручная компиляция LaTeX](#полностью-ручная-компиляция-latex)
 - [Git hooks](#git-hooks)
 
-## Документация mdBook
+## Документация
 
-Инструмент mdBook предоставляет функционал для локального запуска веб-сервиса, содержащего документацию.
-
-mdBook предоставляет:
-
-- Удобную навигацию в sidebar
-- Поиск по документации
-- Выбор нескольких тем, включая светлые и темные
-- Вывод всей документации в PDF для последующей отправки или печати
-
-<br>
-
-<img src="./github_images/mdbook.png" height=400>
+Документация проекта лежит в `docs/` и запускается через Zensical. Для контейнерного запуска используется официальный Docker-образ `zensical/zensical:0.0.40`.
 
 Запустить локальную документацию:
 
@@ -118,10 +107,10 @@ mdBook предоставляет:
 task docs
 ```
 
-После запуска книга доступна в браузере:
+После запуска сайт доступен в браузере:
 
 ```text
-http://localhost:3000
+http://localhost:8000
 ```
 
 Заранее скачать Docker-образ документации:
@@ -130,16 +119,12 @@ http://localhost:3000
 task docs:pull
 ```
 
-Без Docker `mdbook` можно взять как готовый бинарник на странице релизов или установить через Cargo:
+Без Docker Zensical можно установить в Python-окружение:
 
 ```bash
-cargo install mdbook
-cargo install mdbook-tabs
-task docs:tabs
-mdbook serve docs-book
+python -m pip install zensical
+zensical serve --config-file zensical.toml
 ```
-
-Официальная инструкция: <https://rust-lang.github.io/mdBook/guide/installation.html>
 
 ## Сборка без Docker
 

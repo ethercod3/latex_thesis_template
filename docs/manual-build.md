@@ -24,25 +24,27 @@
 3. Клонируйте репозиторий.
 4. Установите Python-зависимости для вспомогательных скриптов:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task deps
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task deps
+    ```
 
-```bash
-pip install -r requirements.txt
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
+
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+
+
+
 
 5. Создайте в корне проекта файл `.env` и укажите основной `.tex` файл:
 
@@ -54,47 +56,51 @@ TARGET="Куприянов_И221_диплом.tex"
 
 Соберите основной документ:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task build:manual
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task build:manual
+    ```
 
-```bash
-latexmk "Куприянов_И221_диплом.tex"
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
+
+
+    ```bash
+    latexmk "Куприянов_И221_диплом.tex"
+    ```
+
+
+
+
 
 Для другого `.tex` файла:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task build:manual -- --target "<файл>.tex"
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task build:manual -- --target "<файл>.tex"
+    ```
 
-```bash
-latexmk "<файл>.tex"
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
+
+
+    ```bash
+    latexmk "<файл>.tex"
+    ```
+
+
+
+
 
 Конфигурация находится в `.latexmkrc`: используется `LuaLaTeX`, `biber`, вспомогательные файлы складываются в `.aux_files`, а готовый PDF остается в корне проекта.
 
@@ -102,69 +108,75 @@ latexmk "<файл>.tex"
 
 Если удобнее читать `TARGET` из `.env`, можно использовать скрипт. По умолчанию он тоже собирает документ через `latexmk`:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task build:manual
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task build:manual
+    ```
 
-```bash
-python scripts/build_latex_manual.py
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
+
+
+    ```bash
+    python scripts/build_latex_manual.py
+    ```
+
+
+
+
 
 Если нужно собрать другой файл без изменения `.env`, передайте его явно:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task build:manual -- --target "<файл>.tex"
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task build:manual -- --target "<файл>.tex"
+    ```
 
-```bash
-python scripts/build_latex_manual.py --target "<файл>.tex"
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
+
+
+    ```bash
+    python scripts/build_latex_manual.py --target "<файл>.tex"
+    ```
+
+
+
+
 
 Если нужно отключить `latexmk` и запустить старую ручную цепочку `lualatex`, `biber`, `lualatex`, `lualatex`, передайте флаг:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task build:manual-chain
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task build:manual-chain
+    ```
 
-```bash
-python scripts/build_latex_manual.py --no-latexmk
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
+
+
+    ```bash
+    python scripts/build_latex_manual.py --no-latexmk
+    ```
+
+
+
+
 
 Этот режим медленнее на повторных сборках: в текущем проекте около 53-54 секунд каждый раз против примерно 18 секунд при повторном запуске через `latexmk`.
 

@@ -4,6 +4,18 @@
 
 Mermaid-диаграммы лежат в папке `mermaid/`, а результат сборки сохраняется в `figures/`.
 
+В Zensical можно вставлять Mermaid напрямую в Markdown через кодовый блок `mermaid`. Такая диаграмма рендерится в браузере и автоматически подстраивается под светлую или темную тему:
+
+```mermaid
+flowchart LR
+    MMD[mermaid/*.mmd] --> SCRIPT[scripts/compile_mermaid.py]
+    SCRIPT --> FIGURES[figures/*.pdf]
+    FIGURES --> LATEX[LaTeX-документ]
+    MMD -. native preview .-> ZENSICAL[Zensical-документация]
+```
+
+Для итогового PDF диплома по-прежнему нужны сгенерированные файлы из `figures/`, потому что LaTeX подключает готовые изображения.
+
 ## Просмотр `.mmd` на GitHub
 
 <img src="./assets/mermaid_no_code.png" height="200">
@@ -31,25 +43,27 @@ mmdc -i <file.mmd> -o <file.pdf> -f
 
 Запустите скрипт:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task mermaid
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task mermaid
+    ```
 
-```bash
-python scripts/compile_mermaid.py
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
+
+
+    ```bash
+    python scripts/compile_mermaid.py
+    ```
+
+
+
+
 
 Скрипт прогоняет все файлы из `mermaid/` и кладет результат в `figures/`.
 
@@ -57,25 +71,27 @@ python scripts/compile_mermaid.py
 
 Сборка Mermaid через Docker:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task mermaid:docker
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task mermaid:docker
+    ```
 
-```bash
-docker compose --profile mermaid up
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
+
+
+    ```bash
+    docker compose --profile mermaid up
+    ```
+
+
+
+
 
 ## Python-диаграммы
 
@@ -86,66 +102,68 @@ Python-диаграммы лежат в папке `python_diagrams/`.
 1. Установите Python. В проекте использовалась версия `3.13+`.
 2. Установите зависимости:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task deps
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task deps
+    ```
 
-```bash
-pip install -r requirements.txt
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
+
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+
+
+
 
 3. Запустите генерацию:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task diagrams
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task diagrams
+    ```
 
-```bash
-python scripts/compile_python_diagrams.py
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
+
+
+    ```bash
+    python scripts/compile_python_diagrams.py
+    ```
+
+
+
+
 
 Сборка через Docker:
 
-{{#tabs global="runmode"}}
 
-{{#tab name="Task"}}
 
-```bash
-task diagrams:docker
-```
+=== "Task"
 
-{{#endtab}}
 
-{{#tab name="Ручной"}}
+    ```bash
+    task diagrams:docker
+    ```
 
-```bash
-docker compose --profile python up
-```
 
-{{#endtab}}
 
-{{#endtabs}}
+=== "Ручной"
+
+
+    ```bash
+    docker compose --profile python up
+    ```
