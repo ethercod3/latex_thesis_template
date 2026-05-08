@@ -1,6 +1,6 @@
 [project]
 site_name = "Документация проекта диплома"
-site_author = "Artem"
+site_author = "Artyom Kupriianov"
 docs_dir = "docs"
 site_dir = "docs-site"
 dev_addr = "0.0.0.0:8000"
@@ -32,16 +32,16 @@ features = [
 [[project.theme.palette]]
 media = "(prefers-color-scheme: light)"
 scheme = "default"
-primary = "amber"
-accent = "amber"
+primary = "teal"
+accent = "teal"
 toggle.icon = "lucide/sun"
 toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
 media = "(prefers-color-scheme: dark)"
 scheme = "slate"
-primary = "amber"
-accent = "amber"
+primary = "teal"
+accent = "teal"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to light mode"
 
