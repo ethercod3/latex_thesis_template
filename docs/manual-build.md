@@ -62,7 +62,7 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
     ```bash
-    task build:local
+    task latex:local
     ```
 
 
@@ -86,7 +86,7 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
     ```bash
-    task build:local -- --target "<файл>.tex"
+    task latex:local -- --target "<файл>.tex"
     ```
 
 
@@ -114,7 +114,7 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
     ```bash
-    task build:local
+    task latex:local
     ```
 
 
@@ -138,7 +138,7 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
     ```bash
-    task build:local -- --target "<файл>.tex"
+    task latex:local -- --target "<файл>.tex"
     ```
 
 
@@ -162,7 +162,7 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
     ```bash
-    task build:manual-chain
+    task latex:manual_chain
     ```
 
 

@@ -14,7 +14,7 @@
 
 
     ```bash
-    task build:local -- --target main.tex
+    task latex:local -- --target main.tex
     ```
 
 

@@ -60,7 +60,7 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
     ```bash
-    task latex
+    task latex:docker
     ```
 
 
@@ -156,7 +156,7 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
     ```bash
-    task latex
+    task latex:docker
     task mermaid:docker
     task diagrams:docker
     task docx
