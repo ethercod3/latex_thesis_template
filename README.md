@@ -170,7 +170,7 @@ zensical serve --config-file zensical.toml
 5. Собрать основной документ через `latexmk`:
 
     ```bash
-    task build:manual
+    task build:local
     ```
 
     Или напрямую через `latexmk`: `latexmk "Куприянов_И221_диплом.tex"`.
@@ -180,7 +180,7 @@ zensical serve --config-file zensical.toml
     Для другого `.tex` файла:
 
     ```bash
-    task build:manual -- --target "<файл>.tex"
+    task build:local -- --target "<файл>.tex"
     ```
 
     Или напрямую через `latexmk`: `latexmk "<файл>.tex"`.
@@ -190,7 +190,7 @@ zensical serve --config-file zensical.toml
 Если удобнее читать `TARGET` из `.env`, можно использовать скрипт. По умолчанию он тоже собирает документ через `latexmk`:
 
 ```bash
-task build:manual
+task build:local
 ```
 
 Или вручную: `python scripts/build_latex_manual.py`.
@@ -198,7 +198,7 @@ task build:manual
 Если нужно собрать другой файл без изменения `.env`, передайте его явно:
 
 ```bash
-task build:manual -- --target "<файл>.tex"
+task build:local -- --target "<файл>.tex"
 ```
 
 Или вручную: `python scripts/build_latex_manual.py --target "<файл>.tex"`.
@@ -433,7 +433,7 @@ task diff -- <commit_1> <commit_2> --profiles latex
 2. Используйте следующую команду для компиляции:
 
     ```bash
-    task build:manual -- --target main.tex
+    task build:local -- --target main.tex
     ```
 
     Или напрямую через `latexmk`: `latexmk main.tex`.

@@ -38,7 +38,7 @@ tasks:
     cmds:
       - docker compose --profile {{.CLI_ARGS}} build
 
-  build:manual:
+  build:local:
     desc: Собрать LaTeX локально через latexmk; дополнительные аргументы передаются после --
     cmds:
       - python scripts/build_latex_manual.py {{.CLI_ARGS}}
