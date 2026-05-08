@@ -6,10 +6,9 @@ import shutil
 import subprocess
 import sys
 
-from dotenv import dotenv_values
+from common import PROJECT_DIR, env_value, require_command, run_command
 
 
-PROJECT_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_DIR = PROJECT_DIR / ".pdf_diff"
 DEFAULT_SAVED_DIFF_DIR = DEFAULT_OUTPUT_DIR / "saved"
 FIGURES_DIR = PROJECT_DIR / "figures"
@@ -26,18 +25,6 @@ PROFILE_GROUPS = {
     "latex": ["latex"],
     "mermaid": ["mermaid", "latex"],
 }
-
-
-def run(command: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
-    print(f"==> {' '.join(command)}", flush=True)
-    return subprocess.run(
-        command,
-        cwd=PROJECT_DIR,
-        check=check,
-        text=True,
-        stdout=None,
-        stderr=None,
-    )
 
 
 def capture(command: list[str]) -> str:
@@ -62,15 +49,6 @@ def docker_compose_command() -> list[str]:
         "Не найден Docker Compose. Установите Docker Desktop или docker-compose и убедитесь, "
         "что команда доступна в терминале."
     )
-
-
-def env_value(name: str) -> str | None:
-    env_path = PROJECT_DIR / ".env"
-    if not env_path.exists():
-        return None
-
-    value = dotenv_values(env_path).get(name)
-    return value if value else None
 
 
 def target_pdf_name() -> str:
@@ -163,11 +141,11 @@ def run_profiles(profiles: list[str]) -> None:
     print(f"Профили сборки: {format_profiles(profiles)}", flush=True)
     for profile in profiles:
         service = PROFILE_SERVICES[profile]
-        run([*compose, "--profile", profile, "run", "--rm", service])
+        run_command([*compose, "--profile", profile, "run", "--rm", service])
 
 
 def build_pdf(commit: str, pdf_name: str, destination_dir: Path, profiles: list[str]) -> Path:
-    run(["git", "checkout", "--detach", commit])
+    run_command(["git", "checkout", "--detach", commit])
 
     run_profiles(profiles)
 
@@ -185,11 +163,7 @@ def build_pdf(commit: str, pdf_name: str, destination_dir: Path, profiles: list[
 
 
 def require_diff_pdf() -> None:
-    if shutil.which("diff-pdf") is None:
-        raise RuntimeError(
-            "Не найдена программа diff-pdf. Установите diff-pdf и убедитесь, "
-            "что команда доступна в терминале."
-        )
+    require_command("diff-pdf")
 
 
 def open_diff_pdf(left_pdf: Path, right_pdf: Path) -> int:

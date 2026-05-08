@@ -33,6 +33,7 @@ WORKDIR /data
 
 COPY ./mermaid ./mermaid
 RUN mkdir -p figures scripts
+COPY ./scripts/common.py ./scripts/common.py
 COPY ./scripts/compile_mermaid.py ./scripts/compile_mermaid.py
 
 RUN printf '%s\n' '{"executablePath":"/usr/bin/chromium","args":["--no-sandbox","--disable-setuid-sandbox","--disable-dev-shm-usage","--disable-gpu","--no-zygote"]}' > puppeteer-config.json && \

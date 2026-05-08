@@ -5,15 +5,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+from common import run_command
+
 
 AUX_DIR = Path(".aux_files_docker")
-
-
-def run(command: list[str]) -> None:
-    print("+ " + " ".join(command), flush=True)
-    result = subprocess.run(command)
-    if result.returncode != 0:
-        raise subprocess.CalledProcessError(result.returncode, command)
 
 
 def main() -> None:
@@ -29,7 +24,7 @@ def main() -> None:
 
     AUX_DIR.mkdir(exist_ok=True)
 
-    run(
+    run_command(
         [
             "latexmk",
             "-lualatex",

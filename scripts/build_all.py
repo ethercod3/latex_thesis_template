@@ -1,10 +1,8 @@
-from pathlib import Path
 import shutil
 import subprocess
 import sys
 
-
-PROJECT_DIR = Path(__file__).resolve().parents[1]
+from common import PROJECT_DIR
 
 PROFILES = [
     ("docx", "docx_pdf"),

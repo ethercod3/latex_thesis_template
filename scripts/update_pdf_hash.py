@@ -6,12 +6,10 @@ import re
 import sys
 from pathlib import Path
 
-from dotenv import dotenv_values
+from common import PROJECT_DIR, env_value
 
 
-PROJECT_DIR = Path(__file__).resolve().parents[1]
 README_PATH = PROJECT_DIR / "README.md"
-ENV_PATH = PROJECT_DIR / ".env"
 START_MARKER = "<!-- DIPLOMA_HASHES_START -->"
 END_MARKER = "<!-- DIPLOMA_HASHES_END -->"
 LEGACY_START_MARKER = "<!-- DIPLOMA_SHA256_START -->"
@@ -25,16 +23,6 @@ HASH_ALGORITHMS = (
     ("blake2s", "BLAKE2s", None),
     ("shake_128", "SHAKE-128 (256-bit output)", 32),
 )
-
-
-def env_value(name: str) -> str | None:
-    if not ENV_PATH.exists():
-        return None
-
-    value = dotenv_values(ENV_PATH).get(name)
-    return value if value else None
-
-
 def target_pdf_path(pdf_arg: str | None) -> Path:
     if pdf_arg:
         return (PROJECT_DIR / pdf_arg).resolve()

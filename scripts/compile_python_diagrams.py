@@ -1,9 +1,8 @@
-from pathlib import Path
 import subprocess
 import sys
 
+from common import PROJECT_DIR
 
-PROJECT_DIR = Path(__file__).resolve().parents[1]
 SOURCE_DIR = PROJECT_DIR / "python_diagrams"
 OUTPUT_DIR = PROJECT_DIR / "figures"
 

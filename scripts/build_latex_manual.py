@@ -6,20 +6,10 @@ import shutil
 import subprocess
 import sys
 
-from dotenv import dotenv_values
+from common import PROJECT_DIR, env_value, require_command, run_command
 
 
-PROJECT_DIR = Path(__file__).resolve().parents[1]
-ENV_PATH = PROJECT_DIR / ".env"
 AUX_DIR = PROJECT_DIR / ".aux_files"
-
-
-def env_value(name: str) -> str | None:
-    if not ENV_PATH.exists():
-        return None
-
-    value = dotenv_values(ENV_PATH).get(name)
-    return value if value else None
 
 
 def target_tex_path(target_arg: str | None) -> Path:
@@ -38,19 +28,6 @@ def target_tex_path(target_arg: str | None) -> Path:
         "Не удалось понять, какой .tex-файл нужно собрать. "
         "Укажите TARGET в файле .env или передайте путь через --target."
     )
-
-
-def require_command(command: str) -> None:
-    if shutil.which(command) is None:
-        raise RuntimeError(
-            f"Не найдена команда '{command}'. Установите нужную программу и убедитесь, "
-            "что она доступна в терминале."
-        )
-
-
-def run_command(command: list[str]) -> None:
-    print(f"\n==> {' '.join(command)}", flush=True)
-    subprocess.run(command, cwd=PROJECT_DIR, check=True)
 
 
 def lualatex_command(target: Path) -> list[str]:

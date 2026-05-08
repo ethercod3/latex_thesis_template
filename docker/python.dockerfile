@@ -34,6 +34,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p figures scripts
 
 COPY ./python_diagrams ./python_diagrams
+COPY ./scripts/common.py ./scripts/common.py
 COPY ./scripts/compile_python_diagrams.py ./scripts/compile_python_diagrams.py
 
 RUN chown -R appuser:appuser /data

@@ -4,8 +4,8 @@ import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
+from common import PROJECT_DIR
 
-PROJECT_DIR = Path(__file__).resolve().parents[1]
 SRC = PROJECT_DIR / "mermaid"
 DST = PROJECT_DIR / "figures"
 
