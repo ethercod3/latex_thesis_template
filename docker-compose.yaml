@@ -54,3 +54,9 @@ services:
       - "8000:8000"
     entrypoint: ["sh", "-lc"]
     command: ["zensical serve --config-file zensical.toml"]
+    develop:
+      watch:
+        - action: restart
+          path: ./zensical.toml
+        - action: restart
+          path: ./docs_macros.py

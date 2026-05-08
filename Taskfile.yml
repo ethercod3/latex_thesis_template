@@ -94,9 +94,9 @@ tasks:
       - docker compose down
 
   docs:
-    desc: Запустить Zensical на http://localhost:8000
+    desc: Запустить Zensical на http://localhost:8000 с автообновлением
     cmds:
-      - docker compose --profile docs up
+      - docker compose --profile docs watch docs
 
   docs:pull:
     desc: Скачать официальный Docker-образ Zensical

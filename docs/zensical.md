@@ -15,7 +15,7 @@
 === "Ручной"
 
     ```bash
-    docker compose --profile docs up
+    docker compose --profile docs watch docs
     ```
 
 После запуска сайт доступен в браузере:
@@ -23,6 +23,8 @@
 ```text
 http://localhost:8000
 ```
+
+Изменения Markdown-файлов в `docs/` подхватывает `zensical serve`. Изменения в `zensical.toml` и `docs_macros.py` отслеживает `docker compose watch` и перезапускает контейнер.
 
 Остановить сервис:
 
