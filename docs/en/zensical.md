@@ -1,6 +1,6 @@
 # Documentation
 
-Project documentation is built with Zensical and stored in `docs/`.
+Project documentation is built with Zensical and stored in `docs/`. The Russian version is stored in `docs/ru/`, and the English version is stored in `docs/en/`.
 
 ## Local run
 

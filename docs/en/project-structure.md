@@ -12,7 +12,7 @@ flowchart LR
     SCRIPTS --> MMD
     SCRIPTS --> PYD
     DOCKER["docker/<br/>docker-compose.yaml"] --> SCRIPTS
-    DOCS["docs/*.md"] --> SITE["docs-site/"]
+    DOCS["docs/ru/*.md<br/>docs/en/*.md"] --> SITE["docs-site/"]
 ```
 
 | Path | Purpose |
@@ -24,7 +24,7 @@ flowchart LR
 | `figures/` | Generated images and PDFs inserted into the document |
 | `scripts/` | Helper scripts for building, conversion, and PDF comparison |
 | `docker/` | Dockerfiles for separate build profiles |
-| `docs/` | Zensical documentation for the project |
+| `docs/ru/`, `docs/en/` | Zensical documentation for the project |
 
 Key files:
 

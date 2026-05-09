@@ -47,7 +47,7 @@ Before distributing built artifacts or Docker images, take the licenses of these
 
 ## Images and documents
 
-Images in `docs/assets/`, `github_images/`, `figures/`, and PDF/DOCX files can contain derivative materials: UI screenshots, exported diagrams, title pages, the assignment, and fragments of the final diploma. Their legal status can differ from the source code status.
+Images in `docs/ru/assets/`, `github_images/`, `figures/`, and PDF/DOCX files can contain derivative materials: UI screenshots, exported diagrams, title pages, the assignment, and fragments of the final diploma. Their legal status can differ from the source code status.
 
 Before public publication, it is worth checking that:
 

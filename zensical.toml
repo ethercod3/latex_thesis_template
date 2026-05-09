@@ -1,7 +1,7 @@
 [project]
 site_name = "Документация проекта диплома"
 site_author = "Artyom Kupriianov"
-docs_dir = "docs"
+docs_dir = "docs/ru"
 site_dir = "docs-site"
 dev_addr = "0.0.0.0:8000"
 repo_url = "https://github.com/ethercod3/diploma_latex"
@@ -28,9 +28,9 @@ nav = [
     {"Сравнение PDF между коммитами" = "pdf-diff.md"},
     {"Проблемы с компиляцией" = "troubleshooting.md"},
     {"Git hooks" = "git-hooks.md"},
-    {"Документация" = "zensical.md"},
-    {"Юридическая информация" = "legal.md"}
-  ]}
+    {"Документация" = "zensical.md"}
+  ]},
+  {"Юридическая информация" = ["legal.md"]}
 ]
 
 [project.theme]
