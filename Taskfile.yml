@@ -107,16 +107,6 @@ tasks:
     cmds:
       - docker compose --profile docs run --rm docs "zensical build --config-file zensical.toml && zensical build --config-file zensical.en.toml"
 
-  docs:serve:ru:
-    desc: Запустить Zensical serve только для русской документации с live reload
-    cmds:
-      - docker compose --profile docs run --rm --service-ports docs "zensical serve --config-file zensical.toml"
-
-  docs:serve:en:
-    desc: Запустить Zensical serve только для английской документации с live reload
-    cmds:
-      - docker compose --profile docs run --rm --service-ports docs "zensical serve --config-file zensical.en.toml"
-
   docs:pull:
     desc: Скачать официальный Docker-образ Zensical
     cmds:

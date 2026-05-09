@@ -117,13 +117,6 @@ http://localhost:8000
 
 Команда `task docs` собирает русскую версию в `docs-site/`, английскую - в `docs-site/en/`, а затем раздает статический сайт. Переключатель языка появляется в UI через настройки `extra.alternate`.
 
-Для live reload одной языковой версии:
-
-```bash
-task docs:serve:ru
-task docs:serve:en
-```
-
 Заранее скачать Docker-образ документации:
 
 ```bash

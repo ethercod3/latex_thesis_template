@@ -26,20 +26,6 @@ http://localhost:8000
 
 `task docs` first builds both language versions, then serves static files from `docs-site/`. After Markdown or config changes, restart the command.
 
-For live reload, run one language version separately:
-
-=== "Russian"
-
-    ```bash
-    task docs:serve:ru
-    ```
-
-=== "English"
-
-    ```bash
-    task docs:serve:en
-    ```
-
 Stop the service:
 
 === "Task"
@@ -70,7 +56,7 @@ Download the documentation Docker image in advance:
 
 ## Bilingual build
 
-The Russian site is built from `zensical.toml` into `docs-site/`. The English site is built from `zensical.en.toml` into `docs-site/en/`. Both configs define language alternatives, so the UI shows a language selector.
+The Russian site is built from `zensical.toml` into `docs-site/`. The English site is built from `zensical.en.toml` into `docs-site/en/`. Both configs define `extra.alternate`, so the regular `task docs` UI shows a language selector.
 
 Build the static site:
 
