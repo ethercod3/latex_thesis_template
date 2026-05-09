@@ -101,9 +101,9 @@ task build
 
 <img src="github_images/zensical.png" height=400>
 
-Документация проекта лежит в `docs/` и запускается через Zensical. Для контейнерного запуска используется официальный Docker-образ `zensical/zensical:0.0.40`.
+Документация проекта лежит в `docs/` и запускается через Zensical. Русская версия находится в `docs/`, английская - в `docs/en/`. Для контейнерного запуска используется официальный Docker-образ `zensical/zensical:0.0.40`.
 
-Запустить локальную документацию:
+Собрать и запустить двуязычную локальную документацию:
 
 ```bash
 task docs
@@ -115,7 +115,14 @@ task docs
 http://localhost:8000
 ```
 
-Изменения Markdown-файлов в `docs/` подхватывает `zensical serve`. После изменений в `zensical.toml` или `docs/macros/docs_macros.py` перезапустите контейнер.
+Команда `task docs` собирает русскую версию в `docs-site/`, английскую - в `docs-site/en/`, а затем раздает статический сайт. Переключатель языка появляется в UI через настройки `extra.alternate`.
+
+Для live reload одной языковой версии:
+
+```bash
+task docs:serve:ru
+task docs:serve:en
+```
 
 Заранее скачать Docker-образ документации:
 
@@ -128,6 +135,7 @@ task docs:pull
 ```bash
 python -m pip install zensical
 zensical serve --config-file zensical.toml
+zensical serve --config-file zensical.en.toml
 ```
 
 ## Сборка без Docker
@@ -595,3 +603,9 @@ task deps
 Или вручную: `pip install -r requirements.txt`.
 
 Hook считает хэши текущего PDF алгоритмами из стандартного `hashlib`. Если PDF отсутствует, README не меняется и коммит продолжается со старым значением.
+
+## Лицензия
+
+Репозиторий использует смешанную некоммерческую схему лицензирования, описанную в [LICENSE.md](LICENSE.md): код и автоматизация распространяются по PolyForm Noncommercial License 1.0.0, документация и авторские материалы - по Creative Commons Attribution-NonCommercial 4.0 International. Коммерческое использование возможно только по отдельному письменному согласованию с автором.
+
+Шрифты в `fonts/latin-modern-mono/` распространяются отдельно по GUST Font License из `fonts/latin-modern-mono/GUST-FONT-LICENSE.TXT`.

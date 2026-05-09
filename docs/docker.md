@@ -6,7 +6,7 @@ flowchart LR
     MERMAID["mermaid<br/>.mmd -> figures/*.pdf"] --> LATEX
     PYTHON["python<br/>python_diagrams -> figures/"] --> LATEX
     LATEX --> PDF["Куприянов_И221_диплом.pdf"]
-    DOCS["docs<br/>Zensical serve"] --> SITE["http://localhost:8000"]
+    DOCS["docs<br/>Zensical build + static serve"] --> SITE["http://localhost:8000"]
 ```
 
 ## Переменные окружения
@@ -155,7 +155,7 @@ TARGET="Куприянов_И221_диплом.tex"
 | `mermaid` | Генерирует Mermaid-диаграммы в `figures/` |
 | `python` | Генерирует диаграммы Python-скриптами |
 | `latex` | Собирает итоговый PDF диплома |
-| `docs` | Поднимает локальную Zensical-документацию |
+| `docs` | Собирает и поднимает локальную двуязычную документацию |
 
 Запуск отдельных профилей:
 

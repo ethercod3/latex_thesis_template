@@ -1,40 +1,40 @@
 [project]
-site_name = "Документация проекта диплома"
+site_name = "Diploma Project Documentation"
 site_author = "Artyom Kupriianov"
-docs_dir = "docs"
-site_dir = "docs-site"
+docs_dir = "docs/en"
+site_dir = "docs-site/en"
 dev_addr = "0.0.0.0:8000"
 repo_url = "https://github.com/ethercod3/diploma_latex"
-repo_name = "Репозиторий"
+repo_name = "Repository"
 nav = [
-  {"Начало" = [
-    {"Введение" = "README.md"},
-    {"Что нужно установить" = "requirements.md"},
-    {"Частые сценарии" = "common-scenarios.md"},
-    {"Структура проекта" = "project-structure.md"},
-    {"Быстрый старт" = "quick-start.md"}
+  {"Start" = [
+    {"Introduction" = "README.md"},
+    {"Requirements" = "requirements.md"},
+    {"Common scenarios" = "common-scenarios.md"},
+    {"Project structure" = "project-structure.md"},
+    {"Quick start" = "quick-start.md"}
   ]},
-  {"Сборка" = [
-    {"Сборка без Docker" = "manual-build.md"},
+  {"Build" = [
+    {"Build without Docker" = "manual-build.md"},
     {"Docker" = "docker.md"},
-    {"Настройка TeXstudio" = "texstudio.md"}
+    {"TeXstudio setup" = "texstudio.md"}
   ]},
-  {"Артефакты" = [
-    {"Титульник и задание" = "title-pages.md"},
-    {"Код в приложениях" = "source-code.md"},
-    {"Диаграммы" = "diagrams.md"}
+  {"Artifacts" = [
+    {"Title page and assignment" = "title-pages.md"},
+    {"Source code in appendices" = "source-code.md"},
+    {"Diagrams" = "diagrams.md"}
   ]},
-  {"Инструменты" = [
-    {"Сравнение PDF между коммитами" = "pdf-diff.md"},
-    {"Проблемы с компиляцией" = "troubleshooting.md"},
+  {"Tools" = [
+    {"PDF comparison between commits" = "pdf-diff.md"},
+    {"Compilation issues" = "troubleshooting.md"},
     {"Git hooks" = "git-hooks.md"},
-    {"Документация" = "zensical.md"},
-    {"Юридическая информация" = "legal.md"}
+    {"Documentation" = "zensical.md"},
+    {"Legal information" = "legal.md"}
   ]}
 ]
 
 [project.theme]
-language = "ru"
+language = "en"
 features = [
   "content.tabs.link",
   "content.code.copy",
@@ -85,7 +85,7 @@ on_undefined = "strict"
 emoji_index = "zensical.extensions.emoji.twemoji"
 emoji_generator = "zensical.extensions.emoji.to_svg"
 [project.markdown_extensions.pymdownx.snippets]
-auto_append = ["includes/abbreviations.md"]
+auto_append = ["includes/abbreviations.en.md"]
 [project.markdown_extensions.pymdownx.tasklist]
 custom_checkbox = true
 

@@ -53,4 +53,4 @@ services:
     ports:
       - "8000:8000"
     entrypoint: ["sh", "-lc"]
-    command: ["zensical serve --config-file zensical.toml"]
+    command: ["zensical build --config-file zensical.toml && zensical build --config-file zensical.en.toml && python -m http.server 8000 --directory docs-site"]
