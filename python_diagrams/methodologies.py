@@ -6,7 +6,7 @@ categories = [
     "Устойчивость к изменениям",
     "Простота внедрения",
     "Удобство сопровождения",
-    "Тестовое покрытие"
+    "Тестовое покрытие",
 ]
 
 data = {
@@ -20,27 +20,17 @@ data = {
 fig = go.Figure()
 
 for method, values in data.items():
-    fig.add_trace(go.Scatterpolar(
-        r=values + [values[0]],
-        theta=categories + [categories[0]],
-        fill='toself',
-        name=method
-    ))
+    fig.add_trace(
+        go.Scatterpolar(r=values + [values[0]], theta=categories + [categories[0]], fill="toself", name=method)
+    )
 
 fig.update_layout(
     polar=dict(
-        radialaxis=dict(
-            visible=True,
-            range=[0, 10],
-            dtick=2
-        ),
-        angularaxis=dict(
-            showline=False  # ← убирает эту линию
-        )        
-    ),  
+        radialaxis=dict(visible=True, range=[0, 10], dtick=2), angularaxis=dict(showline=False)  # ← убирает эту линию
+    ),
     width=950,
     height=750,
-    showlegend=True
+    showlegend=True,
 )
 
 # fig.show()

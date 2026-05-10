@@ -7,7 +7,6 @@ from pathlib import Path
 
 from common import run_command
 
-
 AUX_DIR = Path(".aux_files_docker")
 
 
@@ -37,8 +36,7 @@ def main() -> None:
     pdf_path = Path(f"{base}.pdf")
     if not pdf_path.is_file():
         raise FileNotFoundError(
-            f"PDF-файл не был создан там, где ожидалось: {pdf_path}. "
-            "Проверьте сообщения latexmk выше."
+            f"PDF-файл не был создан там, где ожидалось: {pdf_path}. " "Проверьте сообщения latexmk выше."
         )
 
 

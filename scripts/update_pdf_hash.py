@@ -8,7 +8,6 @@ from pathlib import Path
 
 from common import PROJECT_DIR, env_value
 
-
 README_PATH = PROJECT_DIR / "README.md"
 START_MARKER = "<!-- DIPLOMA_HASHES_START -->"
 END_MARKER = "<!-- DIPLOMA_HASHES_END -->"
@@ -23,6 +22,8 @@ HASH_ALGORITHMS = (
     ("blake2s", "BLAKE2s", None),
     ("shake_128", "SHAKE-128 (256-bit output)", 32),
 )
+
+
 def target_pdf_path(pdf_arg: str | None) -> Path:
     if pdf_arg:
         return (PROJECT_DIR / pdf_arg).resolve()
@@ -57,12 +58,7 @@ def file_hashes(path: Path) -> list[tuple[str, str]]:
 
 def readme_block(hashes: list[tuple[str, str]]) -> str:
     hash_lines = "\n".join(f"{label}: `{digest}`<br>" for label, digest in hashes)
-    return (
-        f"{START_MARKER}\n"
-        "## Контрольные суммы PDF\n\n"
-        f"{hash_lines}\n"
-        f"{END_MARKER}"
-    )
+    return f"{START_MARKER}\n" "## Контрольные суммы PDF\n\n" f"{hash_lines}\n" f"{END_MARKER}"
 
 
 def update_readme(hashes: list[tuple[str, str]]) -> bool:

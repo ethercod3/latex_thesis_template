@@ -8,7 +8,6 @@ import sys
 
 from common import PROJECT_DIR, env_value, require_command, run_command
 
-
 DEFAULT_OUTPUT_DIR = PROJECT_DIR / ".pdf_diff"
 DEFAULT_SAVED_DIFF_DIR = DEFAULT_OUTPUT_DIR / "saved"
 FIGURES_DIR = PROJECT_DIR / "figures"
@@ -61,8 +60,7 @@ def target_pdf_name() -> str:
         return f"{tex_files[0].stem}.pdf"
 
     raise RuntimeError(
-        "Не удалось понять, какой PDF нужно сравнить. "
-        "Укажите TARGET в файле .env или передайте имя PDF через --pdf."
+        "Не удалось понять, какой PDF нужно сравнить. " "Укажите TARGET в файле .env или передайте имя PDF через --pdf."
     )
 
 
@@ -122,8 +120,7 @@ def parse_profiles(value: str) -> list[str]:
     if unknown:
         available = ", ".join(PROFILE_ORDER)
         raise argparse.ArgumentTypeError(
-            f"Неизвестный Docker-профиль: {', '.join(unknown)}. "
-            f"Доступные профили: {available}."
+            f"Неизвестный Docker-профиль: {', '.join(unknown)}. " f"Доступные профили: {available}."
         )
 
     if "latex" not in requested:
@@ -152,8 +149,7 @@ def build_pdf(commit: str, pdf_name: str, destination_dir: Path, profiles: list[
     pdf_path = PROJECT_DIR / pdf_name
     if not pdf_path.exists():
         raise RuntimeError(
-            f"PDF-файл не был создан там, где ожидалось: {pdf_path}. "
-            "Проверьте сообщения сборки выше."
+            f"PDF-файл не был создан там, где ожидалось: {pdf_path}. " "Проверьте сообщения сборки выше."
         )
 
     destination = destination_dir / f"{safe_label(commit)}_{pdf_name}"
@@ -190,17 +186,12 @@ def save_diff_pdf(left_pdf: Path, right_pdf: Path, output_pdf: Path) -> int:
 
 def default_saved_diff_path(left_commit: str, right_commit: str, pdf_name: str) -> Path:
     pdf_stem = Path(pdf_name).stem
-    filename = (
-        f"{pdf_stem}_diff_"
-        f"{safe_label(left_commit)}__{safe_label(right_commit)}.pdf"
-    )
+    filename = f"{pdf_stem}_diff_" f"{safe_label(left_commit)}__{safe_label(right_commit)}.pdf"
     return DEFAULT_SAVED_DIFF_DIR / filename
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Собрать PDF для двух коммитов и сравнить их через diff-pdf."
-    )
+    parser = argparse.ArgumentParser(description="Собрать PDF для двух коммитов и сравнить их через diff-pdf.")
     parser.add_argument("left_commit", help="Первый коммит, тег или ветка")
     parser.add_argument("right_commit", help="Второй коммит, тег или ветка")
     parser.add_argument(

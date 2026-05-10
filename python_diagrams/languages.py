@@ -28,33 +28,17 @@ fig = px.scatter(
 
 fig.update_traces(textposition="top center")
 
-# Зона (расширена вверх)
-fig.add_vrect(
-    x0=2, x1=5.5,
-    fillcolor="lightgreen",
-    opacity=0.12,
-    line_width=0
-)
+fig.add_vrect(x0=2, x1=5.5, fillcolor="lightgreen", opacity=0.12, line_width=0)
 
-fig.add_hrect(
-    y0=2.5, y1=5.2,
-    fillcolor="lightgreen",
-    opacity=0.12,
-    line_width=0
-)
+fig.add_hrect(y0=2.5, y1=5.2, fillcolor="lightgreen", opacity=0.12, line_width=0)
 
-fig.add_annotation(
-    x=4.0,
-    y=3.2,
-    text="Предпочтительная зона<br>для проекта",
-    showarrow=False
-)
+fig.add_annotation(x=4.0, y=3.2, text="Предпочтительная зона<br>для проекта", showarrow=False)
 
 fig.update_layout(
     xaxis=dict(title="Сложность написания", range=[0, 10]),
     yaxis=dict(title="Сложность поддержки", range=[0, 10]),
     width=1000,
-    height=700
+    height=700,
 )
 
 # fig.show()

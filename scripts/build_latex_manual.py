@@ -8,7 +8,6 @@ import sys
 
 from common import PROJECT_DIR, env_value, require_command, run_command
 
-
 AUX_DIR = PROJECT_DIR / ".aux_files"
 
 
@@ -35,7 +34,7 @@ def lualatex_command(target: Path) -> list[str]:
         "lualatex",
         "-synctex=1",
         "-interaction=nonstopmode",
-        '-output-directory=.aux_files',
+        "-output-directory=.aux_files",
         str(target.relative_to(PROJECT_DIR)),
     ]
 
@@ -60,8 +59,7 @@ def build_with_latexmk(target: Path) -> Path:
     output_pdf = output_pdf_path(target)
     if not output_pdf.is_file():
         raise RuntimeError(
-            f"PDF-файл не был создан там, где ожидалось: {output_pdf}. "
-            "Проверьте сообщения latexmk выше."
+            f"PDF-файл не был создан там, где ожидалось: {output_pdf}. " "Проверьте сообщения latexmk выше."
         )
 
     return output_pdf
@@ -81,19 +79,14 @@ def build_without_latexmk(target: Path) -> Path:
     output_pdf = output_pdf_path(target)
 
     if not aux_pdf.is_file():
-        raise RuntimeError(
-            f"PDF-файл не был создан там, где ожидалось: {aux_pdf}. "
-            "Проверьте сообщения LaTeX выше."
-        )
+        raise RuntimeError(f"PDF-файл не был создан там, где ожидалось: {aux_pdf}. " "Проверьте сообщения LaTeX выше.")
 
     shutil.copy2(aux_pdf, output_pdf)
     return output_pdf
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Собрать LaTeX-документ через latexmk."
-    )
+    parser = argparse.ArgumentParser(description="Собрать LaTeX-документ через latexmk.")
     parser.add_argument(
         "--target",
         default=None,
@@ -102,10 +95,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--no-latexmk",
         action="store_true",
-        help=(
-            "Не использовать latexmk. Запустить старую ручную цепочку: "
-            "lualatex, biber, lualatex, lualatex."
-        ),
+        help=("Не использовать latexmk. Запустить старую ручную цепочку: " "lualatex, biber, lualatex, lualatex."),
     )
     return parser.parse_args()
 

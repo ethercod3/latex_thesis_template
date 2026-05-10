@@ -4,7 +4,6 @@ from pathlib import Path
 import shutil
 import subprocess
 
-
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 ENV_PATH = PROJECT_DIR / ".env"
 
@@ -22,8 +21,7 @@ def env_value(name: str) -> str | None:
 def require_command(command: str) -> None:
     if shutil.which(command) is None:
         raise RuntimeError(
-            f"Не найдена команда '{command}'. Установите нужную программу и убедитесь, "
-            "что она доступна в терминале."
+            f"Не найдена команда '{command}'. Установите нужную программу и убедитесь, " "что она доступна в терминале."
         )
 
 

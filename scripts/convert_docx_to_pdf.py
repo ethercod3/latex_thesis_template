@@ -5,12 +5,9 @@ import subprocess
 import sys
 import tempfile
 
-
 INPUT_DIR = Path(os.environ.get("DOCX_INPUT_DIR", "/data/docx"))
 OUTPUT_DIR = Path(os.environ.get("PDF_OUTPUT_DIR", "/data"))
-PDF_EXPORT_FILTER = (
-    'pdf:writer_pdf_Export:{"IsSkipEmptyPages":{"type":"boolean","value":"true"}}'
-)
+PDF_EXPORT_FILTER = 'pdf:writer_pdf_Export:{"IsSkipEmptyPages":{"type":"boolean","value":"true"}}'
 SKIP_BLANK_PAGES = os.environ.get("SKIP_BLANK_PAGES", "1") == "1"
 
 
@@ -107,9 +104,7 @@ def convert_docx(source_file: Path, tmp_dir: Path) -> Path:
     converted_file = tmp_dir / f"{source_file.stem}.pdf"
 
     if not converted_file.is_file():
-        raise FileNotFoundError(
-            f"LibreOffice не создал ожидаемый PDF-файл: {converted_file}"
-        )
+        raise FileNotFoundError(f"LibreOffice не создал ожидаемый PDF-файл: {converted_file}")
 
     return converted_file
 

@@ -34,8 +34,7 @@ def run_profile(profile: str, service: str) -> int:
 def main() -> int:
     if shutil.which("docker") is None:
         print(
-            "Не найден Docker. Установите Docker Desktop и убедитесь, что команда "
-            "'docker' доступна в терминале.",
+            "Не найден Docker. Установите Docker Desktop и убедитесь, что команда " "'docker' доступна в терминале.",
             file=sys.stderr,
         )
         return 1

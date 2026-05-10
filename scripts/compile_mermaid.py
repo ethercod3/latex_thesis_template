@@ -13,6 +13,7 @@ EXTENSIONS = {".mmd", ".mermaid", ".mmdc"}
 MAX_WORKERS_LIMIT = 4
 TIMEOUT_SECONDS = 60
 
+
 def find_mmdc() -> list[str]:
     mmdc = shutil.which("mmdc") or shutil.which("mmdc.cmd")
     if mmdc is None:
@@ -67,10 +68,7 @@ def main() -> None:
 
     mmdc = find_mmdc()
 
-    files = [
-        f for f in SRC.iterdir()
-        if f.is_file() and f.suffix.lower() in EXTENSIONS
-    ]
+    files = [f for f in SRC.iterdir() if f.is_file() and f.suffix.lower() in EXTENSIONS]
 
     if not files:
         print(f"В папке {SRC} не найдены Mermaid-файлы для сборки.")
@@ -79,10 +77,7 @@ def main() -> None:
     max_workers = min(MAX_WORKERS_LIMIT, len(files))
 
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = {
-            executor.submit(process_file, f, mmdc): f
-            for f in files
-        }
+        futures = {executor.submit(process_file, f, mmdc): f for f in files}
 
         for future in as_completed(futures):
             try:
