@@ -12,12 +12,12 @@
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
-MD5: `a1127b7c284f210f2c99ab310c60211e`<br>
-SHA-1: `6b5be1e5ae3a025f14110b45a3888d2614e00468`<br>
-SHA-256: `6fa5e7e621d1374572ae943caa1e0952de6f275a05323ec8db96dc14313e483a`<br>
-SHA3-256: `5954b8b351f35bd4d9fda52b05b4dce8cef6261cad56f63f9b61fdfc501ad90f`<br>
-BLAKE2s: `cbc7d9d1cf43005f64617a427174fbeaab5d29466e077a2d14a2388e4eeb4567`<br>
-SHAKE-128 (256-bit output): `49c076909f06b0ff74c45c8b11a1dc49f46b60394d891ad39bb6d004c0913f83`<br>
+MD5: `b83b850984a440a2a95731e3421a0756`<br>
+SHA-1: `56df85ec50be4c6a7bb66aef98de273a4ed01e17`<br>
+SHA-256: `6394f6cb0e4997b0bb922a9562e8baf49e2b9f81a5fa6f62e8a9331e971b9f44`<br>
+SHA3-256: `ffd41541c180336d1bd0fa0b070bf548097f9bb22b72e56db8500da29c0d4162`<br>
+BLAKE2s: `9be805f232f0931b993bbeb93a46e9e8ca80096abbdb878b9ea28a0b5e76ff0f`<br>
+SHAKE-128 (256-bit output): `924ee482ae271b533264e5017cc517f2b34d63f7fd98d597ca9e1adfb1e9abf6`<br>
 <!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
