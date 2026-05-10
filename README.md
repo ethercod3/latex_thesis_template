@@ -99,7 +99,7 @@ task build
 
 ## Документация
 
-<img src="github_images/zensical.png" height=400>
+<img src=".github/images/zensical.png" height=400>
 
 Документация проекта лежит в `docs/` и запускается через Zensical. Русская версия находится в `docs/ru/`, английская - в `docs/en/`. Для контейнерного запуска используется официальный Docker-образ `zensical/zensical:0.0.40`.
 
@@ -371,7 +371,7 @@ python scripts/compile_python_diagrams.py
 
 ## Сравнение PDF между коммитами
 
-![pdf_diff_example](./github_images/pdf_diff_example.png)
+![pdf_diff_example](.github/images/pdf_diff_example.png)
 
 Если нужно посмотреть визуальную разницу между двумя версиями диплома, используйте скрипт:
 
