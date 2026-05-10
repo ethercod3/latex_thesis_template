@@ -26,7 +26,7 @@ flowchart LR
 | `docker/` | Dockerfiles for separate build profiles |
 | `docs/ru/`, `docs/en/` | Zensical documentation for the project |
 | `docs/includes/` | Shared Markdown includes for Zensical documentation |
-| `tasks/` | Thematic Taskfiles with build and maintenance commands |
+| `tasks/` | Thematic Taskfiles with build and maintenance commands; the task map is in `tasks/README.md` |
 
 Key files:
 

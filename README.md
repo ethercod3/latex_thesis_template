@@ -37,7 +37,7 @@ SHAKE-128 (256-bit output): `ca73dfe3941cda3d4866119d9fd81a1c38bc7c144a994e2f781
 | `docker/` | Dockerfile для отдельных профилей сборки |
 | `docs/ru/`, `docs/en/` | Zensical-документация проекта и ассеты документации |
 | `docs/includes/` | Общие Markdown-вставки для Zensical-документации |
-| `Taskfile.yml`, `tasks/` | Единая точка входа Task и тематические файлы задач |
+| `Taskfile.yml`, `tasks/` | Единая точка входа Task и тематические файлы задач; карта задач лежит в `tasks/README.md` |
 
 ## Установка Task
 

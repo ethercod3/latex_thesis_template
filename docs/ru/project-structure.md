@@ -26,7 +26,7 @@ flowchart LR
 | `docker/` | Dockerfile для отдельных профилей сборки |
 | `docs/ru/`, `docs/en/` | Zensical-документация проекта |
 | `docs/includes/` | Общие Markdown-вставки для Zensical-документации |
-| `tasks/` | Тематические Taskfile с командами сборки и обслуживания |
+| `tasks/` | Тематические Taskfile с командами сборки и обслуживания; карта задач лежит в `tasks/README.md` |
 
 Ключевые файлы:
 
