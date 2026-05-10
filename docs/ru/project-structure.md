@@ -35,6 +35,7 @@ flowchart LR
 | `Куприянов_И221_диплом.tex` | Основной LaTeX-файл диплома |
 | `bibliography.bib` | Библиография для `biblatex` |
 | `requirements.txt` | Python-зависимости для скриптов и диаграмм |
+| `pyproject.toml` | Настройки Python-инструментов, включая Black |
 | `docker-compose.yaml` | Docker Compose профили проекта |
 | `Taskfile.yml` | Единая точка входа Task, подключающая файлы из `tasks/` |
 | `.env` | Локальные переменные окружения для сборки |

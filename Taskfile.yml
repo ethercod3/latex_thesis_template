@@ -26,6 +26,9 @@ includes:
   latex:
     taskfile: ./tasks/latex.yml
     flatten: true
+  python:
+    taskfile: ./tasks/python.yml
+    flatten: true
   tools:
     taskfile: ./tasks/tools.yml
     flatten: true

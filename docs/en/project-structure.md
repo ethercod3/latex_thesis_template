@@ -35,6 +35,7 @@ Key files:
 | `Куприянов_И221_диплом.tex` | Main LaTeX file of the diploma |
 | `bibliography.bib` | Bibliography for `biblatex` |
 | `requirements.txt` | Python dependencies for scripts and diagrams |
+| `pyproject.toml` | Python tooling settings, including Black |
 | `docker-compose.yaml` | Docker Compose profiles for the project |
 | `Taskfile.yml` | Single Task entry point that includes files from `tasks/` |
 | `.env` | Local environment variables for the build |

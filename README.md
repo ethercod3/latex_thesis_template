@@ -12,12 +12,12 @@
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
-MD5: `b83b850984a440a2a95731e3421a0756`<br>
-SHA-1: `56df85ec50be4c6a7bb66aef98de273a4ed01e17`<br>
-SHA-256: `6394f6cb0e4997b0bb922a9562e8baf49e2b9f81a5fa6f62e8a9331e971b9f44`<br>
-SHA3-256: `ffd41541c180336d1bd0fa0b070bf548097f9bb22b72e56db8500da29c0d4162`<br>
-BLAKE2s: `9be805f232f0931b993bbeb93a46e9e8ca80096abbdb878b9ea28a0b5e76ff0f`<br>
-SHAKE-128 (256-bit output): `924ee482ae271b533264e5017cc517f2b34d63f7fd98d597ca9e1adfb1e9abf6`<br>
+MD5: `36ce3bcebcea36589036f1769d2952d6`<br>
+SHA-1: `7ed3e80def46b7dff9fba14b101e2323dd2dccca`<br>
+SHA-256: `00e7416c417edc67ef58e6ed11407dc81960e7fa3c58ae23011b76663ebbc871`<br>
+SHA3-256: `0f8751bdafafbc49ac8f1ddf18d4a2c732b143ed6941cf43f13d48cfe425f0ee`<br>
+BLAKE2s: `82b863053df8f51a96316fbc212489893ff60cd86eab3723bc613daa220309a0`<br>
+SHAKE-128 (256-bit output): `42624c14bcd7ef7699320187b21ccc3e2a3f0c419985956754165f6e0e91f702`<br>
 <!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
@@ -73,6 +73,12 @@ task --list
 ```bash
 task clean:dry
 task clean
+```
+
+Проверить форматирование Python-файлов через Black:
+
+```bash
+task python:lint
 ```
 
 ## Быстрый старт
