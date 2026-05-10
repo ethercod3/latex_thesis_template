@@ -74,6 +74,13 @@ If the Docker images are already built, this is enough:
     python scripts/build_all.py
     ```
 
+To preview and remove generated build artifacts, use:
+
+```bash
+task clean:dry
+task clean
+```
+
 All helper Python scripts are started the same way on Windows, Linux, and macOS.[^mermaid-fonts]
 
 === "Task"

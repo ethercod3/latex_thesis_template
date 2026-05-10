@@ -14,12 +14,12 @@
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
-MD5: `102a8482f4e2c6424fbd5813d66e661d`<br>
-SHA-1: `ae54c948101604570921ed1504a0e867e0c7c95b`<br>
-SHA-256: `a167f479ea679b890e348d215ea2ea0ebbecc2e9488253d0abd7d288c833ae0b`<br>
-SHA3-256: `c54c07063a3603ee81c7dc9eb2d102b2f295daff6c830b0b79d6ba49fd7a6b29`<br>
-BLAKE2s: `2c619bdd9ae1f63cc5e399d36dd2e1af930679de17b150364065a2b80e475919`<br>
-SHAKE-128 (256-bit output): `dbb66fe02aeae373b825ca4c8cf05589d650f3bf32471769b9fe34bbc5782a51`<br>
+MD5: `96b8a82e36c90b2ec60e257391d3643d`<br>
+SHA-1: `41e5a3fde2d4078bab0679dfcc46f4bd7cd9cb6c`<br>
+SHA-256: `aa3189ef46bd0bfdfae4a5ac2ce1884183b3339ddde7ba17f64ebb343e1a40dc`<br>
+SHA3-256: `13fcaf8b9cd93a0289467f3a34900c128f202bdfeeb53cd9794fb0d84546b29b`<br>
+BLAKE2s: `d26c9a1b274c472e4597fc282c33f9905a5e4d648ffb87a00940bdca4e86d6d7`<br>
+SHAKE-128 (256-bit output): `ca73dfe3941cda3d4866119d9fd81a1c38bc7c144a994e2f781b53926e6f48d8`<br>
 <!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
@@ -68,6 +68,13 @@ npm install -g @go-task/cli
 ```bash
 task --version
 task --list
+```
+
+Посмотреть и удалить сгенерированные артефакты сборки:
+
+```bash
+task clean:dry
+task clean
 ```
 
 ## Быстрый старт

@@ -11,6 +11,16 @@ tasks:
     cmds:
       - git config core.hooksPath .githooks
 
+  clean:
+    desc: Удалить сгенерированные артефакты сборки и кэши
+    cmds:
+      - python scripts/clean.py
+
+  clean:dry:
+    desc: Показать, какие артефакты удалит task clean
+    cmds:
+      - python scripts/clean.py --dry-run
+
   hash:
     desc: Обновить контрольные суммы PDF в README.md
     cmds:
