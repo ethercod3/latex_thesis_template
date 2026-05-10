@@ -5,6 +5,8 @@ import subprocess
 import sys
 import tempfile
 
+from common import require_command
+
 INPUT_DIR = Path(os.environ.get("DOCX_INPUT_DIR", "/data/docx"))
 OUTPUT_DIR = Path(os.environ.get("PDF_OUTPUT_DIR", "/data"))
 PDF_EXPORT_FILTER = 'pdf:writer_pdf_Export:{"IsSkipEmptyPages":{"type":"boolean","value":"true"}}'
@@ -13,18 +15,6 @@ SKIP_BLANK_PAGES = os.environ.get("SKIP_BLANK_PAGES", "1") == "1"
 
 def copy_pdf_contents(source: Path, destination: Path) -> None:
     shutil.copyfile(source, destination)
-
-
-def require_command(command: str) -> bool:
-    if shutil.which(command) is None:
-        print(
-            f"Не найдена обязательная команда '{command}'. Установите нужную программу "
-            "и убедитесь, что она доступна в терминале.",
-            file=sys.stderr,
-        )
-        return False
-
-    return True
 
 
 def is_blank_bbox_line(line: str) -> bool:
@@ -115,8 +105,8 @@ def main() -> int:
     if SKIP_BLANK_PAGES:
         required_commands.extend(["gs", "qpdf"])
 
-    if not all(require_command(command) for command in required_commands):
-        return 1
+    for command in required_commands:
+        require_command(command)
 
     if not INPUT_DIR.is_dir():
         print(f"Папка с DOCX-файлами не найдена: {INPUT_DIR}", file=sys.stderr)
@@ -153,6 +143,9 @@ if __name__ == "__main__":
     try:
         raise SystemExit(main())
     except FileNotFoundError as error:
+        print(f"Ошибка: {error}", file=sys.stderr)
+        raise SystemExit(1)
+    except RuntimeError as error:
         print(f"Ошибка: {error}", file=sys.stderr)
         raise SystemExit(1)
     except subprocess.CalledProcessError as error:
