@@ -1,0 +1,7 @@
+version: '3'
+
+tasks:
+  build:
+    desc: Полная последовательная сборка через Docker (docx -> mermaid -> python -> latex)
+    cmds:
+      - python scripts/build_all.py

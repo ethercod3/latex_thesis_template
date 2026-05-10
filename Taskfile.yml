@@ -7,127 +7,31 @@ vars:
   COMPOSE_BUILD_PROFILES: --profile docx --profile mermaid --profile python --profile latex
   COMPOSE_ALL_PROFILES: --profile docx --profile mermaid --profile python --profile latex
 
+includes:
+  build:
+    taskfile: ./tasks/build.yml
+    flatten: true
+  diagrams:
+    taskfile: ./tasks/diagrams.yml
+    flatten: true
+  docker:
+    taskfile: ./tasks/docker.yml
+    flatten: true
+  docs:
+    taskfile: ./tasks/docs.yml
+    flatten: true
+  docx:
+    taskfile: ./tasks/docx.yml
+    flatten: true
+  latex:
+    taskfile: ./tasks/latex.yml
+    flatten: true
+  tools:
+    taskfile: ./tasks/tools.yml
+    flatten: true
+
 tasks:
   default:
     desc: Показать доступные задачи
     cmds:
       - task --list
-
-  deps:
-    desc: Установить Python-зависимости для локальных скриптов
-    cmds:
-      - python -m pip install -r requirements.txt
-
-  hooks:
-    desc: Подключить локальные Git hooks проекта
-    cmds:
-      - git config core.hooksPath .githooks
-
-  build:
-    desc: Полная последовательная сборка через Docker (docx -> mermaid -> python -> latex)
-    cmds:
-      - python scripts/build_all.py
-
-  build:images:
-    desc: Собрать все Docker-образы проекта
-    cmds:
-      - docker compose {{.COMPOSE_BUILD_PROFILES}} build
-
-  build:image:
-    desc: 'Собрать Docker-образ одного профиля: task build:image -- latex'
-    cmds:
-      - docker compose --profile {{.CLI_ARGS}} build
-
-  latex:local:
-    desc: Собрать LaTeX локально через latexmk; дополнительные аргументы передаются после --
-    env:
-      VAULT_PATH: '{{.VAULT_OS_PATH}}'
-    cmds:
-      - python scripts/build_latex_manual.py {{.CLI_ARGS}}
-
-  latex:manual_chain:
-    desc: Собрать LaTeX локально ручной цепочкой lualatex/biber
-    env:
-      VAULT_PATH: '{{.VAULT_OS_PATH}}'
-    cmds:
-      - python scripts/build_latex_manual.py --no-latexmk {{.CLI_ARGS}}
-
-  latex:docker:
-    desc: Собрать итоговый PDF в Docker
-    cmds:
-      - docker compose --profile latex run --rm latex
-
-  docx:
-    desc: Конвертировать docx/*.docx в PDF через Docker
-    cmds:
-      - docker compose --profile docx run --rm docx_pdf
-
-  docx:keep-blank:
-    desc: Конвертировать DOCX в PDF без удаления пустых страниц
-    cmds:
-      - docker compose --profile docx run --rm -e SKIP_BLANK_PAGES=0 docx_pdf
-
-  mermaid:
-    desc: Сгенерировать Mermaid-диаграммы локально
-    cmds:
-      - python scripts/compile_mermaid.py
-
-  mermaid:docker:
-    desc: Сгенерировать Mermaid-диаграммы в Docker
-    cmds:
-      - docker compose --profile mermaid run --rm mermaid_diagrams
-
-  diagrams:
-    desc: Сгенерировать Python-диаграммы локально
-    cmds:
-      - python scripts/compile_python_diagrams.py
-
-  diagrams:docker:
-    desc: Сгенерировать Python-диаграммы в Docker
-    cmds:
-      - docker compose --profile python run --rm python_diagrams
-
-  compose:up:
-    desc: Запустить все основные Docker-профили параллельно
-    cmds:
-      - docker compose {{.COMPOSE_ALL_PROFILES}} up
-
-  compose:down:
-    desc: Остановить сервисы Docker Compose
-    cmds:
-      - docker compose down
-
-  docs:
-    desc: Собрать и запустить двуязычную документацию на http://localhost:8000
-    cmds:
-      - docker compose --profile docs up docs
-
-  docs:build:
-    desc: Собрать русскую и английскую статическую документацию
-    cmds:
-      - docker compose --profile docs run --rm docs "zensical build --config-file zensical.toml && zensical build --config-file zensical.en.toml"
-
-  docs:build:pages:
-    desc: Собрать статическую документацию для публикации на GitHub Pages
-    cmds:
-      - docker run --rm -v "{{.ROOT_DIR}}:/data" -w /data zensical/zensical:0.0.40 sh -lc "zensical build --config-file zensical.toml && zensical build --config-file zensical.en.toml"
-
-  docs:pull:
-    desc: Скачать официальный Docker-образ Zensical
-    cmds:
-      - docker compose --profile docs pull docs
-
-  docs:down:
-    desc: Остановить Zensical
-    cmds:
-      - docker compose --profile docs down
-
-  hash:
-    desc: Обновить контрольные суммы PDF в README.md
-    cmds:
-      - python scripts/update_pdf_hash.py {{.CLI_ARGS}}
-
-  diff:
-    desc: Сравнить PDF между коммитами; аргументы передаются после --
-    cmds:
-      - python scripts/diff_pdf_commits.py {{.CLI_ARGS}}

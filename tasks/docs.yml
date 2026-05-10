@@ -1,0 +1,27 @@
+version: '3'
+
+tasks:
+  docs:
+    desc: Собрать и запустить двуязычную документацию на http://localhost:8000
+    cmds:
+      - docker compose --profile docs up docs
+
+  docs:build:
+    desc: Собрать русскую и английскую статическую документацию
+    cmds:
+      - docker compose --profile docs run --rm docs "zensical build --config-file zensical.toml && zensical build --config-file zensical.en.toml"
+
+  docs:build:pages:
+    desc: Собрать статическую документацию для публикации на GitHub Pages
+    cmds:
+      - docker run --rm -v "{{.ROOT_DIR}}:/data" -w /data zensical/zensical:0.0.40 sh -lc "zensical build --config-file zensical.toml && zensical build --config-file zensical.en.toml"
+
+  docs:pull:
+    desc: Скачать официальный Docker-образ Zensical
+    cmds:
+      - docker compose --profile docs pull docs
+
+  docs:down:
+    desc: Остановить Zensical
+    cmds:
+      - docker compose --profile docs down

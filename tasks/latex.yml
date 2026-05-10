@@ -1,0 +1,21 @@
+version: '3'
+
+tasks:
+  latex:local:
+    desc: Собрать LaTeX локально через latexmk; дополнительные аргументы передаются после --
+    env:
+      VAULT_PATH: '{{.VAULT_OS_PATH}}'
+    cmds:
+      - python scripts/build_latex_manual.py {{.CLI_ARGS}}
+
+  latex:manual_chain:
+    desc: Собрать LaTeX локально ручной цепочкой lualatex/biber
+    env:
+      VAULT_PATH: '{{.VAULT_OS_PATH}}'
+    cmds:
+      - python scripts/build_latex_manual.py --no-latexmk {{.CLI_ARGS}}
+
+  latex:docker:
+    desc: Собрать итоговый PDF в Docker
+    cmds:
+      - docker compose --profile latex run --rm latex

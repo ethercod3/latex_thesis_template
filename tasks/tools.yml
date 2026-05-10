@@ -1,0 +1,22 @@
+version: '3'
+
+tasks:
+  deps:
+    desc: Установить Python-зависимости для локальных скриптов
+    cmds:
+      - python -m pip install -r requirements.txt
+
+  hooks:
+    desc: Подключить локальные Git hooks проекта
+    cmds:
+      - git config core.hooksPath .githooks
+
+  hash:
+    desc: Обновить контрольные суммы PDF в README.md
+    cmds:
+      - python scripts/update_pdf_hash.py {{.CLI_ARGS}}
+
+  diff:
+    desc: Сравнить PDF между коммитами; аргументы передаются после --
+    cmds:
+      - python scripts/diff_pdf_commits.py {{.CLI_ARGS}}

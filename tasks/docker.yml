@@ -1,0 +1,22 @@
+version: '3'
+
+tasks:
+  build:images:
+    desc: Собрать все Docker-образы проекта
+    cmds:
+      - docker compose {{.COMPOSE_BUILD_PROFILES}} build
+
+  build:image:
+    desc: 'Собрать Docker-образ одного профиля: task build:image -- latex'
+    cmds:
+      - docker compose --profile {{.CLI_ARGS}} build
+
+  compose:up:
+    desc: Запустить все основные Docker-профили параллельно
+    cmds:
+      - docker compose {{.COMPOSE_ALL_PROFILES}} up
+
+  compose:down:
+    desc: Остановить сервисы Docker Compose
+    cmds:
+      - docker compose down

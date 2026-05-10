@@ -1,0 +1,12 @@
+version: '3'
+
+tasks:
+  docx:
+    desc: Конвертировать docx/*.docx в PDF через Docker
+    cmds:
+      - docker compose --profile docx run --rm docx_pdf
+
+  docx:keep-blank:
+    desc: Конвертировать DOCX в PDF без удаления пустых страниц
+    cmds:
+      - docker compose --profile docx run --rm -e SKIP_BLANK_PAGES=0 docx_pdf

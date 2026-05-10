@@ -15,6 +15,7 @@ This includes, without limitation:
 - `scripts/`
 - `docker/`
 - `Taskfile.yml`
+- `tasks/`
 - `docker-compose.yaml`
 - build configuration files
 - project automation and helper code

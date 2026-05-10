@@ -25,6 +25,8 @@ flowchart LR
 | `scripts/` | Вспомогательные скрипты сборки, конвертации и сравнения PDF |
 | `docker/` | Dockerfile для отдельных профилей сборки |
 | `docs/ru/`, `docs/en/` | Zensical-документация проекта |
+| `docs/includes/` | Общие Markdown-вставки для Zensical-документации |
+| `tasks/` | Тематические Taskfile с командами сборки и обслуживания |
 
 Ключевые файлы:
 
@@ -34,6 +36,7 @@ flowchart LR
 | `bibliography.bib` | Библиография для `biblatex` |
 | `requirements.txt` | Python-зависимости для скриптов и диаграмм |
 | `docker-compose.yaml` | Docker Compose профили проекта |
+| `Taskfile.yml` | Единая точка входа Task, подключающая файлы из `tasks/` |
 | `.env` | Локальные переменные окружения для сборки |
 
 Файл `.env` не коммитится, потому что содержит локальные пути.[^env-local]

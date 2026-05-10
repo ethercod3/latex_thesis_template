@@ -25,6 +25,8 @@ flowchart LR
 | `scripts/` | Helper scripts for building, conversion, and PDF comparison |
 | `docker/` | Dockerfiles for separate build profiles |
 | `docs/ru/`, `docs/en/` | Zensical documentation for the project |
+| `docs/includes/` | Shared Markdown includes for Zensical documentation |
+| `tasks/` | Thematic Taskfiles with build and maintenance commands |
 
 Key files:
 
@@ -34,6 +36,7 @@ Key files:
 | `bibliography.bib` | Bibliography for `biblatex` |
 | `requirements.txt` | Python dependencies for scripts and diagrams |
 | `docker-compose.yaml` | Docker Compose profiles for the project |
+| `Taskfile.yml` | Single Task entry point that includes files from `tasks/` |
 | `.env` | Local environment variables for the build |
 
 The `.env` file is not committed because it contains local paths.[^env-local]

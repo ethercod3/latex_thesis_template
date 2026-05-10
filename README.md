@@ -36,11 +36,12 @@ SHAKE-128 (256-bit output): `34774f488947511248df89bbfdeb2bbb25fbfffe5af3bb69151
 | `scripts/` | Вспомогательные скрипты сборки, конвертации и сравнения PDF |
 | `docker/` | Dockerfile для отдельных профилей сборки |
 | `docs/ru/`, `docs/en/` | Zensical-документация проекта и ассеты документации |
-| `Taskfile.yml` | Единая точка входа для сборки, Docker-профилей и документации |
+| `docs/includes/` | Общие Markdown-вставки для Zensical-документации |
+| `Taskfile.yml`, `tasks/` | Единая точка входа Task и тематические файлы задач |
 
 ## Установка Task
 
-Проект использует [Task](https://taskfile.dev/docs/installation) как единую точку входа для сборки и вспомогательных команд.
+Проект использует [Task](https://taskfile.dev/docs/installation) как единую точку входа для сборки и вспомогательных команд. Корневой `Taskfile.yml` подключает тематические файлы из `tasks/`, но публичные команды остаются плоскими: `task build`, `task docs`, `task latex:docker`.
 
 Windows:
 
