@@ -1,63 +1,54 @@
 % --------------------------------------
 %  НАСТРОЙКИ МНОЖЕСТВЕННЫХ ФОРМ ДЛЯ РЕФЕРАТА
-% ---------------------------------------
+% --------------------------------------
+
+\directlua{
+  russian_plural = russian_plural or {}
+
+  function russian_plural.form(number, one, few, many)
+    local n = math.abs(tonumber(number) or 0)
+    local last_two = n % 100
+    local last = n % 10
+
+    if last_two >= 11 and last_two <= 14 then
+      return many
+    end
+
+    if last == 1 then
+      return one
+    end
+
+    if last >= 2 and last <= 4 then
+      return few
+    end
+
+    return many
+  end
+}
+
+\newcommand{\russianPlural}[4]{%
+  \directlua{
+    tex.sprint(russian_plural.form(
+      "\luaescapestring{#1}",
+      "\luaescapestring{#2}",
+      "\luaescapestring{#3}",
+      "\luaescapestring{#4}"
+    ))
+  }%
+}
 
 \newcommand{\russianTables}[1]{%
-  \ifnum#1=11 таблиц\else
-  \ifnum#1=12 таблиц\else
-  \ifnum#1=13 таблиц\else
-  \ifnum#1=14 таблиц\else
-    \ifnum#1=1 таблицу\else
-      \ifnum#1=2 таблицы\else
-      \ifnum#1=3 таблицы\else
-      \ifnum#1=4 таблицы\else
-        таблиц%
-      \fi\fi\fi\fi
-    \fi
-  \fi\fi\fi
+  \russianPlural{#1}{таблицу}{таблицы}{таблиц}%
 }
 
 \newcommand{\russianAppendices}[1]{%
-  \ifnum#1=11 приложений\else
-  \ifnum#1=12 приложений\else
-  \ifnum#1=13 приложений\else
-  \ifnum#1=14 приложений\else
-    \ifnum#1=1 приложение\else
-      \ifnum#1=2 приложения\else
-      \ifnum#1=3 приложения\else
-      \ifnum#1=4 приложения\else
-        приложений%
-      \fi\fi\fi\fi
-    \fi
-  \fi\fi\fi
+  \russianPlural{#1}{приложение}{приложения}{приложений}%
 }
 
 \newcommand{\russianSources}[1]{%
-  \ifnum#1=11 источников\else
-  \ifnum#1=12 источников\else
-  \ifnum#1=13 источников\else
-  \ifnum#1=14 источников\else
-    \ifnum#1=1 источник\else
-      \ifnum#1=2 источника\else
-      \ifnum#1=3 источника\else
-      \ifnum#1=4 источника\else
-        источников%
-      \fi\fi\fi\fi
-    \fi
-  \fi\fi\fi
+  \russianPlural{#1}{источник}{источника}{источников}%
 }
 
 \newcommand{\russianListings}[1]{%
-  \ifnum#1=11 листингов\else
-  \ifnum#1=12 листингов\else
-  \ifnum#1=13 листингов\else
-  \ifnum#1=14 листингов\else
-    \ifnum#1=1 листинг\else
-      \ifnum#1=2 листинга\else
-      \ifnum#1=3 листинга\else
-      \ifnum#1=4 листинга\else
-        листингов%
-      \fi\fi\fi\fi
-    \fi
-  \fi\fi\fi
+  \russianPlural{#1}{листинг}{листинга}{листингов}%
 }
