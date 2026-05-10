@@ -37,7 +37,7 @@ This includes, without limitation:
 
 - `README.md`
 - `docs/`
-- `includes/`
+- `docs/includes/`
 - LaTeX source text in `*.tex`
 - diagrams and diagram sources created for this project
 - project-specific explanatory images and documentation materials
