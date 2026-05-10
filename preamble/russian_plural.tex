@@ -3,27 +3,25 @@
 % --------------------------------------
 
 \directlua{
-  russian_plural = russian_plural or {}
+  local candidates = {
+    "preamble/lua/russian_plural.lua",
+    "../preamble/lua/russian_plural.lua",
+    "../../preamble/lua/russian_plural.lua",
+  }
 
-  function russian_plural.form(number, one, few, many)
-    local n = math.abs(tonumber(number) or 0)
-    local last_two = n % 100
-    local last = n % 10
+  local plural_file = nil
 
-    if last_two >= 11 and last_two <= 14 then
-      return many
+  for _, path in ipairs(candidates) do
+    local file = io.open(path, "r")
+    if file then
+      file:close()
+      plural_file = path
+      break
     end
-
-    if last == 1 then
-      return one
-    end
-
-    if last >= 2 and last <= 4 then
-      return few
-    end
-
-    return many
   end
+
+  assert(plural_file, "Cannot find preamble/lua/russian_plural.lua")
+  dofile(plural_file)
 }
 
 \newcommand{\russianPlural}[4]{%
