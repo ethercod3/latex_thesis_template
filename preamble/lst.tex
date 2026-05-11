@@ -4,9 +4,7 @@
 
 \renewcommand{\lstlistingname}{Листинг}
 
-\newcommand{\vaultpath}{\directlua{
-  tex.print(os.getenv("VAULT_PATH") or "../vault_diploma")
-}}
+\newcommand{\vaultpath}{\py{__import__("os").environ.get("VAULT_PATH") or "../vault_diploma"}}
 
 %\newcommand{\listingsgeometry}{}
 
