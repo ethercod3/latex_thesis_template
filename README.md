@@ -12,12 +12,12 @@
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
-MD5: `15ebae700a230ab276dbf85b71cfc4e5`<br>
-SHA-1: `63c0e7df9016c11e540f91bc7a7a964738e5ee0a`<br>
-SHA-256: `5ec12ae87f7cf4ae6a02553635a5ba5ac884bddc4f8adc73eb5a91b435f47952`<br>
-SHA3-256: `3b2877e74490488c347e9edd0fe04c0630766fab63b53287acbc0ea0f9d0bed1`<br>
-BLAKE2s: `06c845ca080cb46f079591b61b2823d595e28e2a0fcbfbe9a39303f60d23095a`<br>
-SHAKE-128 (256-bit output): `d19efd5675b02d43a310d56b60f040114f2fe9228ca4c5737f6a08a298dd9cbe`<br>
+MD5: `b569e6df2059443768542e0c2c220b93`<br>
+SHA-1: `9d96629d348cd38b6c1cfed632a339d025407716`<br>
+SHA-256: `f8607820ec3eb5c5688b0aba34c371d857cc96e63bcf5d57c76bcb93b2017736`<br>
+SHA3-256: `80f1313301f00a0cb9aac70e4a470d462d2fea9bdba31657d1f85e7a8ff07b31`<br>
+BLAKE2s: `9164812b44ac715c01293d9221e55d702f78d60ab006ffc27692e91653b1862d`<br>
+SHAKE-128 (256-bit output): `488ad0e375221cbf112386d8a67da5aeab6456faceefa0a1a13fadbd7405d4f6`<br>
 <!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
@@ -284,11 +284,11 @@ task latex:manual_chain
     task latex:docker
     ```
 
-    Или вручную: `docker compose --profile latex up`.
+    Или вручную: `docker compose --profile latex run --build --rm latex`.
 
     Профиль `latex` запускает скрипт `scripts/build_latex_docker.py`. Он читает `TARGET` из переменных окружения и собирает документ через `latexmk`. Вспомогательные файлы складываются в `.aux_files_docker`, а готовый PDF остается в корне проекта.
 
-Первый build будет долгим. Повторно выполнять `build` нужно только после изменения Dockerfile, зависимостей или базовых образов.
+Первый build будет долгим. Команда `task latex:docker` и ручной вариант с `run --build` проверяют актуальность образа перед запуском, поэтому после изменения Dockerfile не нужно отдельно помнить про пересборку.
 
 ### Сборка Docker-образов
 
@@ -339,10 +339,10 @@ task docx
 Или вручную:
 
 ```bash
-docker compose --profile latex up
-docker compose --profile mermaid up
-docker compose --profile python up
-docker compose --profile docx up
+docker compose --profile latex run --build --rm latex
+docker compose --profile mermaid run --build --rm mermaid_diagrams
+docker compose --profile python run --build --rm python_diagrams
+docker compose --profile docx run --build --rm docx_pdf
 ```
 
 Запуск всех профилей одной командой:
