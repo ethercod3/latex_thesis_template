@@ -9,7 +9,7 @@ import shutil
 import subprocess
 import sys
 
-from common import PROJECT_DIR
+from common import ENV_PATH, PROJECT_DIR, env_value
 
 REQUIREMENTS_PATH = PROJECT_DIR / "requirements.txt"
 
@@ -107,6 +107,109 @@ def path_only_check(name: str, command: str, *, required: bool, fix: str) -> Che
         return Check(name=name, ok=False, required=required, detail=f"команда не найдена: {command}", fix=fix)
 
     return Check(name=name, ok=True, required=required, detail=path, fix=fix)
+
+
+def warning_check(name: str, detail: str, fix: str) -> Check:
+    return Check(name=name, ok=True, required=True, warning=True, detail=detail, fix=fix)
+
+
+def ok_check(name: str, detail: str) -> Check:
+    return Check(name=name, ok=True, required=True, detail=detail, fix="")
+
+
+def safe_env_value(name: str) -> str | None:
+    try:
+        return env_value(name)
+    except ModuleNotFoundError:
+        return None
+
+
+def project_state_checks() -> list[Check]:
+    items: list[Check] = []
+
+    if ENV_PATH.is_file():
+        items.append(ok_check(".env", ".env найден"))
+    else:
+        items.append(warning_check(".env", ".env не найден", "Создайте .env по примеру .env.example."))
+
+    target = safe_env_value("TARGET")
+    if not target:
+        items.append(warning_check("TARGET", "TARGET не задан в .env", "Укажите TARGET в .env."))
+    else:
+        target_path = PROJECT_DIR / target
+        if target_path.is_file():
+            items.append(ok_check("TARGET", f"{target} найден"))
+        else:
+            items.append(warning_check("TARGET", f"файл не найден: {target}", "Проверьте TARGET в .env."))
+
+    vault_path = safe_env_value("VAULT_OS_PATH")
+    if not vault_path:
+        items.append(warning_check("VAULT_OS_PATH", "VAULT_OS_PATH не задан в .env", "Укажите путь к проекту с кодом."))
+    else:
+        path = (PROJECT_DIR / vault_path).resolve()
+        if path.exists():
+            items.append(ok_check("VAULT_OS_PATH", f"{vault_path} найден"))
+        else:
+            items.append(
+                warning_check(
+                    "VAULT_OS_PATH",
+                    f"путь не найден: {vault_path}",
+                    "Проверьте VAULT_OS_PATH в .env или положите код по ожидаемому пути.",
+                )
+            )
+
+    for pdf_name in ("титульник.pdf", "задание.pdf"):
+        if (PROJECT_DIR / pdf_name).is_file():
+            items.append(ok_check(pdf_name, f"{pdf_name} найден"))
+        else:
+            items.append(
+                warning_check(
+                    pdf_name,
+                    f"{pdf_name} не найден",
+                    "Сгенерируйте титульные страницы через task docx или task build.",
+                )
+            )
+
+    items.extend(diagram_state_checks("Mermaid-диаграммы", PROJECT_DIR / "mermaid", "*.mmd"))
+    items.extend(diagram_state_checks("Python-диаграммы", PROJECT_DIR / "python_diagrams", "*.py"))
+    return items
+
+
+def diagram_state_checks(name: str, source_dir: Path, pattern: str) -> list[Check]:
+    if not source_dir.is_dir():
+        return [
+            warning_check(
+                name, f"папка не найдена: {source_dir.relative_to(PROJECT_DIR)}", "Проверьте структуру проекта."
+            )
+        ]
+
+    missing: list[str] = []
+    stale: list[str] = []
+    source_files = sorted(source_dir.glob(pattern))
+    for source in source_files:
+        output = PROJECT_DIR / "figures" / f"{source.stem}.pdf"
+        if not output.is_file():
+            missing.append(output.relative_to(PROJECT_DIR).as_posix())
+        elif output.stat().st_mtime < source.stat().st_mtime:
+            stale.append(output.relative_to(PROJECT_DIR).as_posix())
+
+    if missing:
+        shown = ", ".join(missing[:5])
+        if len(missing) > 5:
+            shown += f", ... (всего {len(missing)})"
+        return [warning_check(name, f"нет PDF: {shown}", "Пересоберите диаграммы через task diagrams или task build.")]
+
+    if stale:
+        shown = ", ".join(stale[:5])
+        if len(stale) > 5:
+            shown += f", ... (всего {len(stale)})"
+        return [
+            warning_check(
+                name, f"PDF старее исходников: {shown}", "Пересоберите диаграммы через task diagrams или task build."
+            )
+        ]
+
+    return [ok_check(name, f"проверено файлов: {len(source_files)}")]
 
 
 def python_check() -> Check:
@@ -343,13 +446,15 @@ def print_group(title: str, items: list[Check]) -> None:
 
 def main() -> int:
     items = checks()
+    project_items = project_state_checks()
     required = [item for item in items if item.required]
     optional = [item for item in items if not item.required]
     missing_required = [item for item in required if not item.ok]
-    warnings = [item for item in items if item.ok and item.warning]
+    warnings = [item for item in [*items, *project_items] if item.ok and item.warning]
 
     print(f"{STYLE.bold}Проверка окружения проекта{STYLE.reset}")
     print_group("Обязательные инструменты для поддерживаемой сборки", required)
+    print_group("Состояние проекта", project_items)
     print_group("Опциональные локальные инструменты", optional)
 
     if missing_required:
