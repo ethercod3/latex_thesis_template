@@ -37,7 +37,7 @@
 | Инструмент | Где используется |
 | --- | --- |
 | Docker и Docker Compose | воспроизводимая сборка профилей |
-| TeX Live, LuaLaTeX, latexmk, biber | сборка LaTeX-документа |
+| TeX Live, LuaLaTeX, latexmk, biber, Python | сборка LaTeX-документа |
 | Zensical | сборка документации |
 | Mermaid CLI | генерация Mermaid-диаграмм |
 | Python-библиотеки из `requirements.txt` | вспомогательные скрипты и диаграммы |

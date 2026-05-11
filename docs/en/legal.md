@@ -37,7 +37,7 @@ The repository contains configuration and instructions for third-party tools, bu
 | Tool | Where it is used |
 | --- | --- |
 | Docker and Docker Compose | reproducible profile builds |
-| TeX Live, LuaLaTeX, latexmk, biber | LaTeX document build |
+| TeX Live, LuaLaTeX, latexmk, biber, Python | LaTeX document build |
 | Zensical | documentation build |
 | Mermaid CLI | Mermaid diagram generation |
 | Python libraries from `requirements.txt` | helper scripts and diagrams |

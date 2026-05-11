@@ -22,9 +22,10 @@
 ## Подготовка
 
 1. Установите дистрибутив LaTeX. Под Windows рекомендуется TeX Live. `latexmk` обычно поставляется вместе с установкой TeX Live, поэтому отдельно его ставить не нужно. Компилятор проекта: LuaLaTeX.
-2. Убедитесь, что доступны команды `latexmk`, `lualatex` и `biber`.
-3. Клонируйте репозиторий.
-4. Установите Python-зависимости для вспомогательных скриптов:
+2. Установите Python и убедитесь, что команда `python` доступна в `PATH`. Она нужна не только вспомогательным скриптам: документ использует PyLuaTeX во время компиляции LaTeX.
+3. Убедитесь, что доступны команды `latexmk`, `lualatex` и `biber`.
+4. Клонируйте репозиторий.
+5. Установите Python-зависимости для вспомогательных скриптов:
 
 
 
@@ -48,7 +49,7 @@
 
 
 
-5. Создайте в корне проекта файл `.env` и укажите основной `.tex` файл:
+6. Создайте в корне проекта файл `.env` и укажите основной `.tex` файл:
 
 ```env
 TARGET="Куприянов_И221_диплом.tex"
@@ -104,7 +105,7 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
 
-Конфигурация находится в `.latexmkrc`: используется `LuaLaTeX`, `biber`, вспомогательные файлы складываются в `.aux_files`, а готовый PDF остается в корне проекта.
+Конфигурация находится в `.latexmkrc`: используется `LuaLaTeX` с `--shell-escape`, `biber`, вспомогательные файлы складываются в `.aux_files`, а готовый PDF остается в корне проекта. `--shell-escape` нужен PyLuaTeX, чтобы запустить Python во время компиляции.
 
 ## Сборка через Python-скрипт
 
@@ -193,24 +194,24 @@ TARGET="Куприянов_И221_диплом.tex"
 mkdir .aux_files
 ```
 
-Так как проект использует `biblatex` с backend `biber`, одного запуска `lualatex` недостаточно:
+Так как проект использует `biblatex` с backend `biber` и PyLuaTeX, одного запуска `lualatex` недостаточно, а каждый запуск `lualatex` должен идти с `--shell-escape`:
 
 ??? example "Ручная цепочка для произвольного `.tex` файла"
     ```bash
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+    lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
     biber ".aux_files/<файл>.bcf"
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+    lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+    lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
     ```
 
 Для основного файла проекта:
 
 ??? example "Ручная цепочка для основного файла проекта"
     ```bash
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+    lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
     biber ".aux_files/Куприянов_И221_диплом.bcf"
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+    lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+    lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
     ```
 
 После сборки итоговый PDF окажется в `.aux_files`. Его нужно перенести в корень проекта:

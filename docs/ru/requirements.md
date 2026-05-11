@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | Task | Рекомендуемый запуск команд проекта | `task --version` |
 | Docker | Полная воспроизводимая сборка, Zensical, DOCX-конвертация | `docker --version` |
-| Python | Локальные вспомогательные скрипты и Python-диаграммы | `python --version` |
+| Python | Локальная компиляция LaTeX через PyLuaTeX, вспомогательные скрипты и Python-диаграммы | `python --version` |
 | TeX Live | Локальная сборка LaTeX без Docker | `lualatex --version` |
 | latexmk | Быстрая локальная сборка LaTeX | `latexmk --version` |
 | biber | Библиография при локальной сборке | `biber --version` |
@@ -16,7 +16,7 @@
     Если цель - просто собрать итоговый PDF, установите Task и Docker, затем выполните команды из раздела [Быстрый старт](quick-start.md).
 
 !!! note "Локальная сборка без Docker"
-    Для сборки без Docker нужны TeX Live, `latexmk`, `lualatex` и `biber`. Под Windows `latexmk` и `biber` обычно ставятся вместе с TeX Live.
+    Для сборки без Docker нужны TeX Live, Python, `latexmk`, `lualatex` и `biber`. Под Windows `latexmk` и `biber` обычно ставятся вместе с TeX Live. Python нужен не только вспомогательным скриптам: LaTeX-документ использует PyLuaTeX и запускает команду `python` во время компиляции.
 
 ## Частые сценарии
 

@@ -18,6 +18,6 @@ latexmk %.tex
 
 <img src="/assets/texstudio_build.png" height=500>
 
-Before the first build, make sure `latexmk`, `lualatex`, and `biber` are available in `PATH`. When TeX Live is installed, they are usually available together with the distribution. The ready PDF will be created in the project root, and auxiliary files will be placed into `.aux_files`.
+Before the first build, make sure `python`, `latexmk`, `lualatex`, and `biber` are available in `PATH`. When TeX Live is installed, `latexmk`, `lualatex`, and `biber` are usually available together with the distribution. Python is required by PyLuaTeX during LaTeX compilation. The ready PDF will be created in the project root, and auxiliary files will be placed into `.aux_files`.
 
 The fully manual scheme with separate `lualatex` and `biber` runs is described at the end of [Build without Docker](manual-build.md#fully-manual-compilation).

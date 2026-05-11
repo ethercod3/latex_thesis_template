@@ -25,7 +25,7 @@
 
 ## Собрать без Docker
 
-1. Установите TeX Live, `latexmk`, `lualatex` и `biber`.
+1. Установите TeX Live, Python, `latexmk`, `lualatex` и `biber`. Python нужен PyLuaTeX во время компиляции LaTeX.
 2. Подготовьте внешние артефакты: титульник, задание, диаграммы и код приложений.
 3. Запустите локальную сборку.
 

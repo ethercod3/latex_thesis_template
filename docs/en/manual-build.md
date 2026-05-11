@@ -22,9 +22,10 @@ The first `latexmk` run can be longer than a manual build because it builds its 
 ## Preparation
 
 1. Install a LaTeX distribution. TeX Live is recommended on Windows. `latexmk` usually comes with TeX Live, so it does not need to be installed separately. The project compiler is LuaLaTeX.
-2. Make sure `latexmk`, `lualatex`, and `biber` commands are available.
-3. Clone the repository.
-4. Install Python dependencies for helper scripts:
+2. Install Python and make sure the `python` command is available in `PATH`. It is not only for helper scripts: the document uses PyLuaTeX during LaTeX compilation.
+3. Make sure `latexmk`, `lualatex`, and `biber` commands are available.
+4. Clone the repository.
+5. Install Python dependencies for helper scripts:
 
 === "Task"
 
@@ -38,7 +39,7 @@ The first `latexmk` run can be longer than a manual build because it builds its 
     pip install -r requirements.txt
     ```
 
-5. Create a `.env` file in the project root and specify the main `.tex` file:
+6. Create a `.env` file in the project root and specify the main `.tex` file:
 
 ```env
 TARGET="Куприянов_И221_диплом.tex"
@@ -74,7 +75,7 @@ For another `.tex` file:
     latexmk "<file>.tex"
     ```
 
-Configuration lives in `.latexmkrc`: it uses `LuaLaTeX`, `biber`, auxiliary files go to `.aux_files`, and the ready PDF stays in the project root.
+Configuration lives in `.latexmkrc`: it uses `LuaLaTeX` with `--shell-escape`, `biber`, auxiliary files go to `.aux_files`, and the ready PDF stays in the project root. `--shell-escape` is required by PyLuaTeX so it can start Python during compilation.
 
 ## Build through the Python script
 
@@ -133,24 +134,24 @@ Create a directory for auxiliary files:
 mkdir .aux_files
 ```
 
-Because the project uses `biblatex` with the `biber` backend, one `lualatex` run is not enough:
+Because the project uses `biblatex` with the `biber` backend and PyLuaTeX, one `lualatex` run is not enough, and every `lualatex` run must include `--shell-escape`:
 
 ??? example "Manual chain for any `.tex` file"
     ```bash
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<file>.tex"
+    lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<file>.tex"
     biber ".aux_files/<file>.bcf"
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<file>.tex"
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<file>.tex"
+    lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<file>.tex"
+    lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<file>.tex"
     ```
 
 For the main project file:
 
 ??? example "Manual chain for the main project file"
     ```bash
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+    lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
     biber ".aux_files/Куприянов_И221_диплом.bcf"
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
-    lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+    lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+    lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
     ```
 
 After the build, the final PDF will be in `.aux_files`. Move it to the project root:

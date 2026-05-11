@@ -6,7 +6,7 @@ The required toolset depends on how you build the project.
 | --- | --- | --- |
 | Task | Recommended entry point for project commands | `task --version` |
 | Docker | Full reproducible build, Zensical, DOCX conversion | `docker --version` |
-| Python | Local helper scripts and Python diagrams | `python --version` |
+| Python | Local LaTeX compilation through PyLuaTeX, helper scripts, and Python diagrams | `python --version` |
 | TeX Live | Local LaTeX build without Docker | `lualatex --version` |
 | latexmk | Fast local LaTeX build | `latexmk --version` |
 | biber | Bibliography for local builds | `biber --version` |
@@ -16,7 +16,7 @@ The required toolset depends on how you build the project.
     If the goal is only to build the final PDF, install Task and Docker, then run the commands from [Quick start](quick-start.md).
 
 !!! note "Local build without Docker"
-    A build without Docker requires TeX Live, `latexmk`, `lualatex`, and `biber`. On Windows, `latexmk` and `biber` usually come with TeX Live.
+    A build without Docker requires TeX Live, Python, `latexmk`, `lualatex`, and `biber`. On Windows, `latexmk` and `biber` usually come with TeX Live. Python is needed by the LaTeX document itself too: it uses PyLuaTeX and runs the `python` command during compilation.
 
 ## Common scenarios
 

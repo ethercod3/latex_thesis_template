@@ -25,7 +25,7 @@ After the build, the final PDF appears in the project root. If the command fails
 
 ## Build without Docker
 
-1. Install TeX Live, `latexmk`, `lualatex`, and `biber`.
+1. Install TeX Live, Python, `latexmk`, `lualatex`, and `biber`. Python is required by PyLuaTeX during LaTeX compilation.
 2. Prepare external artifacts: the title page, assignment, diagrams, and appendix code.
 3. Run the local build.
 
