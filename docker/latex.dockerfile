@@ -8,6 +8,7 @@ RUN echo "deb http://snapshot.debian.org/archive/debian/20260502T000000Z bookwor
 RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && \
     apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y --no-install-recommends \
     python3 \
+    python-is-python3 \
     latexmk \
     biber \
     texlive-base \

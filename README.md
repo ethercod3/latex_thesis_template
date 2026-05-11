@@ -12,12 +12,12 @@
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
-MD5: `36ce3bcebcea36589036f1769d2952d6`<br>
-SHA-1: `7ed3e80def46b7dff9fba14b101e2323dd2dccca`<br>
-SHA-256: `00e7416c417edc67ef58e6ed11407dc81960e7fa3c58ae23011b76663ebbc871`<br>
-SHA3-256: `0f8751bdafafbc49ac8f1ddf18d4a2c732b143ed6941cf43f13d48cfe425f0ee`<br>
-BLAKE2s: `82b863053df8f51a96316fbc212489893ff60cd86eab3723bc613daa220309a0`<br>
-SHAKE-128 (256-bit output): `42624c14bcd7ef7699320187b21ccc3e2a3f0c419985956754165f6e0e91f702`<br>
+MD5: `15ebae700a230ab276dbf85b71cfc4e5`<br>
+SHA-1: `63c0e7df9016c11e540f91bc7a7a964738e5ee0a`<br>
+SHA-256: `5ec12ae87f7cf4ae6a02553635a5ba5ac884bddc4f8adc73eb5a91b435f47952`<br>
+SHA3-256: `3b2877e74490488c347e9edd0fe04c0630766fab63b53287acbc0ea0f9d0bed1`<br>
+BLAKE2s: `06c845ca080cb46f079591b61b2823d595e28e2a0fcbfbe9a39303f60d23095a`<br>
+SHAKE-128 (256-bit output): `d19efd5675b02d43a310d56b60f040114f2fe9228ca4c5737f6a08a298dd9cbe`<br>
 <!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
@@ -162,8 +162,9 @@ zensical serve --config-file zensical.en.toml
 Если эти файлы не подготовлены, `latexmk` может завершиться ошибкой из-за отсутствующих PDF, изображений или листингов.
 
 1. Установить дистрибутив `LaTeX`. Под Windows рекомендуется установить `TeX Live`. Установка долгая, но все пакеты сразу скачаются вместе с дистрибутивом. `latexmk` обычно поставляется вместе с установкой `TeX Live`, поэтому отдельно его ставить не нужно. Компилятор в работе использовался `LuaLaTeX`.
-2. Клонировать репозиторий
-3. Установить Python-зависимости для скриптов:
+2. Установить Python и убедиться, что команда `python` доступна в `PATH`. Python нужен не только вспомогательным скриптам: LaTeX-документ использует PyLuaTeX во время компиляции.
+3. Клонировать репозиторий
+4. Установить Python-зависимости для скриптов:
 
     ```bash
     task deps
@@ -175,13 +176,13 @@ zensical serve --config-file zensical.en.toml
     pip install -r requirements.txt
     ```
 
-4. Создать в корне проекта файл `.env` и указать в нем основной `.tex` файл:
+5. Создать в корне проекта файл `.env` и указать в нем основной `.tex` файл:
 
     ```env
     TARGET="Куприянов_И221_диплом.tex"
     ```
 
-5. Собрать основной документ через `latexmk`:
+6. Собрать основной документ через `latexmk`:
 
     ```bash
     task latex:local
@@ -189,7 +190,7 @@ zensical serve --config-file zensical.en.toml
 
     Или напрямую через `latexmk`: `latexmk "Куприянов_И221_диплом.tex"`.
 
-    Конфигурация находится в `.latexmkrc`: используется `LuaLaTeX`, `biber`, вспомогательные файлы складываются в `.aux_files`, а готовый PDF остается в корне проекта.
+    Конфигурация находится в `.latexmkrc`: используется `LuaLaTeX` с `--shell-escape`, `biber`, вспомогательные файлы складываются в `.aux_files`, а готовый PDF остается в корне проекта. `--shell-escape` нужен PyLuaTeX, чтобы запускать Python во время компиляции.
 
     Для другого `.tex` файла:
 
@@ -241,7 +242,7 @@ task latex:manual_chain
 3. Откройте `Options` $\rightarrow$ `Configure TeXstudio` $\rightarrow$ `Build`.
 4. В `Default Compiler` выберите `Latexmk`.
 
-Перед первой сборкой убедитесь, что `latexmk`, `lualatex` и `biber` доступны в `PATH`. При установке `TeX Live` они обычно уже доступны вместе с дистрибутивом. Готовый PDF будет создан в корне проекта, вспомогательные файлы - в `.aux_files`.
+Перед первой сборкой убедитесь, что `python`, `latexmk`, `lualatex` и `biber` доступны в `PATH`. При установке `TeX Live` команды `latexmk`, `lualatex` и `biber` обычно уже доступны вместе с дистрибутивом. Python нужен PyLuaTeX во время компиляции LaTeX. Готовый PDF будет создан в корне проекта, вспомогательные файлы - в `.aux_files`.
 
 ## Компиляция в Docker
 
@@ -559,22 +560,22 @@ task diagrams:docker
 mkdir .aux_files
 ```
 
-Так как проект использует `biblatex` с backend `biber`, одного запуска `lualatex` недостаточно:
+Так как проект использует `biblatex` с backend `biber` и PyLuaTeX, одного запуска `lualatex` недостаточно, а каждый запуск `lualatex` должен идти с `--shell-escape`:
 
 ```bash
-lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
 biber ".aux_files/<файл>.bcf"
-lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
-lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
+lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "<файл>.tex"
 ```
 
 Для основного файла проекта:
 
 ```bash
-lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
 biber ".aux_files/Куприянов_И221_диплом.bcf"
-lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
-lualatex -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
+lualatex --shell-escape -synctex=1 -interaction=nonstopmode -output-directory=".aux_files" "Куприянов_И221_диплом.tex"
 ```
 
 После сборки итоговый PDF окажется в `.aux_files`. Его нужно перенести в корень проекта:

@@ -2,37 +2,25 @@
 %  НАСТРОЙКИ МНОЖЕСТВЕННЫХ ФОРМ ДЛЯ РЕФЕРАТА
 % --------------------------------------
 
-\directlua{
-  local candidates = {
-    "preamble/lua/russian_plural.lua",
-    "../preamble/lua/russian_plural.lua",
-    "../../preamble/lua/russian_plural.lua",
-  }
+\begin{python}
+from pathlib import Path
 
-  local plural_file = nil
+candidates = (
+    Path("preamble/python/russian_plural.py"),
+    Path("../preamble/python/russian_plural.py"),
+    Path("../../preamble/python/russian_plural.py"),
+)
 
-  for _, path in ipairs(candidates) do
-    local file = io.open(path, "r")
-    if file then
-      file:close()
-      plural_file = path
-      break
-    end
-  end
-
-  assert(plural_file, "Cannot find preamble/lua/russian_plural.lua")
-  dofile(plural_file)
-}
+for candidate in candidates:
+    if candidate.is_file():
+        exec(candidate.read_text(encoding="utf-8"))
+        break
+else:
+    raise FileNotFoundError("Cannot find preamble/python/russian_plural.py")
+\end{python}
 
 \newcommand{\russianPlural}[4]{%
-  \directlua{
-    tex.sprint(russian_plural.form(
-      "\luaescapestring{#1}",
-      "\luaescapestring{#2}",
-      "\luaescapestring{#3}",
-      "\luaescapestring{#4}"
-    ))
-  }%
+  \py{russian_plural_form("#1", "#2", "#3", "#4")}%
 }
 
 \newcommand{\russianTables}[1]{%

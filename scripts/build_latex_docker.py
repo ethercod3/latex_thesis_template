@@ -27,6 +27,7 @@ def main() -> None:
         [
             "latexmk",
             "-lualatex",
+            "-shell-escape",
             f"-auxdir={AUX_DIR}",
             "-outdir=.",
             target,

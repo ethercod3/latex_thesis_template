@@ -32,6 +32,7 @@ def target_tex_path(target_arg: str | None) -> Path:
 def lualatex_command(target: Path) -> list[str]:
     return [
         "lualatex",
+        "--shell-escape",
         "-synctex=1",
         "-interaction=nonstopmode",
         "-output-directory=.aux_files",
