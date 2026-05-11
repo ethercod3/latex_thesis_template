@@ -19,10 +19,10 @@ tasks:
     desc: Run the generated exe without failing on missing runner tools
     dir: ../..
     cmds:
-      - powershell -NoProfile -ExecutionPolicy Bypass -Command ".\dist\diploma-latex-check.exe; if ($LASTEXITCODE -ne 0) { Write-Host \"Smoke test finished with exit code $LASTEXITCODE. This is allowed because the runner may not have TeX Live or Docker.\"; exit 0 }"
+      - python -c "import subprocess; result = subprocess.run([r'.\dist\diploma-latex-check.exe']); print(f'Smoke test finished with exit code {result.returncode}. This is allowed because the runner may not have TeX Live or Docker.') if result.returncode else None"
 
   checksum:
     desc: Create SHA256SUMS.txt for the generated exe
     dir: ../..
     cmds:
-      - powershell -NoProfile -ExecutionPolicy Bypass -Command "Get-FileHash .\dist\diploma-latex-check.exe -Algorithm SHA256 | ForEach-Object { \"$($_.Hash.ToLower())  diploma-latex-check.exe\" } | Set-Content .\dist\SHA256SUMS.txt"
+      - python -c "from pathlib import Path; import hashlib; path = Path(r'.\dist\diploma-latex-check.exe'); Path(r'.\dist\SHA256SUMS.txt').write_text(hashlib.sha256(path.read_bytes()).hexdigest() + '  diploma-latex-check.exe\n', encoding='utf-8')"

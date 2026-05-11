@@ -14,6 +14,15 @@ from common import ENV_PATH, PROJECT_DIR, env_value
 REQUIREMENTS_PATH = PROJECT_DIR / "requirements.txt"
 
 
+def configure_output_encoding() -> None:
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
+
+
+configure_output_encoding()
+
+
 @dataclass(frozen=True)
 class Check:
     name: str
