@@ -78,14 +78,14 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
     ```bash
-    docker compose --profile latex up
+    docker compose --profile latex run --build --rm latex
     ```
 
 
 
 
 
-Профиль `latex` запускает `scripts/build_latex_docker.py`. Скрипт читает `TARGET` из переменных окружения и собирает документ через `latexmk`. Вспомогательные файлы складываются в `.aux_files_docker`, а готовый PDF остается в корне проекта.
+Профиль `latex` запускает `scripts/build_latex_docker.py`. Скрипт читает `TARGET` из переменных окружения и собирает документ через `latexmk`. Вспомогательные файлы складываются в `.aux_files_docker`, а готовый PDF остается в корне проекта. Вариант `run --build` перед запуском проверяет актуальность образа, чтобы Docker не использовал старую версию после изменения Dockerfile.
 
 ## Сборка образов
 
@@ -177,10 +177,10 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
     ```bash
-    docker compose --profile latex up
-    docker compose --profile mermaid up
-    docker compose --profile python up
-    docker compose --profile docx up
+    docker compose --profile latex run --build --rm latex
+    docker compose --profile mermaid run --build --rm mermaid_diagrams
+    docker compose --profile python run --build --rm python_diagrams
+    docker compose --profile docx run --build --rm docx_pdf
     ```
 
 

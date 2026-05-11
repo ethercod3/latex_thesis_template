@@ -9,7 +9,7 @@ tasks:
   mermaid:docker:
     desc: Сгенерировать Mermaid-диаграммы в Docker
     cmds:
-      - docker compose --profile mermaid run --rm mermaid_diagrams
+      - docker compose --profile mermaid run --build --rm mermaid_diagrams
 
   diagrams:
     desc: Сгенерировать Python-диаграммы локально
@@ -19,4 +19,4 @@ tasks:
   diagrams:docker:
     desc: Сгенерировать Python-диаграммы в Docker
     cmds:
-      - docker compose --profile python run --rm python_diagrams
+      - docker compose --profile python run --build --rm python_diagrams

@@ -62,10 +62,10 @@ Run compilation:
 === "Manual"
 
     ```bash
-    docker compose --profile latex up
+    docker compose --profile latex run --build --rm latex
     ```
 
-The `latex` profile runs `scripts/build_latex_docker.py`. The script reads `TARGET` from environment variables and builds the document through `latexmk`. Auxiliary files are placed into `.aux_files_docker`, and the final PDF stays in the project root.
+The `latex` profile runs `scripts/build_latex_docker.py`. The script reads `TARGET` from environment variables and builds the document through `latexmk`. Auxiliary files are placed into `.aux_files_docker`, and the final PDF stays in the project root. The `run --build` form checks that the image is current before starting it, so Docker does not reuse an old image after Dockerfile changes.
 
 ## Building images
 
@@ -131,10 +131,10 @@ Run separate profiles:
 === "Manual"
 
     ```bash
-    docker compose --profile latex up
-    docker compose --profile mermaid up
-    docker compose --profile python up
-    docker compose --profile docx up
+    docker compose --profile latex run --build --rm latex
+    docker compose --profile mermaid run --build --rm mermaid_diagrams
+    docker compose --profile python run --build --rm python_diagrams
+    docker compose --profile docx run --build --rm docx_pdf
     ```
 
 Run all profiles with one command:

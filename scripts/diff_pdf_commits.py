@@ -138,7 +138,7 @@ def run_profiles(profiles: list[str]) -> None:
     print(f"Профили сборки: {format_profiles(profiles)}", flush=True)
     for profile in profiles:
         service = PROFILE_SERVICES[profile]
-        run_command([*compose, "--profile", profile, "run", "--rm", service])
+        run_command([*compose, "--profile", profile, "run", "--build", "--rm", service])
 
 
 def build_pdf(commit: str, pdf_name: str, destination_dir: Path, profiles: list[str]) -> Path:

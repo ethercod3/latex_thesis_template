@@ -18,4 +18,4 @@ tasks:
   latex:docker:
     desc: Собрать итоговый PDF в Docker
     cmds:
-      - docker compose --profile latex run --rm latex
+      - docker compose --profile latex run --build --rm latex

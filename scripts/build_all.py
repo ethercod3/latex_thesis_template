@@ -22,6 +22,7 @@ def run_profile(profile: str, service: str) -> int:
             "--profile",
             profile,
             "run",
+            "--build",
             "--rm",
             service,
         ],
