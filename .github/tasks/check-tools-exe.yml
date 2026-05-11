@@ -1,0 +1,28 @@
+version: '3'
+
+tasks:
+  deps:
+    desc: Install dependencies for the check tools exe build
+    dir: ../..
+    cmds:
+      - python -m pip install --upgrade pip
+      - python -m pip install -r requirements.txt
+      - python -m pip install pyinstaller
+
+  build:
+    desc: Build the Windows check tools exe
+    dir: ../..
+    cmds:
+      - pyinstaller --onefile --name diploma-latex-check --paths scripts scripts/check_tools.py
+
+  smoke:
+    desc: Run the generated exe without failing on missing runner tools
+    dir: ../..
+    cmds:
+      - powershell -NoProfile -ExecutionPolicy Bypass -Command ".\dist\diploma-latex-check.exe; if ($LASTEXITCODE -ne 0) { Write-Host \"Smoke test finished with exit code $LASTEXITCODE. This is allowed because the runner may not have TeX Live or Docker.\"; exit 0 }"
+
+  checksum:
+    desc: Create SHA256SUMS.txt for the generated exe
+    dir: ../..
+    cmds:
+      - powershell -NoProfile -ExecutionPolicy Bypass -Command "Get-FileHash .\dist\diploma-latex-check.exe -Algorithm SHA256 | ForEach-Object { \"$($_.Hash.ToLower())  diploma-latex-check.exe\" } | Set-Content .\dist\SHA256SUMS.txt"

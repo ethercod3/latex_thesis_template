@@ -3,8 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 
-PROJECT_DIR = Path(__file__).resolve().parents[1]
+PROJECT_DIR = Path.cwd().resolve() if getattr(sys, "frozen", False) else Path(__file__).resolve().parents[1]
 ENV_PATH = PROJECT_DIR / ".env"
 
 
