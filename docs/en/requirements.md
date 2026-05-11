@@ -18,6 +18,14 @@ The required toolset depends on how you build the project.
 !!! tip "Environment check"
     After installing the tools, run `task check`. It checks programs, Python packages, and PyLuaTeX, then reports what is ready and what still needs to be installed.
 
+    If Python is not installed yet and you only need to check the environment, download `diploma-latex-check.exe` from GitHub Releases, put it into the project root, and run:
+
+    ```powershell
+    .\diploma-latex-check.exe
+    ```
+
+    This check does not require Python to start the checker itself, but a local LaTeX build without Docker still requires the `python` command in `PATH` because the document uses PyLuaTeX.
+
 !!! note "Local build without Docker"
     A build without Docker requires TeX Live, Python, `latexmk`, `lualatex`, and `biber`. On Windows, `latexmk` and `biber` usually come with TeX Live. Python is needed by the LaTeX document itself too: it uses PyLuaTeX and runs the `python` command during compilation.
 

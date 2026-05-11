@@ -31,6 +31,12 @@ task --version
 task --list
 ```
 
+If Python is not installed yet but you need to check the environment, download `diploma-latex-check.exe` from GitHub Releases, put it into the project root, and run:
+
+```powershell
+.\diploma-latex-check.exe
+```
+
 ## Build
 
 !!! tip "Before the first run"
