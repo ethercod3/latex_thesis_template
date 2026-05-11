@@ -26,3 +26,9 @@ tasks:
     dir: ../..
     cmds:
       - python -c "from pathlib import Path; import hashlib; path = Path(r'.\dist\diploma-latex-check.exe'); Path(r'.\dist\SHA256SUMS.txt').write_text(hashlib.sha256(path.read_bytes()).hexdigest() + '  diploma-latex-check.exe\n', encoding='utf-8')"
+
+  release:
+    desc: Upload the generated exe and checksum to GitHub Release assets
+    dir: ../..
+    cmds:
+      - python scripts/release_check_tools.py

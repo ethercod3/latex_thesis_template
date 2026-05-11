@@ -3,20 +3,26 @@ name: Build check tools exe
 on:
   workflow_dispatch:
   push:
+    tags:
+      - "v*"
+    branches:
+      - main
     paths:
       - "scripts/check_tools.py"
       - "scripts/common.py"
+      - "scripts/release_check_tools.py"
       - ".github/tasks/check-tools-exe.yml"
       - ".github/workflows/check-tools-exe.yml"
   pull_request:
     paths:
       - "scripts/check_tools.py"
       - "scripts/common.py"
+      - "scripts/release_check_tools.py"
       - ".github/tasks/check-tools-exe.yml"
       - ".github/workflows/check-tools-exe.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-windows:
@@ -46,9 +52,16 @@ jobs:
         run: task --taskfile .github/tasks/check-tools-exe.yml checksum
 
       - name: Upload artifact
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         uses: actions/upload-artifact@v4
         with:
           name: diploma-latex-check-windows-x64
           path: |
             dist/diploma-latex-check.exe
             dist/SHA256SUMS.txt
+
+      - name: Upload release assets
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: task --taskfile .github/tasks/check-tools-exe.yml release
