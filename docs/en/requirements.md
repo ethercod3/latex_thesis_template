@@ -15,6 +15,9 @@ The required toolset depends on how you build the project.
 !!! tip "Shortest path"
     If the goal is only to build the final PDF, install Task and Docker, then run the commands from [Quick start](quick-start.md).
 
+!!! tip "Environment check"
+    After installing the tools, run `task check`. It checks programs, Python packages, and PyLuaTeX, then reports what is ready and what still needs to be installed.
+
 !!! note "Local build without Docker"
     A build without Docker requires TeX Live, Python, `latexmk`, `lualatex`, and `biber`. On Windows, `latexmk` and `biber` usually come with TeX Live. Python is needed by the LaTeX document itself too: it uses PyLuaTeX and runs the `python` command during compilation.
 

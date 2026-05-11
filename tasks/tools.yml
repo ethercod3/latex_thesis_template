@@ -1,6 +1,11 @@
 version: '3'
 
 tasks:
+  check:
+    desc: Проверить наличие инструментов для сборки проекта
+    cmds:
+      - python scripts/check_tools.py
+
   deps:
     desc: Установить Python-зависимости для локальных скриптов
     cmds:
