@@ -12,12 +12,12 @@
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
-MD5: `b569e6df2059443768542e0c2c220b93`<br>
-SHA-1: `9d96629d348cd38b6c1cfed632a339d025407716`<br>
-SHA-256: `f8607820ec3eb5c5688b0aba34c371d857cc96e63bcf5d57c76bcb93b2017736`<br>
-SHA3-256: `80f1313301f00a0cb9aac70e4a470d462d2fea9bdba31657d1f85e7a8ff07b31`<br>
-BLAKE2s: `9164812b44ac715c01293d9221e55d702f78d60ab006ffc27692e91653b1862d`<br>
-SHAKE-128 (256-bit output): `488ad0e375221cbf112386d8a67da5aeab6456faceefa0a1a13fadbd7405d4f6`<br>
+MD5: `18843d84af388a0b041a863b4c813ee9`<br>
+SHA-1: `9d04593da942aa3830260f8ba2e75a82a3e52d78`<br>
+SHA-256: `8200d1f4b7fee2c46dc030f31715daaeb31d7030f56ad10c88129282795cdd77`<br>
+SHA3-256: `6316267d9af850b6f1d9d1c2e5f21b1cc0b5e3467557765e14b32c8e22422d45`<br>
+BLAKE2s: `e6d2a4be7a25b60cb3c57915c0afe77f32f47fe38b11949ba781e351e815098c`<br>
+SHAKE-128 (256-bit output): `a131a622b41583918802360e46fec41e7ee9f92e977375330d8b2f8002d5d1d8`<br>
 <!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
@@ -79,6 +79,14 @@ task check
 ```bash
 task clean:dry
 task clean
+```
+
+Остановить и очистить Docker-артефакты только текущего Compose-проекта:
+
+```bash
+task clean:docker:dry
+task clean:docker
+task clean:docker:images
 ```
 
 Проверить форматирование Python-файлов через Black:

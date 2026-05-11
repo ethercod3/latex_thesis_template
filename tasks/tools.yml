@@ -21,6 +21,21 @@ tasks:
     cmds:
       - python scripts/clean.py
 
+  clean:docker:
+    desc: Остановить и удалить контейнеры/сети текущего Docker Compose-проекта
+    cmds:
+      - python scripts/clean_docker.py
+
+  clean:docker:dry:
+    desc: Показать Docker-команду очистки проекта без выполнения
+    cmds:
+      - python scripts/clean_docker.py --dry-run
+
+  clean:docker:images:
+    desc: Удалить контейнеры/сети и локальные образы текущего Docker Compose-проекта
+    cmds:
+      - python scripts/clean_docker.py --images
+
   clean:dry:
     desc: Показать, какие артефакты удалит task clean
     cmds:
