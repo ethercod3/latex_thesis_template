@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from importlib import metadata
 from pathlib import Path
 import os
 import re
@@ -325,18 +324,31 @@ def requirements_check() -> Check:
             fix="Восстановите requirements.txt.",
         )
 
-    missing: list[str] = []
-    for line in REQUIREMENTS_PATH.read_text(encoding="utf-8").splitlines():
-        package = line.strip()
-        if not package or package.startswith("#"):
-            continue
-        package = re.split(r"[<>=!~]", package, maxsplit=1)[0].strip()
-        if not package:
-            continue
-        try:
-            metadata.version(package)
-        except metadata.PackageNotFoundError:
-            missing.append(package)
+    python = shutil.which("python")
+    if python is None:
+        return Check(
+            name="Python-пакеты",
+            ok=False,
+            required=True,
+            detail="невозможно проверить пакеты: команда python не найдена",
+            fix="Установите Python 3.13+ и затем запустите: task deps",
+        )
+
+    result = run([python, str(PROJECT_DIR / "scripts" / "check_python_requirements.py"), str(REQUIREMENTS_PATH)])
+    if result is None or result.returncode != 0:
+        detail = "проверка Python-пакетов завершилась с ошибкой"
+        if result and first_line(result.stdout):
+            detail += f": {first_line(result.stdout)}"
+        return Check(
+            name="Python-пакеты",
+            ok=True,
+            required=True,
+            warning=True,
+            detail=detail,
+            fix="Проверьте Python и при необходимости запустите: task deps",
+        )
+
+    missing = [line.strip() for line in result.stdout.splitlines() if line.strip()]
 
     if missing:
         shown = ", ".join(missing[:8])

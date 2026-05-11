@@ -7,6 +7,8 @@ on:
       - main
     paths:
       - "scripts/check_tools.py"
+      - "scripts/check_tools_exe.py"
+      - "scripts/check_python_requirements.py"
       - "scripts/common.py"
       - "scripts/release_check_tools.py"
       - ".github/tasks/check-tools-exe.yml"
@@ -14,6 +16,8 @@ on:
   pull_request:
     paths:
       - "scripts/check_tools.py"
+      - "scripts/check_tools_exe.py"
+      - "scripts/check_python_requirements.py"
       - "scripts/common.py"
       - "scripts/release_check_tools.py"
       - ".github/tasks/check-tools-exe.yml"

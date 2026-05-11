@@ -19,13 +19,13 @@ tasks:
     desc: Run the generated exe without failing on missing runner tools
     dir: ../..
     cmds:
-      - python -c "import subprocess; result = subprocess.run([r'.\dist\diploma-latex-check.exe']); print(f'Smoke test finished with exit code {result.returncode}. This is allowed because the runner may not have TeX Live or Docker.') if result.returncode else None"
+      - python scripts/check_tools_exe.py smoke
 
   checksum:
     desc: Create SHA256SUMS.txt for the generated exe
     dir: ../..
     cmds:
-      - python -c "from pathlib import Path; import hashlib; path = Path(r'.\dist\diploma-latex-check.exe'); Path(r'.\dist\SHA256SUMS.txt').write_text(hashlib.sha256(path.read_bytes()).hexdigest() + '  diploma-latex-check.exe\n', encoding='utf-8')"
+      - python scripts/check_tools_exe.py checksum
 
   release:
     desc: Upload the generated exe and checksum to GitHub Release assets
