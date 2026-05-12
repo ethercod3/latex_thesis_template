@@ -21,7 +21,7 @@ permissions:
 jobs:
   release-pdf:
     if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push') }}
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout LaTeX repo
         uses: actions/checkout@v4
@@ -46,25 +46,8 @@ jobs:
       - name: Prepare CI environment
         run: python scripts/ci/prepare_pdf_release_env.py
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Install Mermaid CLI
-        run: npm install -g @mermaid-js/mermaid-cli
-
-      - name: Build DOCX PDFs
-        run: task docx
-
-      - name: Build Mermaid diagrams
-        run: task mermaid
-
-      - name: Build Python diagrams
-        run: task diagrams:docker
-
       - name: Build PDF
-        run: task latex:docker
+        run: task build
 
       - name: Download latest check tool assets
         env:

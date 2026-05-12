@@ -1,6 +1,6 @@
 # CI/CD and releases
 
-The repository uses GitHub Actions to check helper tools, build the PDF, and publish release assets. The PDF workflow runs on `windows-latest`.
+The repository uses GitHub Actions to check helper tools, build the PDF, and publish release assets.
 
 ## Check tools
 
@@ -63,4 +63,4 @@ Non-trivial workflow logic is kept in Python scripts:
 | `scripts/ci/publish_pdf_release.py` | Creates/updates the release and uploads PDF/checktool assets |
 | `scripts/ci/release_check_tools.py` | Publishes the environment-checker exe |
 
-Workflow YAML keeps only basic commands such as `python ...`, `task docx`, `task mermaid`, `task diagrams:docker`, and `task latex:docker`.
+Workflow YAML keeps only basic commands such as `python ...` and `task build`.
