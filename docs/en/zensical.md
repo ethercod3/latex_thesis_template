@@ -1,6 +1,11 @@
 # Documentation
 
-Project documentation is built with Zensical and stored in `docs/`. The Russian version is stored in `docs/ru/`, and the English version is stored in `docs/en/`.
+Project documentation is stored in `docs/` and built with Zensical. The Russian version is the primary site and opens at the root URL. The English version is served separately from `/en/`.
+
+| Version | Sources | Config | Build output |
+| --- | --- | --- | --- |
+| Russian | `docs/ru/` | `zensical.toml` | `docs-site/` |
+| English | `docs/en/` | `zensical.en.toml` | `docs-site/en/` |
 
 ## Local run
 
@@ -25,6 +30,24 @@ http://localhost:8000
 ```
 
 `task docs` first builds both language versions, then serves static files from `docs-site/`. After Markdown or config changes, restart the command.
+
+## Bilingual build
+
+Both configs define `extra.alternate`, so the regular `task docs` UI shows a language selector. Russian is listed first.
+
+Build the static site without starting the server:
+
+=== "Task"
+
+    ```bash
+    task docs:build
+    ```
+
+=== "Manual"
+
+    ```bash
+    docker compose --profile docs run --rm docs "zensical build --config-file zensical.toml && zensical build --config-file zensical.en.toml"
+    ```
 
 Stop the service:
 
@@ -54,24 +77,6 @@ Download the documentation Docker image in advance:
     docker compose --profile docs pull docs
     ```
 
-## Bilingual build
-
-The Russian site is built from `zensical.toml` into `docs-site/`. The English site is built from `zensical.en.toml` into `docs-site/en/`. Both configs define `extra.alternate`, so the regular `task docs` UI shows a language selector.
-
-Build the static site:
-
-=== "Task"
-
-    ```bash
-    task docs:build
-    ```
-
-=== "Manual"
-
-    ```bash
-    docker compose --profile docs run --rm docs "zensical build --config-file zensical.toml && zensical build --config-file zensical.en.toml"
-    ```
-
 ## Image
 
 Documentation uses the official image:
@@ -80,4 +85,4 @@ Documentation uses the official image:
 zensical/zensical:0.0.40
 ```
 
-Site settings are stored in `zensical.toml` and `zensical.en.toml`.
+If you change structure or navigation, update `zensical.toml` for the Russian version first, then mirror the same changes in `zensical.en.toml`.
