@@ -4,6 +4,9 @@ services:
     build:
       context: .
       dockerfile: ./docker/latex.dockerfile
+    user: "${HOST_UID:-0}:${HOST_GID:-0}"
+    environment:
+      HOME: /tmp
     volumes:
       - ./:/data
       - ${VAULT_OS_PATH}:${VAULT_PATH}
@@ -17,6 +20,9 @@ services:
     build:
       context: .
       dockerfile: ./docker/mermaid.dockerfile
+    user: "${HOST_UID:-0}:${HOST_GID:-0}"
+    environment:
+      HOME: /tmp
     env_file:
       - ./.env
     volumes:
@@ -28,6 +34,9 @@ services:
     build:
       context: .
       dockerfile: ./docker/python.dockerfile
+    user: "${HOST_UID:-0}:${HOST_GID:-0}"
+    environment:
+      HOME: /tmp
     env_file:
       - ./.env
     volumes:
@@ -39,6 +48,9 @@ services:
     build:
       context: .
       dockerfile: ./docker/docx.dockerfile
+    user: "${HOST_UID:-0}:${HOST_GID:-0}"
+    environment:
+      HOME: /tmp
     volumes:
       - ./:/data
     working_dir: /data

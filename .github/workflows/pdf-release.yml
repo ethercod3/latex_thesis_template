@@ -38,6 +38,8 @@ jobs:
             echo 'VAULT_PATH="/vault_code"'
             echo 'VAULT_OS_PATH="./vault_diploma"'
             echo 'TARGET="Куприянов_И221_диплом.tex"'
+            echo "HOST_UID=$(id -u)"
+            echo "HOST_GID=$(id -g)"
           } > .env
 
       - name: Build PDF
