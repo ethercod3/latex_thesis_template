@@ -33,14 +33,7 @@ jobs:
         uses: arduino/setup-task@v2
 
       - name: Prepare CI environment
-        run: |
-          {
-            echo 'VAULT_PATH="/vault_code"'
-            echo 'VAULT_OS_PATH="./vault_diploma"'
-            echo 'TARGET="Куприянов_И221_диплом.tex"'
-            echo "HOST_UID=$(id -u)"
-            echo "HOST_GID=$(id -g)"
-          } > .env
+        run: python scripts/ci/prepare_pdf_release_env.py
 
       - name: Build PDF
         run: task build
@@ -49,48 +42,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           CURRENT_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
-        run: |
-          set -euo pipefail
-          mkdir -p dist
-
-          LATEST_TAG="$(gh release list --exclude-drafts --exclude-pre-releases --limit 20 --json tagName --jq '.[] | select(.tagName != "'"$CURRENT_TAG"'") | .tagName' | head -n 1)"
-          if [ -z "$LATEST_TAG" ]; then
-            echo "No previous release found; skipping check tool assets."
-            exit 0
-          fi
-
-          echo "Downloading check tool assets from $LATEST_TAG"
-          gh release download "$LATEST_TAG" --pattern "diploma-latex-check.exe" --dir dist --clobber || true
-          gh release download "$LATEST_TAG" --pattern "checktool-windows-x64.exe" --dir dist --clobber || true
-          gh release download "$LATEST_TAG" --pattern "SHA256SUMS.txt" --dir dist --clobber || true
-          gh release download "$LATEST_TAG" --pattern "checktool-SHA256SUMS.txt" --dir dist --clobber || true
-
-          if [ -f dist/checktool-windows-x64.exe ] && [ ! -f dist/diploma-latex-check.exe ]; then
-            cp dist/checktool-windows-x64.exe dist/diploma-latex-check.exe
-          fi
-
-          if [ -f dist/checktool-SHA256SUMS.txt ] && [ ! -f dist/SHA256SUMS.txt ]; then
-            cp dist/checktool-SHA256SUMS.txt dist/SHA256SUMS.txt
-          fi
+        run: python scripts/ci/download_latest_checktool_assets.py
 
       - name: Publish release assets
         env:
           GH_TOKEN: ${{ github.token }}
           CURRENT_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
-          PDF_PATH: Куприянов_И221_диплом.pdf
-        run: |
-          set -euo pipefail
-
-          gh release view "$CURRENT_TAG" >/dev/null 2>&1 || gh release create "$CURRENT_TAG" \
-            --title "$CURRENT_TAG" \
-            --notes "Автоматическая сборка PDF."
-
-          gh release upload "$CURRENT_TAG" "$PDF_PATH#pdf-Куприянов_И221_диплом.pdf" --clobber
-
-          if [ -f dist/diploma-latex-check.exe ]; then
-            gh release upload "$CURRENT_TAG" "dist/diploma-latex-check.exe#checktool-windows-x64.exe" --clobber
-          fi
-
-          if [ -f dist/SHA256SUMS.txt ]; then
-            gh release upload "$CURRENT_TAG" "dist/SHA256SUMS.txt#checktool-SHA256SUMS.txt" --clobber
-          fi
+        run: python scripts/ci/publish_pdf_release.py
