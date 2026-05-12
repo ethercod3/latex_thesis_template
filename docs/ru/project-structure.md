@@ -12,6 +12,7 @@ flowchart LR
     SCRIPTS --> MMD
     SCRIPTS --> PYD
     CI["scripts/ci/*.py<br/>.github/workflows"] --> RELEASE["GitHub Releases"]
+    BACKUP["scripts/backup_project.py<br/>backup.yml"] --> CLOUD["Google Drive<br/>Яндекс Диск"]
     DOCKER["docker/<br/>docker-compose.yaml"] --> SCRIPTS
     DOCS["docs/ru/*.md<br/>docs/en/*.md"] --> SITE["docs-site/"]
 ```
@@ -23,14 +24,14 @@ flowchart LR
 | `mermaid/` | Исходники Mermaid-диаграмм |
 | `python_diagrams/` | Python-скрипты генерации диаграмм |
 | `figures/` | Сгенерированные изображения и PDF для вставки в документ |
-| `scripts/` | Вспомогательные скрипты сборки, конвертации и сравнения PDF |
+| `scripts/` | Вспомогательные скрипты сборки, конвертации, сравнения PDF и резервного копирования |
 | `scripts/ci/` | Python-скрипты для GitHub Actions и публикации релизов |
 | `docker/` | Dockerfile для отдельных профилей сборки |
 | `docs/ru/`, `docs/en/` | Zensical-документация проекта |
 | `docs/includes/` | Общие Markdown-вставки для Zensical-документации |
 | `tasks/` | Тематические Taskfile с командами сборки и обслуживания; список команд доступен через `task --list` |
 | `tests/` | Pytest-тесты чистой логики вспомогательных скриптов |
-| `.github/workflows/` | GitHub Actions для Pages, check tools и PDF releases |
+| `.github/workflows/` | GitHub Actions для Pages, check tools, PDF releases и backup |
 
 Ключевые файлы:
 
@@ -41,6 +42,7 @@ flowchart LR
 | `requirements.txt` | Python-зависимости для скриптов и диаграмм |
 | `pyproject.toml` | Настройки Python-инструментов, включая Black |
 | `docker-compose.yaml` | Docker Compose профили проекта |
+| `docker-compose.ci-cache.yaml` | CI-only Compose override для кэша Docker BuildKit в GitHub Actions |
 | `Taskfile.yml` | Единая точка входа Task, подключающая файлы из `tasks/` |
 | `.env` | Локальные переменные окружения для сборки |
 

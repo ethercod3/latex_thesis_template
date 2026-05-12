@@ -31,6 +31,28 @@ The nightly build runs at 04:00 Asia/Yakutsk. GitHub Actions cron uses UTC, so t
 
 The nightly build is published to the service tag and release `nightly`. The `scripts/ci/publish_pdf_release.py` script moves the `nightly` tag to the current default-branch commit and reuploads the PDF asset.
 
+## Backup
+
+The `Backup git bundle` workflow runs manually and every Sunday at 05:00 Asia/Yakutsk. It creates a `git bundle`, uploads it through `rclone` to the configured cloud remotes, and keeps the latest 30 backup files.
+
+The workflow requires this repository secret:
+
+```text
+RCLONE_CONFIG_CONTENT
+```
+
+The secret value is the full contents of `rclone.conf`. The default destinations are:
+
+```text
+gdrive:diploma_latex_backups,ydisk:diploma_latex_backups
+```
+
+They can be overridden with the `BACKUP_RCLONE_DESTINATIONS` repository variable. Details: [Backups](/en/backup/).
+
+## CI caches
+
+The Windows workflow for `diploma-latex-check.exe` enables the `pip` cache keyed by `requirements.txt`. The PDF workflow uses `docker-compose.ci-cache.yaml`: Docker BuildKit stores build layers in GitHub Actions cache separately for `latex`, `docx`, `mermaid`, and `python`.
+
 ## Private code repository
 
 To build appendices with application source code, the workflow checks out the private repository `ethercod3/diploma_code` into `vault_diploma`. The LaTeX repository must have this GitHub Actions secret:

@@ -29,6 +29,7 @@ nav = [
     {"Сравнение PDF между коммитами" = "pdf-diff.md"},
     {"Проблемы с компиляцией" = "troubleshooting.md"},
     {"Git hooks" = "git-hooks.md"},
+    {"Резервное копирование" = "backup.md"},
     {"CI/CD и релизы" = "ci.md"},
     {"Документация" = "zensical.md"}
   ]},

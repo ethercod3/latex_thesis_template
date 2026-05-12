@@ -666,12 +666,12 @@ rclone config
 Рекомендуемые имена remote:
 
 - `gdrive` для Google Drive;
-- `yandex` для Яндекс Диска.
+- `ydisk` для Яндекс Диска.
 
 По умолчанию backup загружается в:
 
 ```env
-BACKUP_RCLONE_DESTINATIONS="gdrive:diploma_latex_backups,yandex:diploma_latex_backups"
+BACKUP_RCLONE_DESTINATIONS="gdrive:diploma_latex_backups,ydisk:diploma_latex_backups"
 BACKUP_KEEP_WEEKS="30"
 ```
 

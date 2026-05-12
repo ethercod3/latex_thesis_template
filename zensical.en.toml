@@ -29,6 +29,7 @@ nav = [
     {"PDF comparison between commits" = "pdf-diff.md"},
     {"Compilation issues" = "troubleshooting.md"},
     {"Git hooks" = "git-hooks.md"},
+    {"Backups" = "backup.md"},
     {"CI/CD and releases" = "ci.md"},
     {"Documentation" = "zensical.md"}
   ]},

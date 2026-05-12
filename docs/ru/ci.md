@@ -31,6 +31,28 @@ Workflow проверки также оставляет исходные assets 
 
 Ночная сборка публикуется в служебный тег и release `nightly`. Скрипт `scripts/ci/publish_pdf_release.py` передвигает тег `nightly` на текущий commit default branch и перезаливает PDF-asset.
 
+## Backup
+
+Workflow `Backup git bundle` запускается вручную и по расписанию каждое воскресенье в 05:00 по Якутску. Он создает `git bundle`, загружает его через `rclone` в настроенные облачные remotes и оставляет последние 30 backup-файлов.
+
+Для workflow нужен repository secret:
+
+```text
+RCLONE_CONFIG_CONTENT
+```
+
+Значение секрета - полный текст `rclone.conf`. По умолчанию используются destinations:
+
+```text
+gdrive:diploma_latex_backups,ydisk:diploma_latex_backups
+```
+
+Их можно переопределить через repository variable `BACKUP_RCLONE_DESTINATIONS`. Подробности: [Резервное копирование](/backup/).
+
+## Кэши CI
+
+В Windows workflow для `diploma-latex-check.exe` включен `pip` cache по `requirements.txt`. В PDF workflow подключен `docker-compose.ci-cache.yaml`: Docker BuildKit сохраняет слои сборочных образов в GitHub Actions cache отдельно для `latex`, `docx`, `mermaid` и `python`.
+
 ## Приватный репозиторий с кодом
 
 Для сборки приложений workflow подтягивает приватный репозиторий `ethercod3/diploma_code` в каталог `vault_diploma`. Для этого в настройках репозитория должен быть GitHub Actions secret:

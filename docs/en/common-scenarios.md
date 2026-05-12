@@ -130,6 +130,22 @@ Before running the command, make sure the Git working tree is clean.
 
 Details: [PDF comparison between commits](/en/pdf-diff/).
 
+## Back up Git history
+
+Create and verify a local bundle without uploading it:
+
+```bash
+task backup:local
+```
+
+Upload the bundle to Google Drive and Yandex Disk through `rclone`:
+
+```bash
+task backup
+```
+
+Commit or stash important local changes before backing up: `git bundle` stores Git history, not uncommitted files. Details: [Backups](/en/backup/).
+
 ## Run the documentation locally
 
 === "Task"

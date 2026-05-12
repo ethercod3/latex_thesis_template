@@ -11,6 +11,7 @@ The required toolset depends on how you build the project.
 | latexmk | Fast local LaTeX build | `latexmk --version` |
 | biber | Bibliography for local builds | `biber --version` |
 | diff-pdf | Visual PDF comparison between commits | `diff-pdf --help` |
+| rclone | Backing up `git bundle` files to cloud storage | `rclone version` |
 
 !!! tip "Shortest path"
     If the goal is only to build the final PDF, install Task and Docker, then run the commands from [Quick start](/en/quick-start/).
@@ -43,5 +44,6 @@ The required toolset depends on how you build the project.
 | Rebuild diagrams | [Diagrams](/en/diagrams/) |
 | Connect application source code | [Source code in appendices](/en/source-code/) |
 | Compare PDFs between commits | [PDF comparison between commits](/en/pdf-diff/) |
+| Configure backups | [Backups](/en/backup/) |
 | Investigate a build error | [Compilation issues](/en/troubleshooting/) |
 | Check CI/CD and release assets | [CI/CD and releases](/en/ci/) |
