@@ -41,6 +41,21 @@ tasks:
     cmds:
       - python scripts/clean.py --dry-run
 
+  backup:
+    desc: Создать git bundle и загрузить бэкап через rclone
+    cmds:
+      - python scripts/backup_project.py {{.CLI_ARGS}}
+
+  backup:dry:
+    desc: Проверить создание bundle и показать rclone-операции без загрузки и удаления
+    cmds:
+      - python scripts/backup_project.py --dry-run {{.CLI_ARGS}}
+
+  backup:local:
+    desc: Создать и проверить локальный git bundle без загрузки в облако
+    cmds:
+      - python scripts/backup_project.py --local-only {{.CLI_ARGS}}
+
   hash:
     desc: Обновить контрольные суммы PDF в README.md
     cmds:

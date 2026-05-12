@@ -112,6 +112,12 @@ task python:lint
 task python:test
 ```
 
+Создать резервную копию Git-истории через `rclone`:
+
+```bash
+task backup
+```
+
 ## Быстрый старт
 
 ```bash
@@ -138,6 +144,7 @@ task build
 - [Как работать с диаграммами](#как-работать-с-диаграммами)
 - [Полностью ручная компиляция LaTeX](#полностью-ручная-компиляция-latex)
 - [Git hooks](#git-hooks)
+- [Резервное копирование](#резервное-копирование)
 - [CI/CD и релизы](#cicd-и-релизы)
 
 ## Документация
@@ -639,6 +646,76 @@ task deps
 Или вручную: `pip install -r requirements.txt`.
 
 Hook считает хэши текущего PDF алгоритмами из стандартного `hashlib`. Если PDF отсутствует, README не меняется и коммит продолжается со старым значением.
+
+## Резервное копирование
+
+Проект можно бэкапить как `git bundle` через `rclone`. Такой архив хранит Git-историю, ветки и теги, но не сохраняет незакоммиченные изменения рабочей копии. Перед важным бэкапом стоит сделать коммит или stash.
+
+Установите `rclone` по официальной инструкции: <https://rclone.org/install/>. После установки проверьте, что команда доступна:
+
+```bash
+rclone version
+```
+
+Настройте два remote в `rclone`:
+
+```bash
+rclone config
+```
+
+Рекомендуемые имена remote:
+
+- `gdrive` для Google Drive;
+- `yandex` для Яндекс Диска.
+
+По умолчанию backup загружается в:
+
+```env
+BACKUP_RCLONE_DESTINATIONS="gdrive:diploma_latex_backups,yandex:diploma_latex_backups"
+BACKUP_KEEP_WEEKS="30"
+```
+
+Проверить создание bundle и rclone-операции без реальной загрузки и удаления:
+
+```bash
+task backup:dry
+```
+
+Создать и проверить только локальный bundle без загрузки в облако:
+
+```bash
+task backup:local
+```
+
+Создать бэкап, загрузить его на оба remote и оставить только последние 30 bundle-файлов на каждом remote:
+
+```bash
+task backup
+```
+
+Если remote называются иначе, передайте назначения явно:
+
+```bash
+task backup -- --destinations "google:latex-backups,yadisk:latex-backups" --keep 30
+```
+
+Пример еженедельного запуска через Windows Task Scheduler по воскресеньям в 22:00:
+
+```powershell
+schtasks /Create /TN "Diploma LaTeX weekly backup" /SC WEEKLY /D SUN /ST 22:00 /TR "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"cd 'C:\Users\Artem\Documents\диплом_latex'; task backup\"" /F
+```
+
+Посмотреть задачу:
+
+```powershell
+schtasks /Query /TN "Diploma LaTeX weekly backup" /V /FO LIST
+```
+
+Запустить вручную:
+
+```powershell
+schtasks /Run /TN "Diploma LaTeX weekly backup"
+```
 
 ## CI/CD и релизы
 
