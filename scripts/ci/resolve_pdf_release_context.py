@@ -1,3 +1,9 @@
+"""Вычисление GitHub Actions контекста для PDF-релиза.
+
+Решает, какой tag и заголовок использовать для nightly или tag-сборки, и
+экспортирует значения через GITHUB_ENV для последующих шагов workflow.
+"""
+
 from __future__ import annotations
 
 import os

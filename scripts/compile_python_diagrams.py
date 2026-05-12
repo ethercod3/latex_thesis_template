@@ -1,3 +1,9 @@
+"""Генерация диаграмм, описанных Python-скриптами.
+
+Запускает фиксированный набор файлов из python_diagrams/ и ожидает, что они
+запишут итоговые изображения в figures/.
+"""
+
 import sys
 
 from common import PROJECT_DIR, ScriptError, run_command, script_main

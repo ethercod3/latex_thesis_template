@@ -1,3 +1,9 @@
+"""Подготовка .env для CI-сборки PDF-релиза.
+
+Записывает минимальный набор переменных, нужных Docker/LaTeX пайплайну,
+включая TARGET и UID/GID runner-а для корректных прав на артефакты.
+"""
+
 from __future__ import annotations
 
 import os

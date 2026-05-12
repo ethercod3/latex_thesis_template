@@ -1,3 +1,9 @@
+"""Диагностика локальных инструментов, нужных для сборки проекта.
+
+Проверяет Python-пакеты, команды LaTeX/Docker/diagram toolchain и параметры
+из .env, чтобы пользователь видел проблемы окружения до запуска сборки.
+"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass

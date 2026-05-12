@@ -1,3 +1,9 @@
+"""Smoke-test собранного Windows checktool-исполняемого файла.
+
+Запускает exe из dist, допускает ненулевой код при отсутствии внешних
+инструментов на runner-е и сверяет SHA-256 с опубликованным checksum-файлом.
+"""
+
 from __future__ import annotations
 
 from pathlib import Path

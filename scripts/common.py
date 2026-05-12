@@ -1,3 +1,9 @@
+"""Общие утилиты для проектных скриптов.
+
+Содержит единые функции запуска subprocess, чтения .env, проверки команд и
+обертку script_main, чтобы CLI-скрипты одинаково обрабатывали ошибки.
+"""
+
 from __future__ import annotations
 
 from pathlib import Path

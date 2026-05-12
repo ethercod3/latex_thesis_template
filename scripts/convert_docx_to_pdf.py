@@ -1,3 +1,9 @@
+"""Конвертация DOCX-документов в PDF через LibreOffice.
+
+Используется в Docker-сервисе docx_pdf: берет входные файлы из DOCX_INPUT_DIR,
+экспортирует PDF и по умолчанию удаляет пустые страницы из результата.
+"""
+
 from pathlib import Path
 import os
 import shutil

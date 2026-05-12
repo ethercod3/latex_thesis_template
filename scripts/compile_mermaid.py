@@ -1,3 +1,9 @@
+"""Компиляция Mermaid-диаграмм из mermaid/ в figures/.
+
+Находит локальный mmdc, параллельно обрабатывает исходники диаграмм и
+сохраняет SVG/PNG-результаты рядом с остальными иллюстрациями диплома.
+"""
+
 import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path

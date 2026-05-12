@@ -1,3 +1,9 @@
+"""Загрузка последних release assets для Windows checktool.
+
+Используется в CI перед PDF-релизом: находит подходящие артефакты прошлого
+релиза через GitHub CLI и кладет exe/checksum-файлы в dist.
+"""
+
 from __future__ import annotations
 
 import json

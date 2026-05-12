@@ -1,3 +1,9 @@
+"""Публикация Windows checktool и checksum-файла в GitHub Release.
+
+Скрипт ожидает tag-контекст CI и токен GitHub, после чего загружает
+подготовленные dist-артефакты как release assets.
+"""
+
 from __future__ import annotations
 
 from pathlib import Path

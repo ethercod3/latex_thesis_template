@@ -1,3 +1,9 @@
+"""Локальная сборка диплома через установленный LaTeX toolchain.
+
+Поддерживает сборку через latexmk и ручную цепочку LuaLaTeX/Biber, складывая
+временные файлы в .aux_files и проверяя наличие внешних команд заранее.
+"""
+
 from __future__ import annotations
 
 import argparse

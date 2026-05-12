@@ -1,3 +1,9 @@
+"""Полная Docker-сборка всех публикуемых артефактов проекта.
+
+Последовательно запускает Compose-профили для DOCX, Mermaid, Python-диаграмм
+и LaTeX, останавливая цепочку на первом неуспешном профиле.
+"""
+
 from common import docker_compose_command, run_command, script_main
 
 PROFILES = [

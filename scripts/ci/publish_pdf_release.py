@@ -1,3 +1,9 @@
+"""Публикация собранного PDF как GitHub Release asset.
+
+Определяет целевой tag, копирует PDF в dist и через GitHub CLI загружает
+артефакт в nightly или tag-релиз с предсказуемым именем файла.
+"""
+
 from __future__ import annotations
 
 import os
