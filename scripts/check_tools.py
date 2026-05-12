@@ -4,11 +4,10 @@ from dataclasses import dataclass
 from pathlib import Path
 import os
 import re
-import shutil
 import subprocess
 import sys
 
-from common import ENV_PATH, PROJECT_DIR, env_value
+from common import ENV_PATH, PROJECT_DIR, command_path, env_value, script_main
 
 REQUIREMENTS_PATH = PROJECT_DIR / "requirements.txt"
 
@@ -77,7 +76,7 @@ def command_check(
     fix: str,
     timeout: int = 10,
 ) -> Check:
-    path = shutil.which(command)
+    path = command_path(command)
     if path is None:
         return Check(name=name, ok=False, required=required, detail=f"команда не найдена: {command}", fix=fix)
 
@@ -110,7 +109,7 @@ def command_check(
 
 
 def path_only_check(name: str, command: str, *, required: bool, fix: str) -> Check:
-    path = shutil.which(command)
+    path = command_path(command)
     if path is None:
         return Check(name=name, ok=False, required=required, detail=f"команда не найдена: {command}", fix=fix)
 
@@ -221,7 +220,7 @@ def diagram_state_checks(name: str, source_dir: Path, pattern: str) -> list[Chec
 
 
 def python_check() -> Check:
-    path = shutil.which("python")
+    path = command_path("python")
     if path is None:
         return Check(
             name="Python",
@@ -253,7 +252,7 @@ def python_check() -> Check:
 
 
 def docker_compose_check() -> Check:
-    if shutil.which("docker") is None:
+    if command_path("docker") is None:
         return Check(
             name="Docker Compose plugin",
             ok=False,
@@ -285,7 +284,7 @@ def docker_compose_check() -> Check:
 
 
 def pyluatex_check() -> Check:
-    if shutil.which("kpsewhich") is None:
+    if command_path("kpsewhich") is None:
         return Check(
             name="Пакет PyLuaTeX",
             ok=False,
@@ -324,7 +323,7 @@ def requirements_check() -> Check:
             fix="Восстановите requirements.txt.",
         )
 
-    python = shutil.which("python")
+    python = command_path("python")
     if python is None:
         return Check(
             name="Python-пакеты",
@@ -495,4 +494,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(script_main(main))

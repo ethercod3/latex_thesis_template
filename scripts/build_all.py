@@ -1,8 +1,4 @@
-import shutil
-import subprocess
-import sys
-
-from common import PROJECT_DIR
+from common import docker_compose_command, run_command, script_main
 
 PROFILES = [
     ("docx", "docx_pdf"),
@@ -14,32 +10,15 @@ PROFILES = [
 
 def run_profile(profile: str, service: str) -> int:
     print(f"\n==> {profile}", flush=True)
-
-    result = subprocess.run(
-        [
-            "docker",
-            "compose",
-            "--profile",
-            profile,
-            "run",
-            "--build",
-            "--rm",
-            service,
-        ],
-        cwd=PROJECT_DIR,
+    result = run_command(
+        [*docker_compose_command(), "--profile", profile, "run", "--build", "--rm", service],
+        check=False,
     )
 
     return result.returncode
 
 
 def main() -> int:
-    if shutil.which("docker") is None:
-        print(
-            "Не найден Docker. Установите Docker Desktop и убедитесь, что команда " "'docker' доступна в терминале.",
-            file=sys.stderr,
-        )
-        return 1
-
     for profile, service in PROFILES:
         exit_code = run_profile(profile, service)
         if exit_code != 0:
@@ -49,4 +28,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(script_main(main))

@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from pathlib import Path
 import hashlib
-import subprocess
 import sys
 
+from common import run_command, script_main
 
 EXE_PATH = Path("dist/diploma-latex-check.exe")
 CHECKSUM_PATH = Path("dist/SHA256SUMS.txt")
 
 
 def smoke() -> int:
-    result = subprocess.run([str(EXE_PATH)], check=False)
+    result = run_command([str(EXE_PATH)], check=False)
     if result.returncode:
         print(
             f"Smoke test finished with exit code {result.returncode}. "
@@ -38,4 +38,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(script_main(main))

@@ -3,10 +3,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 import shutil
-import subprocess
-import sys
 
-from common import PROJECT_DIR, env_value, require_command, run_command
+from common import PROJECT_DIR, ScriptError, env_value, require_command, run_command, script_main
 
 AUX_DIR = PROJECT_DIR / ".aux_files"
 
@@ -23,7 +21,7 @@ def target_tex_path(target_arg: str | None) -> Path:
     if len(tex_files) == 1:
         return tex_files[0].resolve()
 
-    raise RuntimeError(
+    raise ScriptError(
         "Не удалось понять, какой .tex-файл нужно собрать. "
         "Укажите TARGET в файле .env или передайте путь через --target."
     )
@@ -53,13 +51,13 @@ def output_pdf_path(target: Path) -> Path:
 
 def build_with_latexmk(target: Path) -> Path:
     if not target.is_file():
-        raise RuntimeError(f"Указанный .tex-файл не найден: {target}")
+        raise ScriptError(f"Указанный .tex-файл не найден: {target}")
 
     run_command(latexmk_command(target))
 
     output_pdf = output_pdf_path(target)
     if not output_pdf.is_file():
-        raise RuntimeError(
+        raise ScriptError(
             f"PDF-файл не был создан там, где ожидалось: {output_pdf}. " "Проверьте сообщения latexmk выше."
         )
 
@@ -68,7 +66,7 @@ def build_with_latexmk(target: Path) -> Path:
 
 def build_without_latexmk(target: Path) -> Path:
     if not target.is_file():
-        raise RuntimeError(f"Указанный .tex-файл не найден: {target}")
+        raise ScriptError(f"Указанный .tex-файл не найден: {target}")
 
     AUX_DIR.mkdir(exist_ok=True)
     run_command(lualatex_command(target))
@@ -80,7 +78,7 @@ def build_without_latexmk(target: Path) -> Path:
     output_pdf = output_pdf_path(target)
 
     if not aux_pdf.is_file():
-        raise RuntimeError(f"PDF-файл не был создан там, где ожидалось: {aux_pdf}. " "Проверьте сообщения LaTeX выше.")
+        raise ScriptError(f"PDF-файл не был создан там, где ожидалось: {aux_pdf}. " "Проверьте сообщения LaTeX выше.")
 
     shutil.copy2(aux_pdf, output_pdf)
     return output_pdf
@@ -104,29 +102,18 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
 
-    try:
-        target = target_tex_path(args.target)
-        if args.no_latexmk:
-            require_command("lualatex")
-            require_command("biber")
-            output_pdf = build_without_latexmk(target)
-        else:
-            require_command("latexmk")
-            output_pdf = build_with_latexmk(target)
-    except RuntimeError as error:
-        print(error, file=sys.stderr)
-        return 1
-    except subprocess.CalledProcessError as error:
-        print(
-            f"Команда завершилась с ошибкой (код {error.returncode}): {' '.join(error.cmd)}",
-            file=sys.stderr,
-        )
-        print("Проверьте сообщения выше: там обычно указана причина ошибки сборки.", file=sys.stderr)
-        return error.returncode
+    target = target_tex_path(args.target)
+    if args.no_latexmk:
+        require_command("lualatex")
+        require_command("biber")
+        output_pdf = build_without_latexmk(target)
+    else:
+        require_command("latexmk")
+        output_pdf = build_with_latexmk(target)
 
     print(f"\nГотово: {output_pdf.relative_to(PROJECT_DIR)}")
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(script_main(main))

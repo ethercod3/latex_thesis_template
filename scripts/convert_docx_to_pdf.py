@@ -2,10 +2,9 @@ from pathlib import Path
 import os
 import shutil
 import subprocess
-import sys
 import tempfile
 
-from common import require_command
+from common import ScriptError, require_command, run_command, script_main
 
 INPUT_DIR = Path(os.environ.get("DOCX_INPUT_DIR", "/data/docx"))
 OUTPUT_DIR = Path(os.environ.get("PDF_OUTPUT_DIR", "/data"))
@@ -63,9 +62,8 @@ def remove_blank_pages(input_file: Path, output_file: Path, tmp_dir: Path) -> No
 
     reduced_file = tmp_dir / f"{input_file.stem}.without_blank_pages.pdf"
 
-    subprocess.run(
+    run_command(
         ["qpdf", "--empty", "--pages", str(input_file), *keep_pages, "--", str(reduced_file)],
-        check=True,
     )
 
     copy_pdf_contents(reduced_file, output_file)
@@ -74,7 +72,7 @@ def remove_blank_pages(input_file: Path, output_file: Path, tmp_dir: Path) -> No
 def convert_docx(source_file: Path, tmp_dir: Path) -> Path:
     print(f"Конвертирую {source_file}")
 
-    subprocess.run(
+    run_command(
         [
             "soffice",
             "--headless",
@@ -87,14 +85,13 @@ def convert_docx(source_file: Path, tmp_dir: Path) -> Path:
             "--outdir",
             str(tmp_dir),
             str(source_file),
-        ],
-        check=True,
+        ]
     )
 
     converted_file = tmp_dir / f"{source_file.stem}.pdf"
 
     if not converted_file.is_file():
-        raise FileNotFoundError(f"LibreOffice не создал ожидаемый PDF-файл: {converted_file}")
+        raise ScriptError(f"LibreOffice не создал ожидаемый PDF-файл: {converted_file}")
 
     return converted_file
 
@@ -109,16 +106,14 @@ def main() -> int:
         require_command(command)
 
     if not INPUT_DIR.is_dir():
-        print(f"Папка с DOCX-файлами не найдена: {INPUT_DIR}", file=sys.stderr)
-        return 1
+        raise ScriptError(f"Папка с DOCX-файлами не найдена: {INPUT_DIR}")
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     source_files = sorted(INPUT_DIR.glob("*.docx"))
 
     if not source_files:
-        print(f"В папке {INPUT_DIR} не найдены .docx-файлы для конвертации.", file=sys.stderr)
-        return 1
+        raise ScriptError(f"В папке {INPUT_DIR} не найдены .docx-файлы для конвертации.")
 
     with tempfile.TemporaryDirectory() as tmp:
         tmp_dir = Path(tmp)
@@ -140,18 +135,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    try:
-        raise SystemExit(main())
-    except FileNotFoundError as error:
-        print(f"Ошибка: {error}", file=sys.stderr)
-        raise SystemExit(1)
-    except RuntimeError as error:
-        print(f"Ошибка: {error}", file=sys.stderr)
-        raise SystemExit(1)
-    except subprocess.CalledProcessError as error:
-        print(
-            f"Команда завершилась с ошибкой (код {error.returncode}): {' '.join(error.cmd)}",
-            file=sys.stderr,
-        )
-        print("Проверьте сообщения выше: там обычно указана причина ошибки.", file=sys.stderr)
-        raise SystemExit(error.returncode)
+    raise SystemExit(script_main(main))

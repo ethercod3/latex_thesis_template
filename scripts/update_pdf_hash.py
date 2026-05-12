@@ -3,10 +3,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import re
-import sys
 from pathlib import Path
 
-from common import PROJECT_DIR, env_value
+from common import PROJECT_DIR, ScriptError, env_value, script_main
 
 README_PATH = PROJECT_DIR / "README.md"
 START_MARKER = "<!-- DIPLOMA_HASHES_START -->"
@@ -36,7 +35,7 @@ def target_pdf_path(pdf_arg: str | None) -> Path:
     if len(tex_files) == 1:
         return (PROJECT_DIR / f"{tex_files[0].stem}.pdf").resolve()
 
-    raise RuntimeError(
+    raise ScriptError(
         "Не удалось понять, для какого PDF нужно обновить хеши. "
         "Укажите TARGET в файле .env или передайте путь через --pdf."
     )
@@ -116,8 +115,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    try:
-        raise SystemExit(main())
-    except RuntimeError as error:
-        print(f"Ошибка: {error}", file=sys.stderr)
-        raise SystemExit(1)
+    raise SystemExit(script_main(main))

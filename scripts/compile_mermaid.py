@@ -1,10 +1,8 @@
-import shutil
 import subprocess
-import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from common import PROJECT_DIR
+from common import PROJECT_DIR, ScriptError, command_path, script_main
 
 SRC = PROJECT_DIR / "mermaid"
 DST = PROJECT_DIR / "figures"
@@ -15,9 +13,9 @@ TIMEOUT_SECONDS = 60
 
 
 def find_mmdc() -> list[str]:
-    mmdc = shutil.which("mmdc") or shutil.which("mmdc.cmd")
+    mmdc = command_path("mmdc") or command_path("mmdc.cmd")
     if mmdc is None:
-        raise RuntimeError(
+        raise ScriptError(
             "Не найдена программа mmdc для сборки Mermaid-диаграмм. "
             "Установите Mermaid CLI и убедитесь, что команда 'mmdc' доступна в терминале."
         )
@@ -37,7 +35,7 @@ def process_file(f: Path, mmdc: list[str]) -> str | None:
     cmd = [*mmdc, "-i", str(f), "-o", str(output_file), "-f"]
 
     try:
-        result = subprocess.run(
+        subprocess.run(
             cmd,
             check=True,
             capture_output=True,
@@ -62,17 +60,18 @@ def process_file(f: Path, mmdc: list[str]) -> str | None:
         )
 
 
-def main() -> None:
+def main() -> int:
     if not SRC.exists():
-        raise FileNotFoundError(f"Папка с Mermaid-диаграммами не найдена: {SRC}")
+        raise ScriptError(f"Папка с Mermaid-диаграммами не найдена: {SRC}")
 
+    DST.mkdir(parents=True, exist_ok=True)
     mmdc = find_mmdc()
 
     files = [f for f in SRC.iterdir() if f.is_file() and f.suffix.lower() in EXTENSIONS]
 
     if not files:
         print(f"В папке {SRC} не найдены Mermaid-файлы для сборки.")
-        return
+        return 0
 
     max_workers = min(MAX_WORKERS_LIMIT, len(files))
 
@@ -88,11 +87,8 @@ def main() -> None:
                 f = futures[future]
                 print(f"[ОШИБКА] Не удалось обработать {f.name}: {e}")
 
+    return 0
+
 
 if __name__ == "__main__":
-    try:
-        DST.mkdir(parents=True, exist_ok=True)
-        main()
-    except (RuntimeError, FileNotFoundError) as error:
-        print(f"Ошибка: {error}", file=sys.stderr)
-        raise SystemExit(1)
+    raise SystemExit(script_main(main))

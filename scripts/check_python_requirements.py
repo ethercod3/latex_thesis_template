@@ -5,6 +5,8 @@ from pathlib import Path
 import re
 import sys
 
+from common import script_main
+
 
 def requirement_name(line: str) -> str:
     package = line.strip()
@@ -37,4 +39,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(script_main(main))

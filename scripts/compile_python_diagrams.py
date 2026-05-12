@@ -1,7 +1,6 @@
-import subprocess
 import sys
 
-from common import PROJECT_DIR
+from common import PROJECT_DIR, ScriptError, run_command, script_main
 
 SOURCE_DIR = PROJECT_DIR / "python_diagrams"
 OUTPUT_DIR = PROJECT_DIR / "figures"
@@ -16,14 +15,13 @@ def run_diagram(script_name: str) -> int:
     script_path = SOURCE_DIR / script_name
 
     if not script_path.is_file():
-        print(f"[ОШИБКА] Не найден скрипт для диаграммы: {script_path}", file=sys.stderr)
-        return 1
+        raise ScriptError(f"Не найден скрипт для диаграммы: {script_path}")
 
     print(f"==> {script_name}", flush=True)
 
-    result = subprocess.run(
+    result = run_command(
         [sys.executable, str(script_path)],
-        cwd=PROJECT_DIR,
+        check=False,
     )
 
     if result.returncode == 0:
@@ -34,8 +32,7 @@ def run_diagram(script_name: str) -> int:
 
 def main() -> int:
     if not SOURCE_DIR.is_dir():
-        print(f"Папка со скриптами диаграмм не найдена: {SOURCE_DIR}", file=sys.stderr)
-        return 1
+        raise ScriptError(f"Папка со скриптами диаграмм не найдена: {SOURCE_DIR}")
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -48,4 +45,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(script_main(main))

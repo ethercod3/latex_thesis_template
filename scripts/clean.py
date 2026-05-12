@@ -4,6 +4,8 @@ import argparse
 import shutil
 from pathlib import Path
 
+from common import ScriptError, script_main
+
 ROOT = Path(__file__).resolve().parents[1]
 
 EXPLICIT_DIRS = [
@@ -76,7 +78,7 @@ def unique_existing(paths: list[Path]) -> list[Path]:
         if resolved in seen or not path.exists() or is_excluded(path):
             continue
         if not is_inside_root(path):
-            raise RuntimeError(f"Refusing to remove path outside project root: {path}")
+            raise ScriptError(f"Refusing to remove path outside project root: {path}")
         seen.add(resolved)
         result.append(path)
 
@@ -141,4 +143,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(script_main(main))
