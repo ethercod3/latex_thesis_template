@@ -11,7 +11,7 @@
 ![Python](https://img.shields.io/badge/Python-3.13+-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Pytest](https://img.shields.io/badge/Tests-pytest-0A9EDC?style=flat-square&logo=pytest&logoColor=white)
 ![Test count](https://img.shields.io/badge/Test%20suite-43%20passed-2EA44F?style=flat-square)
-![Coverage](https://img.shields.io/badge/Coverage-not%20measured-lightgrey?style=flat-square)
+![Coverage](https://img.shields.io/badge/Coverage-35%25-orange?style=flat-square)
 ![Black](https://img.shields.io/badge/Style-Black-000000?style=flat-square)
 ![Plotly](https://img.shields.io/badge/Charts-Plotly-3F4F75?style=flat-square&logo=plotly&logoColor=white)
 ![Pandas](https://img.shields.io/badge/Data-Pandas-150458?style=flat-square&logo=pandas&logoColor=white)

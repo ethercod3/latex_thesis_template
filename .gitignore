@@ -30,3 +30,6 @@ docs-site/
 *.bbl
 *.exe
 .cache
+.coverage
+coverage.xml
+htmlcov/
