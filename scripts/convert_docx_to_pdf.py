@@ -72,6 +72,7 @@ def remove_blank_pages(input_file: Path, output_file: Path, tmp_dir: Path) -> No
 
 def convert_docx(source_file: Path, tmp_dir: Path) -> Path:
     print(f"Конвертирую {source_file}")
+    libreoffice_profile = tmp_dir / "libreoffice-profile"
 
     run_command(
         [
@@ -81,6 +82,7 @@ def convert_docx(source_file: Path, tmp_dir: Path) -> Path:
             "--nofirststartwizard",
             "--nodefault",
             "--nolockcheck",
+            f"-env:UserInstallation=file://{libreoffice_profile}",
             "--convert-to",
             PDF_EXPORT_FILTER,
             "--outdir",
