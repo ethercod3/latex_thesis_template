@@ -34,14 +34,12 @@ task --list
 === "Task"
 
     ```bash
-    task build:images
     task build
     ```
 
 === "Manual"
 
     ```bash
-    docker compose --profile docx --profile mermaid --profile python --profile latex build
     python scripts/build_all.py
     ```
 

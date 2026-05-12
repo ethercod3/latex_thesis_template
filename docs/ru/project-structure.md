@@ -11,6 +11,7 @@ flowchart LR
     SCRIPTS["scripts/*.py"] --> DOCX
     SCRIPTS --> MMD
     SCRIPTS --> PYD
+    CI["scripts/ci/*.py<br/>.github/workflows"] --> RELEASE["GitHub Releases"]
     DOCKER["docker/<br/>docker-compose.yaml"] --> SCRIPTS
     DOCS["docs/ru/*.md<br/>docs/en/*.md"] --> SITE["docs-site/"]
 ```
@@ -23,10 +24,13 @@ flowchart LR
 | `python_diagrams/` | Python-скрипты генерации диаграмм |
 | `figures/` | Сгенерированные изображения и PDF для вставки в документ |
 | `scripts/` | Вспомогательные скрипты сборки, конвертации и сравнения PDF |
+| `scripts/ci/` | Python-скрипты для GitHub Actions и публикации релизов |
 | `docker/` | Dockerfile для отдельных профилей сборки |
 | `docs/ru/`, `docs/en/` | Zensical-документация проекта |
 | `docs/includes/` | Общие Markdown-вставки для Zensical-документации |
-| `tasks/` | Тематические Taskfile с командами сборки и обслуживания; карта задач лежит в `tasks/README.md` |
+| `tasks/` | Тематические Taskfile с командами сборки и обслуживания; список команд доступен через `task --list` |
+| `tests/` | Pytest-тесты чистой логики вспомогательных скриптов |
+| `.github/workflows/` | GitHub Actions для Pages, check tools и PDF releases |
 
 Ключевые файлы:
 

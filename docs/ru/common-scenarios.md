@@ -10,18 +10,19 @@
 === "Task"
 
     ```bash
-    task build:images
     task build
     ```
 
 === "Ручной"
 
     ```bash
-    docker compose --profile docx --profile mermaid --profile python --profile latex build
     python scripts/build_all.py
     ```
 
 После сборки итоговый PDF появится в корне проекта. Если команда падает, откройте [Проблемы с компиляцией](/troubleshooting/).
+
+!!! note "Когда собирать образы отдельно"
+    `task build` запускает профильные контейнеры через `docker compose run --build`, поэтому отдельная команда `task build:images` обычно не нужна. Используйте ее только если хотите заранее пересобрать все Docker-образы.
 
 ## Собрать без Docker
 

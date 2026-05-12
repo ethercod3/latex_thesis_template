@@ -32,10 +32,13 @@ SHAKE-128 (256-bit output): `6384d4828a9a4106f8565d3746fa97434dab275ca3c009aead4
 | `python_diagrams/` | Python-скрипты генерации диаграмм |
 | `figures/` | Сгенерированные изображения и PDF для вставки в документ |
 | `scripts/` | Вспомогательные скрипты сборки, конвертации и сравнения PDF |
+| `scripts/ci/` | Python-скрипты для GitHub Actions и публикации релизов |
 | `docker/` | Dockerfile для отдельных профилей сборки |
 | `docs/ru/`, `docs/en/` | Zensical-документация проекта и ассеты документации |
 | `docs/includes/` | Общие Markdown-вставки для Zensical-документации |
-| `Taskfile.yml`, `tasks/` | Единая точка входа Task и тематические файлы задач; карта задач лежит в `tasks/README.md` |
+| `Taskfile.yml`, `tasks/` | Единая точка входа Task и тематические файлы задач; список команд доступен через `task --list` |
+| `tests/` | Pytest-тесты чистой логики вспомогательных скриптов |
+| `.github/workflows/` | GitHub Actions для Pages, check tools и PDF releases |
 
 ## Установка Task
 
@@ -103,17 +106,22 @@ task clean:docker:images
 task python:lint
 ```
 
+Запустить тесты Python-скриптов:
+
+```bash
+task python:test
+```
+
 ## Быстрый старт
 
 ```bash
-task build:images
 task build
 ```
 
-Макисмальная воспроизводимость с оригиналом будет, если вы будете собирать `Mermaid`-диаграммы из-под `Windows`. Если собирать их Docker-ом, то шрифт для `KaTeX` (математических) выражений будет отличаться от оригинала. Если это для вас неважно, просто пользуйтесь скриптом выше.
+Максимальная воспроизводимость с оригиналом будет, если вы будете собирать `Mermaid`-диаграммы из-под `Windows`. Если собирать их Docker-ом, то шрифт для `KaTeX` (математических) выражений будет отличаться от оригинала. Если это для вас неважно, просто пользуйтесь скриптом выше.
 
 Для запуска скрипта потребуется Docker. Если вы не планируете использовать Docker, рекомендуемый вариант сборки LaTeX-документа - `latexmk`.
-Если `task` не установлен, используйте исходные команды напрямую: `docker compose --profile docx --profile mermaid --profile python --profile latex build` и `python scripts/build_all.py`.
+Если `task` не установлен, используйте исходную команду напрямую: `python scripts/build_all.py`.
 
 ## Навигация
 
@@ -130,6 +138,7 @@ task build
 - [Как работать с диаграммами](#как-работать-с-диаграммами)
 - [Полностью ручная компиляция LaTeX](#полностью-ручная-компиляция-latex)
 - [Git hooks](#git-hooks)
+- [CI/CD и релизы](#cicd-и-релизы)
 
 ## Документация
 
@@ -338,7 +347,7 @@ docker compose --profile python build
 docker compose --profile docx build
 ```
 
-Скрипты `scripts/build_all.py` и `scripts/diff_pdf_commits.py` не пересобирают образы при каждом запуске. Если Docker-образов еще нет, сначала выполните `task build:images` или ручную сборку нужных образов.
+Команды профилей используют `docker compose run --build`, поэтому Docker проверяет актуальность образов перед запуском. Первый запуск все равно будет долгим: Docker скачает базовые образы и соберет окружение.
 
 ### Профили Docker Compose
 
@@ -384,7 +393,6 @@ task build
 ```
 
 Скрипты запускают профили в порядке `docx` $\rightarrow$ `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex` и останавливаются на первой ошибке.
-Перед первым запуском скрипта соберите образы командой из раздела [Сборка Docker-образов](#сборка-docker-образов).
 
 Все вспомогательные скрипты проекта написаны на Python и запускаются одинаково в Windows, Linux и macOS:
 
@@ -631,6 +639,22 @@ task deps
 Или вручную: `pip install -r requirements.txt`.
 
 Hook считает хэши текущего PDF алгоритмами из стандартного `hashlib`. Если PDF отсутствует, README не меняется и коммит продолжается со старым значением.
+
+## CI/CD и релизы
+
+В `.github/workflows/` настроены GitHub Actions:
+
+- `check-tools-exe.yml` собирает `diploma-latex-check.exe` и загружает его в release для тегов `v*`;
+- `pdf-release.yml` собирает PDF через Docker и публикует release assets;
+- `pages.yml` публикует Zensical-документацию на GitHub Pages.
+
+Для тегов `v*` PDF workflow запускается через `workflow_run` после успешного завершения `Release check tools exe`, поэтому в release попадает актуальная версия `checktool-windows-x64.exe`.
+
+Ночная сборка запускается по cron в 04:00 по Якутску и обновляет служебный тег/release `nightly`.
+
+Для CI-сборки приложений workflow подтягивает приватный репозиторий `ethercod3/diploma_code` в `vault_diploma`. В настройках GitHub Actions должен быть secret `VIEW_DIPLOMA_CODE` с read-only доступом к этому репозиторию.
+
+Нетривиальная логика CI/CD вынесена из YAML в Python-скрипты `scripts/ci/*.py`: подготовка `.env`, определение release context, скачивание checktool assets и публикация PDF release.
 
 ## Лицензия
 

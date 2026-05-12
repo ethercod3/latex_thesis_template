@@ -11,6 +11,7 @@ flowchart LR
     SCRIPTS["scripts/*.py"] --> DOCX
     SCRIPTS --> MMD
     SCRIPTS --> PYD
+    CI["scripts/ci/*.py<br/>.github/workflows"] --> RELEASE["GitHub Releases"]
     DOCKER["docker/<br/>docker-compose.yaml"] --> SCRIPTS
     DOCS["docs/ru/*.md<br/>docs/en/*.md"] --> SITE["docs-site/"]
 ```
@@ -23,10 +24,13 @@ flowchart LR
 | `python_diagrams/` | Python scripts that generate diagrams |
 | `figures/` | Generated images and PDFs inserted into the document |
 | `scripts/` | Helper scripts for building, conversion, and PDF comparison |
+| `scripts/ci/` | Python scripts for GitHub Actions and release publishing |
 | `docker/` | Dockerfiles for separate build profiles |
 | `docs/ru/`, `docs/en/` | Zensical documentation for the project |
 | `docs/includes/` | Shared Markdown includes for Zensical documentation |
-| `tasks/` | Thematic Taskfiles with build and maintenance commands; the task map is in `tasks/README.md` |
+| `tasks/` | Thematic Taskfiles with build and maintenance commands; the command list is available through `task --list` |
+| `tests/` | Pytest tests for pure helper-script logic |
+| `.github/workflows/` | GitHub Actions for Pages, check tools, and PDF releases |
 
 Key files:
 

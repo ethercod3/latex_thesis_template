@@ -45,46 +45,36 @@ If Python is not installed yet but you need to check the environment, download `
     - [ ] `.env` is created if the build needs local paths to source code;
     - [ ] the title page, assignment, and diagrams can be rebuilt from source.
 
-Build Docker images and run the full build:
+Run the full Docker build:
 
 === "Task"
 
     ```bash
-    task build:images
     task build
     ```
 
 === "Manual"
 
     ```bash
-    docker compose --profile docx --profile mermaid --profile python --profile latex build
     python scripts/build_all.py
     ```
 
 The `scripts/build_all.py` script runs profiles in this order: `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex`.
 
 !!! info "First run"
-    The first `build` will take a while. Run `build` again only after changing a Dockerfile, dependencies, or base images.
-
-If the Docker images are already built, this is enough:
-
-=== "Task"
-
-    ```bash
-    task build
-    ```
-
-=== "Manual"
-
-    ```bash
-    python scripts/build_all.py
-    ```
+    The first `build` will take a while because Docker downloads base images and builds the environment. The script runs profiles through `docker compose run --build`, so Docker checks image freshness before each profile.
 
 To preview and remove generated build artifacts, use:
 
 ```bash
 task clean:dry
 task clean
+```
+
+Run Python tests:
+
+```bash
+task python:test
 ```
 
 All helper Python scripts are started the same way on Windows, Linux, and macOS.[^mermaid-fonts]

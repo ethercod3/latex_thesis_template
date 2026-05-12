@@ -34,6 +34,7 @@ Explanation:
 | `VAULT_PATH` | Any absolute Unix path inside the container |
 | `VAULT_OS_PATH` | Where the code is located relative to the current directory |
 | `TARGET` | Main `.tex` file |
+| `HOST_UID`, `HOST_GID` | Optional user UID/GID for Linux CI so containers can write to bind mounts without permission issues |
 
 ## LaTeX
 
@@ -103,7 +104,7 @@ Build one profile image:
     docker compose --profile docx build
     ```
 
-The `scripts/build_all.py` and `scripts/diff_pdf_commits.py` scripts do not rebuild images on every run. If Docker images do not exist yet, run `task build:images` first or manually build the required images.
+Profile commands use `docker compose run --build`, so Docker checks whether images are current before running containers. The first run still takes time because Docker downloads base images and builds the environment.
 
 ## Available profiles
 
@@ -175,3 +176,8 @@ flowchart LR
     ```bash
     python scripts/build_all.py
     ```
+
+`scripts/build_all.py` runs profiles in the order `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex` and stops at the first error.
+
+!!! note "File permissions in Linux CI"
+    In GitHub Actions, the workflow writes `HOST_UID` and `HOST_GID` to `.env`. Docker Compose uses these values in `user: "${HOST_UID:-0}:${HOST_GID:-0}"` so containers create PDFs and diagrams as the runner user. Without these variables, local builds use the `0:0` fallback.

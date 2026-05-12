@@ -29,6 +29,9 @@ The required toolset depends on how you build the project.
 !!! note "Local build without Docker"
     A build without Docker requires TeX Live, Python, `latexmk`, `lualatex`, and `biber`. On Windows, `latexmk` and `biber` usually come with TeX Live. Python is needed by the LaTeX document itself too: it uses PyLuaTeX and runs the `python` command during compilation.
 
+!!! note "Script tests"
+    Python dependencies in `requirements.txt` include `pytest`. After `task deps`, run helper-script tests with `task python:test`.
+
 ## Common scenarios
 
 | What you need to do | Where to go |
@@ -41,3 +44,4 @@ The required toolset depends on how you build the project.
 | Connect application source code | [Source code in appendices](source-code.md) |
 | Compare PDFs between commits | [PDF comparison between commits](pdf-diff.md) |
 | Investigate a build error | [Compilation issues](troubleshooting.md) |
+| Check CI/CD and release assets | [CI/CD and releases](ci.md) |

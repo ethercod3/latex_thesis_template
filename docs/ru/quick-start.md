@@ -44,40 +44,24 @@ task --list
 !!! tip "Перед первым запуском"
     Проверьте, что установлен Docker, доступна команда `task`, а файл `.env` создан, если проекту нужны локальные пути к коду.
 
-Сначала соберите Docker-образы, затем запустите полную сборку:
+Запустите полную Docker-сборку:
 
 === "Task"
 
     ```bash
-    task build:images
     task build
     ```
 
 === "Ручной"
 
     ```bash
-    docker compose --profile docx --profile mermaid --profile python --profile latex build
     python scripts/build_all.py
     ```
 
 `scripts/build_all.py` запускает профили по порядку: `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex`. Так титульные страницы и диаграммы успевают обновиться до сборки основного PDF.
 
 !!! info "Первый запуск"
-    Первый `build` обычно долгий: Docker скачивает базовые образы и собирает окружение. Повторно выполнять `task build:images` нужно только после изменения Dockerfile, зависимостей или базовых образов.
-
-Когда образы уже собраны, достаточно одной команды:
-
-=== "Task"
-
-    ```bash
-    task build
-    ```
-
-=== "Ручной"
-
-    ```bash
-    python scripts/build_all.py
-    ```
+    Первый `build` обычно долгий: Docker скачивает базовые образы и собирает окружение. Скрипт запускает профили через `docker compose run --build`, поэтому Docker проверяет актуальность образов перед каждым профилем.
 
 После сборки итоговый PDF лежит в корне проекта.
 
@@ -86,6 +70,12 @@ task --list
 ```bash
 task clean:dry
 task clean
+```
+
+Проверить Python-скрипты тестами:
+
+```bash
+task python:test
 ```
 
 Все вспомогательные Python-скрипты запускаются одинаково в Windows, Linux и macOS.[^mermaid-fonts]

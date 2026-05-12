@@ -10,18 +10,19 @@ This page helps you choose the shortest path when you do not need to read the wh
 === "Task"
 
     ```bash
-    task build:images
     task build
     ```
 
 === "Manual"
 
     ```bash
-    docker compose --profile docx --profile mermaid --profile python --profile latex build
     python scripts/build_all.py
     ```
 
 After the build, the final PDF appears in the project root. If the command fails, go to [Compilation issues](/en/troubleshooting/).
+
+!!! note "When to build images separately"
+    `task build` runs the profile containers through `docker compose run --build`, so a separate `task build:images` step is usually not required. Use it only when you want to rebuild every Docker image ahead of time.
 
 ## Build without Docker
 

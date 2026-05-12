@@ -34,6 +34,7 @@ TARGET="Куприянов_И221_диплом.tex"
 | `VAULT_PATH` | Любой абсолютный Unix-путь внутри контейнера |
 | `VAULT_OS_PATH` | Где относительно текущей папки лежит код |
 | `TARGET` | Основной `.tex` файл |
+| `HOST_UID`, `HOST_GID` | Необязательные UID/GID пользователя для Linux CI, чтобы контейнеры писали в bind mount без проблем с правами |
 
 ## LaTeX
 
@@ -143,7 +144,7 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
 
-Скрипты `scripts/build_all.py` и `scripts/diff_pdf_commits.py` не пересобирают образы при каждом запуске. Если Docker-образов еще нет, сначала выполните `task build:images` или ручную сборку нужных образов.
+Команды профилей используют `docker compose run --build`, поэтому Docker проверяет актуальность образов перед запуском. Первый запуск все равно будет долгим: Docker скачает базовые образы и соберет окружение.
 
 ## Доступные профили
 
@@ -241,3 +242,8 @@ flowchart LR
     ```bash
     python scripts/build_all.py
     ```
+
+`scripts/build_all.py` запускает профили по порядку `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex` и останавливается на первой ошибке.
+
+!!! note "Права на файлы в Linux CI"
+    В GitHub Actions workflow записывает в `.env` `HOST_UID` и `HOST_GID`. Docker Compose использует эти значения в `user: "${HOST_UID:-0}:${HOST_GID:-0}"`, чтобы контейнеры создавали PDF и диаграммы от имени пользователя runner. Локально без этих переменных используется fallback `0:0`.
