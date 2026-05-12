@@ -4,14 +4,14 @@ tasks:
   python:lint:
     desc: Проверить форматирование Python-файлов через Black
     cmds:
-      - python -m black --check --diff scripts python_diagrams docs
+      - python -m black --check --diff scripts python_diagrams docs tests
 
   python:format:
     desc: Отформатировать Python-файлы через Black
     cmds:
-      - python -m black scripts python_diagrams docs
+      - python -m black scripts python_diagrams docs tests
 
   python:test:
     desc: Запустить Python-тесты
     cmds:
-      - python -m pytest -p no:seleniumbase tests
+      - python -m pytest

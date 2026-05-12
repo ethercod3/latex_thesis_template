@@ -9,6 +9,7 @@ extend-exclude = '''
   | \.cache
   | \.git
   | \.pdf_diff
+  | \.pytest_cache
   | \.venv
   | docs-site
 )/
