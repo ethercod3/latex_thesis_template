@@ -44,7 +44,17 @@ jobs:
         uses: arduino/setup-task@v2
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
+        with:
+          version: latest
+
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v2
+        with:
+          version: latest
+
+      - name: Expose GitHub Actions runtime for Docker cache
+        uses: crazy-max/ghaction-github-runtime@v3
 
       - name: Prepare CI environment
         run: python scripts/ci/prepare_pdf_release_env.py
