@@ -9,21 +9,29 @@ on:
   schedule:
     # 04:00 Asia/Yakutsk (UTC+9)
     - cron: "0 19 * * *"
-  push:
-    tags:
-      - "v*"
+  workflow_run:
+    workflows:
+      - Release check tools exe
+    types:
+      - completed
 
 permissions:
   contents: write
 
 jobs:
   release-pdf:
+    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout LaTeX repo
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || (github.event_name == 'workflow_dispatch' && inputs.tag || github.ref) }}
+
+      - name: Resolve release context
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+        run: python scripts/ci/resolve_pdf_release_context.py
 
       - name: Checkout diploma code repo
         uses: actions/checkout@v4
@@ -44,11 +52,9 @@ jobs:
       - name: Download latest check tool assets
         env:
           GH_TOKEN: ${{ github.token }}
-          CURRENT_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
         run: python scripts/ci/download_latest_checktool_assets.py
 
       - name: Publish release assets
         env:
           GH_TOKEN: ${{ github.token }}
-          CURRENT_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
         run: python scripts/ci/publish_pdf_release.py

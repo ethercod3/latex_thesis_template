@@ -48,6 +48,13 @@ def latest_release_tag(excluded_tag: str) -> str | None:
     return None
 
 
+def checktool_source_tag(current_release_tag: str) -> str | None:
+    source_tag = os.environ.get("CHECKTOOL_SOURCE_TAG")
+    if source_tag:
+        return source_tag
+    return latest_release_tag(current_release_tag)
+
+
 def download_pattern(tag: str, pattern: str) -> None:
     result = run_command(
         ["gh", "release", "download", tag, "--pattern", pattern, "--dir", str(DIST_DIR), "--clobber"],
@@ -72,7 +79,7 @@ def normalize_assets() -> None:
 def main() -> int:
     DIST_DIR.mkdir(exist_ok=True)
 
-    tag = latest_release_tag(current_tag())
+    tag = checktool_source_tag(current_tag())
     if tag is None:
         print("No previous release found; skipping check tool assets.")
         return 0

@@ -31,4 +31,4 @@ tasks:
     desc: Upload the generated exe and checksum to GitHub Release assets
     dir: ../..
     cmds:
-      - python scripts/release_check_tools.py
+      - python scripts/ci/release_check_tools.py

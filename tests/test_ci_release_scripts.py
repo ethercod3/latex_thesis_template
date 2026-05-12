@@ -7,6 +7,7 @@ import pytest
 from ci import download_latest_checktool_assets as download
 from ci import prepare_pdf_release_env as prepare
 from ci import publish_pdf_release as publish
+from ci import resolve_pdf_release_context as context
 from common import ScriptError
 
 
@@ -40,6 +41,19 @@ def test_latest_release_tag_returns_none_when_only_current_tag_exists(monkeypatc
     assert download.latest_release_tag("v0.1.3") is None
 
 
+def test_checktool_source_tag_prefers_explicit_env(monkeypatch) -> None:
+    monkeypatch.setenv("CHECKTOOL_SOURCE_TAG", "v0.1.3")
+
+    assert download.checktool_source_tag("nightly") == "v0.1.3"
+
+
+def test_checktool_source_tag_falls_back_to_latest_release(monkeypatch) -> None:
+    monkeypatch.delenv("CHECKTOOL_SOURCE_TAG", raising=False)
+    monkeypatch.setattr(download, "latest_release_tag", lambda excluded_tag: "v0.1.2")
+
+    assert download.checktool_source_tag("nightly") == "v0.1.2"
+
+
 def test_normalize_assets_copies_aliases_to_canonical_names(tmp_path, monkeypatch) -> None:
     dist = tmp_path / "dist"
     dist.mkdir()
@@ -58,3 +72,45 @@ def test_current_tag_requires_env(monkeypatch) -> None:
 
     with pytest.raises(ScriptError):
         publish.current_tag()
+
+
+def test_move_nightly_tag_force_updates_only_nightly(monkeypatch) -> None:
+    commands: list[list[str]] = []
+    monkeypatch.setattr(publish, "run_command", lambda command: commands.append(command))
+
+    publish.move_nightly_tag("v0.1.3")
+    assert commands == []
+
+    publish.move_nightly_tag("nightly")
+    assert commands == [
+        ["git", "tag", "-f", "nightly", "HEAD"],
+        ["git", "push", "origin", "refs/tags/nightly", "--force"],
+    ]
+
+
+def test_release_tag_for_schedule_is_nightly(monkeypatch) -> None:
+    monkeypatch.setattr(context, "github_event_name", lambda: "schedule")
+
+    assert context.release_tag_for_event() == "nightly"
+
+
+def test_release_tag_for_workflow_dispatch_uses_input_tag(monkeypatch) -> None:
+    monkeypatch.setattr(context, "github_event_name", lambda: "workflow_dispatch")
+    monkeypatch.setenv("INPUT_TAG", "v0.1.3")
+
+    assert context.release_tag_for_event() == "v0.1.3"
+
+
+def test_release_tag_for_workflow_run_uses_tag_pointing_at_head(monkeypatch) -> None:
+    monkeypatch.setattr(context, "github_event_name", lambda: "workflow_run")
+    monkeypatch.setattr(context, "tags_pointing_at_head", lambda: ["v0.1.2", "v0.1.3"])
+
+    assert context.release_tag_for_event() == "v0.1.3"
+
+
+def test_checktool_source_tag_is_empty_for_nightly() -> None:
+    assert context.checktool_source_tag("nightly") == ""
+
+
+def test_checktool_source_tag_is_current_tag_for_version_release() -> None:
+    assert context.checktool_source_tag("v0.1.3") == "v0.1.3"

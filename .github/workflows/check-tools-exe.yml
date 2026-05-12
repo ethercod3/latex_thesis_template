@@ -10,7 +10,7 @@ on:
       - "scripts/check_tools_exe.py"
       - "scripts/check_python_requirements.py"
       - "scripts/common.py"
-      - "scripts/release_check_tools.py"
+      - "scripts/ci/release_check_tools.py"
       - ".github/tasks/check-tools-exe.yml"
       - ".github/workflows/check-tools-exe.yml"
   pull_request:
@@ -19,7 +19,7 @@ on:
       - "scripts/check_tools_exe.py"
       - "scripts/check_python_requirements.py"
       - "scripts/common.py"
-      - "scripts/release_check_tools.py"
+      - "scripts/ci/release_check_tools.py"
       - ".github/tasks/check-tools-exe.yml"
       - ".github/workflows/check-tools-exe.yml"
 

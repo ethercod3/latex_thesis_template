@@ -10,6 +10,7 @@ from common import PROJECT_DIR, ScriptError, run_command, script_main
 
 PDF_PATH = PROJECT_DIR / "Куприянов_И221_диплом.pdf"
 DIST_DIR = PROJECT_DIR / "dist"
+NIGHTLY_TAG = "nightly"
 
 
 def current_tag() -> str:
@@ -38,6 +39,14 @@ def ensure_release(tag: str) -> None:
     )
 
 
+def move_nightly_tag(tag: str) -> None:
+    if tag != NIGHTLY_TAG:
+        return
+
+    run_command(["git", "tag", "-f", tag, "HEAD"])
+    run_command(["git", "push", "origin", f"refs/tags/{tag}", "--force"])
+
+
 def upload_if_exists(tag: str, local_path, asset_name: str) -> None:
     if not local_path.is_file():
         return
@@ -46,6 +55,7 @@ def upload_if_exists(tag: str, local_path, asset_name: str) -> None:
 
 def main() -> int:
     tag = current_tag()
+    move_nightly_tag(tag)
     ensure_release(tag)
     upload_if_exists(tag, PDF_PATH, "pdf-Куприянов_И221_диплом.pdf")
     upload_if_exists(tag, DIST_DIR / "diploma-latex-check.exe", "checktool-windows-x64.exe")

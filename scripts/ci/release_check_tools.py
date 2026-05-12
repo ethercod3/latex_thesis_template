@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 import os
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from common import ScriptError, run_command, script_main
 
@@ -32,7 +35,7 @@ def main() -> int:
                 "--title",
                 tag,
                 "--notes",
-                "Автоматическая сборка diploma-latex-check.exe.",
+                "Автоматическая сборка",
             ]
         )
 
