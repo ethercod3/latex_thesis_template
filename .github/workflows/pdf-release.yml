@@ -26,7 +26,7 @@ jobs:
       - name: Checkout LaTeX repo
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || (github.event_name == 'workflow_dispatch' && inputs.tag || github.ref) }}
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || ((github.event_name == 'workflow_dispatch' && inputs.tag != 'nightly') && inputs.tag || github.ref) }}
 
       - name: Resolve release context
         env:
