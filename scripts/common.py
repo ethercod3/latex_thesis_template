@@ -10,6 +10,15 @@ PROJECT_DIR = Path.cwd().resolve() if getattr(sys, "frozen", False) else Path(__
 ENV_PATH = PROJECT_DIR / ".env"
 
 
+def configure_output_encoding() -> None:
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
+
+
+configure_output_encoding()
+
+
 class ScriptError(RuntimeError):
     pass
 
