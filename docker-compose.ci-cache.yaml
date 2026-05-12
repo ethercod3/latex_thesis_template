@@ -1,0 +1,28 @@
+services:
+  latex:
+    build:
+      cache_from:
+        - type=gha,scope=diploma-latex-latex
+      cache_to:
+        - type=gha,scope=diploma-latex-latex,mode=max
+
+  mermaid_diagrams:
+    build:
+      cache_from:
+        - type=gha,scope=diploma-latex-mermaid
+      cache_to:
+        - type=gha,scope=diploma-latex-mermaid,mode=max
+
+  python_diagrams:
+    build:
+      cache_from:
+        - type=gha,scope=diploma-latex-python
+      cache_to:
+        - type=gha,scope=diploma-latex-python,mode=max
+
+  docx_pdf:
+    build:
+      cache_from:
+        - type=gha,scope=diploma-latex-docx
+      cache_to:
+        - type=gha,scope=diploma-latex-docx,mode=max
