@@ -1,6 +1,6 @@
 # CI/CD и релизы
 
-В репозитории настроены GitHub Actions для проверки вспомогательных инструментов, сборки PDF и публикации релизных артефактов.
+В репозитории настроены GitHub Actions для проверки вспомогательных инструментов, сборки PDF и публикации релизных артефактов. PDF workflow запускается на `windows-latest`.
 
 ## Проверка check tools
 
@@ -63,4 +63,4 @@ TARGET="Куприянов_И221_диплом.tex"
 | `scripts/ci/publish_pdf_release.py` | Создает/обновляет release и загружает PDF/checktool assets |
 | `scripts/ci/release_check_tools.py` | Публикует exe проверки окружения |
 
-В YAML остаются только базовые команды вида `python ...` и `task build`.
+В YAML остаются только базовые команды вида `python ...`, `task docx`, `task mermaid`, `task diagrams:docker` и `task latex:docker`.

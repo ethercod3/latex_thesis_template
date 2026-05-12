@@ -654,7 +654,7 @@ Hook считает хэши текущего PDF алгоритмами из с
 
 Для CI-сборки приложений workflow подтягивает приватный репозиторий `ethercod3/diploma_code` в `vault_diploma`. В настройках GitHub Actions должен быть secret `VIEW_DIPLOMA_CODE` с read-only доступом к этому репозиторию.
 
-Нетривиальная логика CI/CD вынесена из YAML в Python-скрипты `scripts/ci/*.py`: подготовка `.env`, определение release context, скачивание checktool assets и публикация PDF release.
+Нетривиальная логика CI/CD вынесена из YAML в Python-скрипты `scripts/ci/*.py`: подготовка `.env`, определение release context, скачивание checktool assets и публикация PDF release. Сам workflow запускается на `windows-latest` и вызывает задачи по шагам: `task docx`, `task mermaid`, `task diagrams:docker`, `task latex:docker`.
 
 ## Лицензия
 
