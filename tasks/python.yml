@@ -10,3 +10,8 @@ tasks:
     desc: Отформатировать Python-файлы через Black
     cmds:
       - python -m black scripts python_diagrams docs
+
+  python:test:
+    desc: Запустить Python-тесты
+    cmds:
+      - python -m pytest -p no:seleniumbase tests
