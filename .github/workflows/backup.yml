@@ -1,0 +1,56 @@
+name: Backup git bundle
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 05:00 Asia/Yakutsk (UTC+9) every Sunday
+    - cron: "0 20 * * 6"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backup-git-bundle
+  cancel-in-progress: false
+
+env:
+  BACKUP_RCLONE_DESTINATIONS: ${{ vars.BACKUP_RCLONE_DESTINATIONS || 'gdrive:diploma_latex_backups,ydisk:diploma_latex_backups' }}
+  BACKUP_KEEP_WEEKS: ${{ vars.BACKUP_KEEP_WEEKS || '30' }}
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full git history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Set up Task
+        uses: arduino/setup-task@v2
+
+      - name: Install rclone
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends rclone
+
+      - name: Configure rclone
+        env:
+          RCLONE_CONFIG_CONTENT: ${{ secrets.RCLONE_CONFIG_CONTENT }}
+        run: |
+          if [ -z "$RCLONE_CONFIG_CONTENT" ]; then
+            echo "RCLONE_CONFIG_CONTENT secret is not set" >&2
+            exit 1
+          fi
+
+          mkdir -p "$RUNNER_TEMP/rclone"
+          printf '%s' "$RCLONE_CONFIG_CONTENT" > "$RUNNER_TEMP/rclone/rclone.conf"
+          chmod 600 "$RUNNER_TEMP/rclone/rclone.conf"
+          echo "RCLONE_CONFIG=$RUNNER_TEMP/rclone/rclone.conf" >> "$GITHUB_ENV"
+
+      - name: Check rclone remotes
+        run: rclone listremotes
+
+      - name: Create and upload backup
+        run: task backup -- --require-clean

@@ -717,13 +717,43 @@ schtasks /Query /TN "Diploma LaTeX weekly backup" /V /FO LIST
 schtasks /Run /TN "Diploma LaTeX weekly backup"
 ```
 
+### Backup в GitHub Actions
+
+Workflow `.github/workflows/backup.yml` запускается вручную и по расписанию каждое воскресенье в 05:00 по Якутску. Он создает `git bundle`, загружает его через `rclone` и оставляет последние 30 backup-файлов на каждом remote.
+
+Для работы CI backup добавьте в GitHub repository secret:
+
+```text
+RCLONE_CONFIG_CONTENT
+```
+
+Значение секрета - полный текст локального файла `rclone.conf`. Его путь можно узнать командой:
+
+```bash
+rclone config file
+```
+
+Remote names в этом конфиге должны совпадать с destinations. По умолчанию workflow использует:
+
+```env
+gdrive:diploma_latex_backups,ydisk:diploma_latex_backups
+```
+
+Если нужны другие пути или имена remote, задайте GitHub repository variable:
+
+```text
+BACKUP_RCLONE_DESTINATIONS=remote1:path,remote2:path
+BACKUP_KEEP_WEEKS=30
+```
+
 ## CI/CD и релизы
 
 В `.github/workflows/` настроены GitHub Actions:
 
 - `check-tools-exe.yml` собирает `diploma-latex-check.exe` и загружает его в release для тегов `v*`;
 - `pdf-release.yml` собирает PDF через Docker и публикует release assets;
-- `pages.yml` публикует Zensical-документацию на GitHub Pages.
+- `pages.yml` публикует Zensical-документацию на GitHub Pages;
+- `backup.yml` еженедельно создает `git bundle` и загружает его в облачные хранилища через `rclone`.
 
 Для тегов `v*` PDF workflow запускается через `workflow_run` после успешного завершения `Release check tools exe`, поэтому в release попадает актуальная версия `checktool-windows-x64.exe`.
 
