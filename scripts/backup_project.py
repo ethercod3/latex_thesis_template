@@ -7,7 +7,7 @@ from pathlib import Path
 
 from common import PROJECT_DIR, ScriptError, env_value, require_command, run_command, script_main
 
-DEFAULT_DESTINATIONS = "gdrive:diploma_latex_backups,yandex:diploma_latex_backups"
+DEFAULT_DESTINATIONS = "gdrive:diploma_latex_backups,ydisk:diploma_latex_backups"
 DEFAULT_KEEP = 30
 BACKUP_DIR = PROJECT_DIR / ".cache" / "backups"
 BACKUP_PREFIX = "diploma_latex"

@@ -14,7 +14,7 @@ tasks:
   docs:build:pages:
     desc: Собрать статическую документацию для публикации на GitHub Pages
     cmds:
-      - docker run --rm -v "{{.ROOT_DIR}}:/data" -w /data zensical/zensical:0.0.40 sh -lc "zensical build --config-file zensical.toml && zensical build --config-file zensical.en.toml"
+      - docker run --rm --entrypoint sh -v "{{.ROOT_DIR}}:/data" -w /data zensical/zensical:0.0.40 -lc "zensical build --config-file zensical.toml && zensical build --config-file zensical.en.toml"
 
   docs:pull:
     desc: Скачать официальный Docker-образ Zensical
