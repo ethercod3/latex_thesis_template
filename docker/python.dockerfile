@@ -5,7 +5,13 @@ USER root
 ENV DEBIAN_FRONTEND=noninteractive
 ENV BROWSER_PATH=/usr/bin/chromium
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN printf '%s\n' \
+    "deb http://snapshot.debian.org/archive/debian/20260502T000000Z bookworm main" \
+    "deb http://snapshot.debian.org/archive/debian-security/20260502T000000Z bookworm-security main" \
+    > /etc/apt/sources.list && \
+    rm -f /etc/apt/sources.list.d/debian.sources
+
+RUN apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y --no-install-recommends \
     chromium=147.0.7727.137-1~deb12u1 \
     fontconfig=2.14.1-4 \
     fonts-noto-core=20201225-1 \

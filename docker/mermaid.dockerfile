@@ -6,10 +6,14 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV PUPPETEER_CACHE_DIR=/usr/local/share/puppeteer
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 
-RUN sed -i 's/Components: main/Components: main contrib non-free non-free-firmware/' /etc/apt/sources.list.d/debian.sources
+RUN printf '%s\n' \
+    "deb http://snapshot.debian.org/archive/debian/20260502T000000Z bookworm main contrib non-free non-free-firmware" \
+    "deb http://snapshot.debian.org/archive/debian-security/20260502T000000Z bookworm-security main contrib non-free non-free-firmware" \
+    > /etc/apt/sources.list && \
+    rm -f /etc/apt/sources.list.d/debian.sources
 
 RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && \
-    apt-get update && apt-get install -y --no-install-recommends \
+    apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y --no-install-recommends \
     ca-certificates=20230311+deb12u1 \
     python3=3.11.2-1+b1 \
     chromium=147.0.7727.137-1~deb12u1 \
