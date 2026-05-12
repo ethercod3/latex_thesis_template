@@ -5,6 +5,14 @@
 # время компиляции. Все временные файлы складываются в .aux_files, чтобы
 # корень проекта оставался чистым, а итоговый PDF появлялся рядом с .tex.
 # Biber используется как движок библиографии.
+#
+# Полезные ссылки:
+# - latexmk на CTAN: https://ctan.org/pkg/latexmk
+# - домашняя страница latexmk: https://www.cantab.net/users/johncollins/latexmk/
+# - документация LuaTeX: https://www.luatex.org/documentation.html
+# - Biber на CTAN: https://ctan.org/pkg/biber
+# - репозиторий Biber: https://github.com/plk/biber
+# - репозиторий biblatex: https://github.com/plk/biblatex
 
 $pdf_mode = 4;
 $aux_dir = '.aux_files';
