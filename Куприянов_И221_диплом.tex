@@ -27,7 +27,10 @@
 % Настройки приложений
 \newcommand{\listingsappendix}{Б}
 \newcommand{\currentappendixletter}{\Asbuk{appendixcount}}
-\newpagestyle{appendixcontstyle}{\sethead{}{}{Продолжение приложения \currentappendixletter} \setfoot{}{\thepage}{}}
+\newpagestyle{appendixcontstyle}{
+    \sethead{}{Продолжение Приложения \currentappendixletter}{}
+    \setfoot{}{\thepage}{}
+}
 
 % --- Подпись таблиц ---
 \captionsetup[table]{
