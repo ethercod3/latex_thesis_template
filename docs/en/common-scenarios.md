@@ -19,7 +19,7 @@ This page helps you choose the shortest path when you do not need to read the wh
     python scripts/build_all.py
     ```
 
-After the build, the final PDF appears in the project root. If the command fails, go to [Compilation issues](/en/troubleshooting/).
+After the build, the final PDF appears in the project root. If the command fails, go to [Compilation issues](troubleshooting.md).
 
 !!! note "When to build images separately"
     `task build` runs the profile containers through `docker compose run --build`, so a separate `task build:images` step is usually not required. Use it only when you want to rebuild every Docker image ahead of time.
@@ -42,7 +42,7 @@ After the build, the final PDF appears in the project root. If the command fails
     latexmk "Куприянов_И221_диплом.tex"
     ```
 
-Details: [Build without Docker](/en/manual-build/).
+Details: [Build without Docker](manual-build.md).
 
 ## Update diagrams
 
@@ -74,7 +74,7 @@ If `python_diagrams/*.py` files changed, rebuild Python diagrams:
     python scripts/compile_python_diagrams.py
     ```
 
-After updating diagrams, rebuild the main PDF. Details: [Diagrams](/en/diagrams/).
+After updating diagrams, rebuild the main PDF. Details: [Diagrams](diagrams.md).
 
 ## Update the title page or assignment
 
@@ -96,7 +96,7 @@ After updating diagrams, rebuild the main PDF. Details: [Diagrams](/en/diagrams/
     python scripts/build_all.py
     ```
 
-If blank pages must be preserved, use `task docx:keep-blank`. Details: [Title page and assignment](/en/title-pages/).
+If blank pages must be preserved, use `task docx:keep-blank`. Details: [Title page and assignment](title-pages.md).
 
 ## Connect application source code
 
@@ -110,7 +110,7 @@ VAULT_OS_PATH="../vault_diploma"
 !!! note "Path meaning"
     `VAULT_OS_PATH` is the path on your machine, and `VAULT_PATH` is the path inside the Docker container.
 
-Details: [Source code in appendices](/en/source-code/).
+Details: [Source code in appendices](source-code.md).
 
 ## Compare PDFs between commits
 
@@ -128,7 +128,7 @@ Before running the command, make sure the Git working tree is clean.
     python scripts/diff_pdf_commits.py <commit_1> <commit_2>
     ```
 
-Details: [PDF comparison between commits](/en/pdf-diff/).
+Details: [PDF comparison between commits](pdf-diff.md).
 
 ## Back up Git history
 
@@ -144,7 +144,7 @@ Upload the bundle to Google Drive and Yandex Disk through `rclone`:
 task backup
 ```
 
-Commit or stash important local changes before backing up: `git bundle` stores Git history, not uncommitted files. Details: [Backups](/en/backup/).
+Commit or stash important local changes before backing up: `git bundle` stores Git history, not uncommitted files. Details: [Backups](backup.md).
 
 ## Run the documentation locally
 
@@ -166,4 +166,4 @@ Then open:
 http://localhost:8000
 ```
 
-Details: [Documentation](/en/zensical/).
+Details: [Documentation](zensical.md).

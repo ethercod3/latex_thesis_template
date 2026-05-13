@@ -47,7 +47,7 @@ RCLONE_CONFIG_CONTENT
 gdrive:diploma_latex_backups,ydisk:diploma_latex_backups
 ```
 
-Их можно переопределить через repository variable `BACKUP_RCLONE_DESTINATIONS`. Подробности: [Резервное копирование](/backup/).
+Их можно переопределить через repository variable `BACKUP_RCLONE_DESTINATIONS`. Подробности: [Резервное копирование](backup.md).
 
 ## Кэши CI
 

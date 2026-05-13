@@ -47,7 +47,7 @@ The secret value is the full contents of `rclone.conf`. The default destinations
 gdrive:diploma_latex_backups,ydisk:diploma_latex_backups
 ```
 
-They can be overridden with the `BACKUP_RCLONE_DESTINATIONS` repository variable. Details: [Backups](/en/backup/).
+They can be overridden with the `BACKUP_RCLONE_DESTINATIONS` repository variable. Details: [Backups](backup.md).
 
 ## CI caches
 

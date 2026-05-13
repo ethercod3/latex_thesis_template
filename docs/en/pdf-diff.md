@@ -1,6 +1,6 @@
 # PDF comparison between commits
 
-![Example of visual PDF comparison](/assets/pdf_diff_example.png)
+![Example of visual PDF comparison](assets/pdf_diff_example.png)
 
 If you need to inspect the visual difference between two diploma versions, use the script:
 

@@ -28,10 +28,10 @@ This repository contains the source files for the diploma project: `LaTeX` docum
 ## Main workflow
 
 !!! info "Required tools"
-    If you are opening the project for the first time, start with [Requirements](/en/requirements/). It briefly lists the tools needed for Docker builds, local builds, and PDF comparison.
+    If you are opening the project for the first time, start with [Requirements](requirements.md). It briefly lists the tools needed for Docker builds, local builds, and PDF comparison.
 
 !!! tip "If you already know what to do"
-    Open [Common scenarios](/en/common-scenarios/): it contains short instructions for building the PDF, updating diagrams and title pages, connecting source code, and comparing versions.
+    Open [Common scenarios](common-scenarios.md): it contains short instructions for building the PDF, updating diagrams and title pages, connecting source code, and comparing versions.
 
 Install Task:
 
@@ -68,4 +68,4 @@ task --list
 
 The result is closest to the original if Mermaid diagrams are built on Windows. When Mermaid is built through Docker, the font used for KaTeX expressions can differ from the original.
 
-The main workflow requires Docker. If Docker is not used, see [Build without Docker](/en/manual-build/).
+The main workflow requires Docker. If Docker is not used, see [Build without Docker](manual-build.md).

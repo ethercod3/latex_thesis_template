@@ -14,7 +14,7 @@ The required toolset depends on how you build the project.
 | rclone | Backing up `git bundle` files to cloud storage | `rclone version` |
 
 !!! tip "Shortest path"
-    If the goal is only to build the final PDF, install Task and Docker, then run the commands from [Quick start](/en/quick-start/).
+    If the goal is only to build the final PDF, install Task and Docker, then run the commands from [Quick start](quick-start.md).
 
 !!! tip "Environment check"
     After installing the tools, run `task check`. It checks programs, Python packages, and PyLuaTeX, then reports what is ready and what still needs to be installed.
@@ -37,13 +37,13 @@ The required toolset depends on how you build the project.
 
 | What you need to do | Where to go |
 | --- | --- |
-| Build the final PDF | [Quick start](/en/quick-start/) |
-| Build without Docker | [Build without Docker](/en/manual-build/) |
-| Configure TeXstudio | [TeXstudio setup](/en/texstudio/) |
-| Rebuild the title page and assignment | [Title page and assignment](/en/title-pages/) |
-| Rebuild diagrams | [Diagrams](/en/diagrams/) |
-| Connect application source code | [Source code in appendices](/en/source-code/) |
-| Compare PDFs between commits | [PDF comparison between commits](/en/pdf-diff/) |
-| Configure backups | [Backups](/en/backup/) |
-| Investigate a build error | [Compilation issues](/en/troubleshooting/) |
-| Check CI/CD and release assets | [CI/CD and releases](/en/ci/) |
+| Build the final PDF | [Quick start](quick-start.md) |
+| Build without Docker | [Build without Docker](manual-build.md) |
+| Configure TeXstudio | [TeXstudio setup](texstudio.md) |
+| Rebuild the title page and assignment | [Title page and assignment](title-pages.md) |
+| Rebuild diagrams | [Diagrams](diagrams.md) |
+| Connect application source code | [Source code in appendices](source-code.md) |
+| Compare PDFs between commits | [PDF comparison between commits](pdf-diff.md) |
+| Configure backups | [Backups](backup.md) |
+| Investigate a build error | [Compilation issues](troubleshooting.md) |
+| Check CI/CD and release assets | [CI/CD and releases](ci.md) |

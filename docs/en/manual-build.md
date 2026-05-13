@@ -12,10 +12,10 @@ The first `latexmk` run can be longer than a manual build because it builds its 
 !!! warning "External artifacts"
     `latexmk` builds only the LaTeX document. Before building without Docker, prepare all external artifacts included from `.tex`:
 
-    - `титульник.pdf` and `задание.pdf` must be in the project root. They can be created manually from `docx/*.docx` through Microsoft Word or LibreOffice; see [Title pages](/en/title-pages/).
-    - Mermaid diagrams from `mermaid/*.mmd` must be generated in advance into `figures/`; see [Diagrams](/en/diagrams/).
+    - `титульник.pdf` and `задание.pdf` must be in the project root. They can be created manually from `docx/*.docx` through Microsoft Word or LibreOffice; see [Title pages](title-pages.md).
+    - Mermaid diagrams from `mermaid/*.mmd` must be generated in advance into `figures/`; see [Diagrams](diagrams.md).
     - Python diagrams must be generated in advance with `task diagrams` or manually with `python scripts/compile_python_diagrams.py`.
-    - If appendix code is included, it must be located at the expected path; see [Source code in appendices](/en/source-code/).
+    - If appendix code is included, it must be located at the expected path; see [Source code in appendices](source-code.md).
 
     If these files are not prepared, `latexmk` can fail because of missing PDFs, images, or listings.
 
