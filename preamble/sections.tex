@@ -21,9 +21,19 @@
 {}
 
 \titlespacing*{\section}
+{\parindent}
 {0pt}
 {0pt}
-{1\baselineskip}
+
+\titlespacing*{\subsection}
+{\parindent}
+{0pt}
+{0pt}
+
+\titlespacing*{\subsubsection}
+{\parindent}
+{0pt}
+{0pt}
 
 
 % ------------------------------------------------
@@ -34,9 +44,8 @@
 \phantomsection
 \addcontentsline{toc}{section}{#1}
 
-\begin{center}
-	\MakeUppercase{#1}
-\end{center}
 
-\vspace*{-0.2cm}
+\centerline{\MakeUppercase{#1}}
+
+%\vspace*{-0.2cm}
 }
