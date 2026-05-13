@@ -56,20 +56,27 @@
 \setmainfont{Times New Roman}
 \setmonofont{Inconsolata}
 \hypersetup{breaklinks=true}
-%\tolerance=1
-%\emergencystretch=\maxdimen
-%\hyphenpenalty=10000
-%\hbadness=10000
-%
-%\makeatletter
-%\lst@AddToHook{Init}{
-%  \tolerance=9999\relax
-%  \emergencystretch=0pt\relax
-%  \hyphenpenalty=0\relax
-%  \hbadness=10000\relax
-%}
-%\makeatother
+
+\tolerance=2000
+\emergencystretch=2em
+\hyphenpenalty=1000
+\exhyphenpenalty=1000
+\hbadness=10000
+
+\makeatletter
+\lst@AddToHook{Init}{
+  \tolerance=9999\relax
+  \emergencystretch=0pt\relax
+  \hyphenpenalty=0\relax
+  \hbadness=10000\relax
+}
+\makeatother
 % -------------------------------
+
+\let\oldtexttt\texttt
+\renewcommand{\texttt}[1]{%
+  {\def\UrlFont{\ttfamily}\nolinkurl{#1}}%
+}
 
 % Отутспы от секций
 % \titlespacing*{\section}{0pt}{0pt}{0.3cm}
