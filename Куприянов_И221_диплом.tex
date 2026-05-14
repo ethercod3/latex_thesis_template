@@ -38,6 +38,14 @@
 	singlelinecheck=false
 }
 
+% --- Отступы для figure[p] ---
+
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{\baselineskip}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
+
 % --- Запасной шрифт для листингов ---
 \directlua{
   luaotfload.add_fallback("monocyrfallback", {
@@ -839,7 +847,7 @@
 	\item Upsert записи в \texttt{data\_records} с обновлением. \texttt{auth\_hash}, \texttt{header\_json, payload\_hex} и ссылок на DEK.
 	\end{enumerate}
 	
-	Диаграмма сценария представлена на рисунке  \pageref{fig:load});
+	Диаграмма сценария представлена на рисунке \ref{fig:load};
 	
 	\item Сценарий \texttt{GET /data/\{name\}}
 	
@@ -853,20 +861,32 @@
 	Диаграмма сценария представлена на рисунке \ref{fig:get_data};
 	
 	\begin{figure}[p]
-		\begin{minipage}{0.48\textwidth}
-		    \centering
-		    \includegraphics[height=0.7\textheight]{load.pdf}
-		    \caption{Диаграмма сценария \texttt{load}}
-		    \label{fig:load}
-		\end{minipage}
-		\hfill
-		\begin{minipage}{0.48\textwidth}
-		    \centering
-		    \includegraphics[height=0.7\textheight]{get_data.pdf}
-		    \caption{Диаграмма сценария \texttt{GET /data/{name}}}
-		    \label{fig:get_data}
-		\end{minipage}
+		\centering\includegraphics[height=0.95\textheight]{load.pdf}
+    	\caption{Диаграмма сценария \texttt{load}}
+    	\label{fig:load}
 	\end{figure}
+	
+	\begin{figure}[p]
+		\centering\includegraphics[height=0.95\textheight]{get_data.pdf}
+	  \caption{Диаграмма сценария \texttt{GET /data/{name}}}
+	  \label{fig:get_data}
+	\end{figure}	
+	
+%	\begin{figure}[!htb]
+%		\begin{minipage}{0.48\textwidth}
+%		    \centering
+%		    \includegraphics[height=0.7\textheight]{load.pdf}
+%		    \caption{Диаграмма сценария \texttt{load}}
+%		    \label{fig:load}
+%		\end{minipage}
+%		\hfill
+%		\begin{minipage}{0.48\textwidth}
+%		    \centering
+%		    \includegraphics[height=0.7\textheight]{get_data.pdf}
+%		    \caption{Диаграмма сценария \texttt{GET /data/{name}}}
+%		    \label{fig:get_data}
+%		\end{minipage}
+%	\end{figure}
 	
 %	\FloatBarrier
 	
@@ -1036,7 +1056,7 @@
 	
 	Финальная диаграмма модели угроз приложения показана на рисунке \ref{fig:threats}.
 	
-	\begin{figure}[H]
+	\begin{figure}[!hbt]
 		\centering\includegraphics[width=\textwidth]{threats.pdf}
 		\caption{Модель угроз приложения}
 		\label{fig:threats}
@@ -1073,7 +1093,11 @@
 	\end{figure}
 	
 	\begin{figure}[p]
-		\centering\includegraphics[angle=90, height=0.95\textheight]{flow_get.pdf}
+		\centering\includegraphics[
+		  width=0.9\textheight,
+		  angle=90,
+		  keepaspectratio
+		]{flow_get.pdf}
 		\caption{Схема получения данных из приложения}
 		\label{fig:flow_get}
 	\end{figure}	
@@ -1133,14 +1157,14 @@ python -m uvicorn vault.api:app --host <host> --port <port> --ssl-keyfile <key> 
 	
 	Диаграммы 1 и 2 представлены на рисунках \ref{fig:web-up} и \ref{fig:web-down} соответственно.
 	
-	\begin{figure}[p]
+	\begin{figure}[!htb]
 		\centering\includegraphics[angle=90, width=\textwidth]{web_up.pdf}
 		\caption{Диаграмма запуска веб-сервера}
 		\label{fig:web-up}
 	\end{figure}
 
 
-	\begin{figure}[p]
+	\begin{figure}[!htb]
 		\centering\includegraphics[angle=90, width=\textwidth]{web_down.pdf}
 		\caption{Диаграмма остановки веб-сервера}
 		\label{fig:web-down}
@@ -1182,7 +1206,6 @@ python -m uvicorn vault.api:app --host <host> --port <port> --ssl-keyfile <key> 
 	
 	Диаграмма представлена на рисунке \ref{fig:store_dek}.
 	
-
 	\begin{figure}[p]
 		\centering\includegraphics[angle=90, height=0.95\textheight]{store_dek.pdf}
 		\caption{Эксплуатационная фаза работы с ключом данных}
