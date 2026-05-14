@@ -7,6 +7,8 @@ Project documentation is stored in `docs/` and built with Zensical. The Russian 
 | Russian | `docs/ru/` | `zensical.toml` | `docs-site/` |
 | English | `docs/en/` | `zensical.en.toml` | `docs-site/en/` |
 
+GitHub Pages publishing uses separate configs: `zensical.pages.toml` and `zensical.pages.en.toml`. They use the same sources, but set the absolute `site_url` for `https://ethercod3.github.io/diploma_latex/`.
+
 ## Local run
 
 Run documentation:
@@ -49,6 +51,20 @@ Build the static site without starting the server:
     docker compose --profile docs run --rm docs "zensical build --config-file zensical.toml && zensical build --config-file zensical.en.toml"
     ```
 
+Build the GitHub Pages variant:
+
+=== "Task"
+
+    ```bash
+    task docs:build:pages
+    ```
+
+=== "Manual"
+
+    ```bash
+    docker run --rm --entrypoint sh -v "$PWD:/data" -w /data zensical/zensical:0.0.40 -lc "zensical build --config-file zensical.pages.toml && zensical build --config-file zensical.pages.en.toml"
+    ```
+
 Stop the service:
 
 === "Task"
@@ -85,4 +101,4 @@ Documentation uses the official image:
 zensical/zensical:0.0.40
 ```
 
-If you change structure or navigation, update `zensical.toml` for the Russian version first, then mirror the same changes in `zensical.en.toml`.
+If you change structure or navigation, update `zensical.toml` for the Russian version first, then mirror the same changes in `zensical.en.toml`, `zensical.pages.toml`, and `zensical.pages.en.toml`.

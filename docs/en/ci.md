@@ -2,6 +2,10 @@
 
 The repository uses GitHub Actions to check helper tools, build the PDF, and publish release assets.
 
+## GitHub Pages
+
+The `Publish Zensical docs` workflow builds bilingual documentation with `task docs:build:pages` and publishes `docs-site/` to GitHub Pages. This build uses `zensical.pages.toml` and `zensical.pages.en.toml` so language-switcher links and `site_url` point to the public Pages URL.
+
 ## Check tools
 
 The `Release check tools exe` workflow runs on `v*` tag pushes and manually. It builds the Windows environment checker:

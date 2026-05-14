@@ -2,6 +2,10 @@
 
 В репозитории настроены GitHub Actions для проверки вспомогательных инструментов, сборки PDF и публикации релизных артефактов.
 
+## GitHub Pages
+
+Workflow `Publish Zensical docs` собирает двуязычную документацию командой `task docs:build:pages` и публикует каталог `docs-site/` в GitHub Pages. Для этой сборки используются конфиги `zensical.pages.toml` и `zensical.pages.en.toml`, чтобы ссылки языкового переключателя и `site_url` указывали на публичный адрес Pages.
+
 ## Проверка check tools
 
 Workflow `Release check tools exe` запускается при push тегов `v*` и вручную. Он собирает Windows-исполняемый файл проверки окружения:

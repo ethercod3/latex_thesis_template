@@ -7,6 +7,8 @@
 | Русская | `docs/ru/` | `zensical.toml` | `docs-site/` |
 | Английская | `docs/en/` | `zensical.en.toml` | `docs-site/en/` |
 
+Для публикации на GitHub Pages есть отдельные конфиги `zensical.pages.toml` и `zensical.pages.en.toml`. Они используют те же исходники, но задают абсолютный `site_url` для `https://ethercod3.github.io/diploma_latex/`.
+
 ## Локальный запуск
 
 Собрать и запустить сайт с двумя языками:
@@ -49,6 +51,20 @@ http://localhost:8000
     docker compose --profile docs run --rm docs "zensical build --config-file zensical.toml && zensical build --config-file zensical.en.toml"
     ```
 
+Собрать вариант для GitHub Pages:
+
+=== "Task"
+
+    ```bash
+    task docs:build:pages
+    ```
+
+=== "Ручной"
+
+    ```bash
+    docker run --rm --entrypoint sh -v "$PWD:/data" -w /data zensical/zensical:0.0.40 -lc "zensical build --config-file zensical.pages.toml && zensical build --config-file zensical.pages.en.toml"
+    ```
+
 Остановить сервис:
 
 === "Task"
@@ -85,4 +101,4 @@ http://localhost:8000
 zensical/zensical:0.0.40
 ```
 
-Если меняете структуру или навигацию, сначала обновите `zensical.toml` для русской версии, затем внесите такие же изменения в `zensical.en.toml`.
+Если меняете структуру или навигацию, сначала обновите `zensical.toml` для русской версии, затем внесите такие же изменения в `zensical.en.toml`, `zensical.pages.toml` и `zensical.pages.en.toml`.

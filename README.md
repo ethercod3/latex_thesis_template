@@ -183,6 +183,14 @@ http://localhost:8000
 
 Команда `task docs` собирает русскую версию в `docs-site/`, английскую - в `docs-site/en/`, а затем раздает статический сайт. Переключатель языка появляется в UI через настройки `extra.alternate`.
 
+Для локальной статической сборки без запуска сервера используйте `task docs:build`. Для варианта, который публикуется на GitHub Pages, используется отдельная команда:
+
+```bash
+task docs:build:pages
+```
+
+Она собирает сайт через `zensical.pages.toml` и `zensical.pages.en.toml`, где `site_url` и ссылки переключателя языка настроены на публичный адрес Pages.
+
 Заранее скачать Docker-образ документации:
 
 ```bash
@@ -575,13 +583,15 @@ task mermaid
 
 Или вручную: `python scripts/compile_mermaid.py`.
 
+После генерации скрипт обрезает поля через `pdfcrop`, которому нужен Ghostscript. Если локально доступны только `mmdc` и нужно собрать PDF без обрезки, запустите `task mermaid -- --no-crop`.
+
 ### Сборка Mermaid через Docker
 
 ```
 task mermaid:docker
 ```
 
-Или вручную: `docker compose --profile mermaid up`.
+Или вручную: `docker compose --profile mermaid run --build --rm mermaid_diagrams`.
 
 ### Генерация диаграмм Python вручную
 

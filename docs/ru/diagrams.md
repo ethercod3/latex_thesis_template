@@ -50,7 +50,7 @@ GitHub не всегда показывает содержимое файлов 
 mmdc -i <file.mmd> -o <file.pdf> -f
 ```
 
-Флаг `-f` нужен, чтобы лист PDF обрезался под размер диаграммы.
+Флаг `-f` нужен, чтобы `mmdc` перезаписывал уже существующий PDF. В проектной автоматической сборке поля дополнительно обрезаются через `pdfcrop`, поэтому для локального запуска нужны `pdfcrop` и Ghostscript.
 
 ## Автоматическая сборка Mermaid
 
@@ -78,7 +78,11 @@ mmdc -i <file.mmd> -o <file.pdf> -f
 
 
 
-Скрипт прогоняет все файлы из `mermaid/` и кладет результат в `figures/`.
+Скрипт прогоняет все файлы из `mermaid/`, кладет результат в `figures/` и после генерации обрезает поля через `pdfcrop`. Если `pdfcrop` или Ghostscript не установлены, можно временно отключить обрезку:
+
+```bash
+task mermaid -- --no-crop
+```
 
 ## Mermaid через Docker
 
@@ -99,10 +103,12 @@ mmdc -i <file.mmd> -o <file.pdf> -f
 
 
     ```bash
-    docker compose --profile mermaid up
+    docker compose --profile mermaid run --build --rm mermaid_diagrams
     ```
 
 
+
+Docker-образ Mermaid включает Chromium, Mermaid CLI, `pdfcrop` и Ghostscript, поэтому обычная команда собирает уже обрезанные PDF.
 
 
 

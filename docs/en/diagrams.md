@@ -50,7 +50,7 @@ To rebuild a diagram into PDF:
 mmdc -i <file.mmd> -o <file.pdf> -f
 ```
 
-The `-f` flag is needed so the PDF page is cropped to the diagram size.
+The `-f` flag makes `mmdc` overwrite an existing PDF. The project automation additionally crops margins through `pdfcrop`, so local builds need `pdfcrop` and Ghostscript.
 
 ## Automatic Mermaid build
 
@@ -68,7 +68,11 @@ Run the script:
     python scripts/compile_mermaid.py
     ```
 
-The script processes all files from `mermaid/` and places the result into `figures/`.
+The script processes all files from `mermaid/`, places the result into `figures/`, and crops margins through `pdfcrop` after generation. If `pdfcrop` or Ghostscript is not installed, temporarily disable cropping:
+
+```bash
+task mermaid -- --no-crop
+```
 
 ## Mermaid through Docker
 
@@ -83,8 +87,10 @@ Build Mermaid through Docker:
 === "Manual"
 
     ```bash
-    docker compose --profile mermaid up
+    docker compose --profile mermaid run --build --rm mermaid_diagrams
     ```
+
+The Mermaid Docker image includes Chromium, Mermaid CLI, `pdfcrop`, and Ghostscript, so the regular command produces cropped PDFs.
 
 ## Python diagrams
 
