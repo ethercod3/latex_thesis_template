@@ -33,3 +33,4 @@ docs-site/
 .coverage
 coverage.xml
 htmlcov/
+dnevnik.md
