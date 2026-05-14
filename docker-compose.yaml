@@ -56,6 +56,19 @@ services:
     working_dir: /data
     command: ["python3", "/data/scripts/convert_docx_to_pdf.py"]
 
+  crop_pdf:
+    profiles: ["crop"]
+    build:
+      context: .
+      dockerfile: ./docker/crop.dockerfile
+    user: "${HOST_UID:-0}:${HOST_GID:-0}"
+    environment:
+      HOME: /tmp
+    volumes:
+      - ./:/data
+    working_dir: /data
+    command: ["python3", "scripts/crop_pdf.py"]
+
   docs:
     profiles: ["docs"]
     image: zensical/zensical:0.0.40

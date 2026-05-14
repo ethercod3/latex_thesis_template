@@ -4,7 +4,7 @@ dotenv:
   - .env
 
 vars:
-  COMPOSE_BUILD_PROFILES: --profile docx --profile mermaid --profile python --profile latex
+  COMPOSE_BUILD_PROFILES: --profile docx --profile mermaid --profile python --profile latex --profile crop
   COMPOSE_ALL_PROFILES: --profile docx --profile mermaid --profile python --profile latex
 
 includes:

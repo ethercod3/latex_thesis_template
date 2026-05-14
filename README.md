@@ -33,12 +33,12 @@ https://ethercod3.github.io/diploma_latex/
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
-MD5: `031af9eea264f83b476be215b066812e`<br>
-SHA-1: `839c26118bd04e208e1789f5bb3477fdc2a9f5fd`<br>
-SHA-256: `e462274895d8de8834a90733634791249a9e1d4a1d8f9bd1776d25a4fa6ec1e8`<br>
-SHA3-256: `4dd8b5cbf8feb1f4eae27323b73d1d0115eba73b3c8b54d642dc1df25e222888`<br>
-BLAKE2s: `c92e09829f56f7c8cb24c261cee2d36f8567a5af13d02f012b41f215fae4cf47`<br>
-SHAKE-128 (256-bit output): `a60f45eeebac97d7098cf96f13b237f29810691bd254e0c819afc15a978a7986`<br>
+MD5: `dcc8935d9ec2c0e07edfb0340f276742`<br>
+SHA-1: `840aa5fcd422836d9495877f1d77f47ae896c9e2`<br>
+SHA-256: `84a5a664c3526c57902dd808e218ae184f4d9cf49ba2b37400b2198a965399d9`<br>
+SHA3-256: `d4afa89f399a203044d40ed02b7025fbaa5045c5fde0da05416d94551e82cbae`<br>
+BLAKE2s: `b93372bdde35399a494f5d3f4c1ab50e5270f945c8f0bd03628ff4684eb321db`<br>
+SHAKE-128 (256-bit output): `9644b5ac293ac2d117db3f152809e4985c05d4533fbc795a8f4310d3fb8b8591`<br>
 <!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
@@ -372,6 +372,7 @@ task build:image -- latex
 task build:image -- mermaid
 task build:image -- python
 task build:image -- docx
+task build:image -- crop
 ```
 
 Или вручную:
@@ -381,6 +382,7 @@ docker compose --profile latex build
 docker compose --profile mermaid build
 docker compose --profile python build
 docker compose --profile docx build
+docker compose --profile crop build
 ```
 
 Команды профилей используют `docker compose run --build`, поэтому Docker проверяет актуальность образов перед запуском. Первый запуск все равно будет долгим: Docker скачает базовые образы и соберет окружение.
@@ -393,6 +395,7 @@ docker compose --profile docx build
 - `mermaid` - генерация Mermaid-диаграмм в `figures`
 - `python` - генерация Python-диаграмм в `figures`
 - `docx` - конвертация файлов `docx/*.docx` в одноименные PDF в корне проекта
+- `crop` - обрезка полей произвольного PDF через `pdfcrop`
 
 Запуск отдельных профилей:
 
@@ -401,6 +404,7 @@ task latex:docker
 task mermaid:docker
 task diagrams:docker
 task docx
+task crop:docker -- path/to/file.pdf
 ```
 
 Или вручную:
@@ -410,6 +414,7 @@ docker compose --profile latex run --build --rm latex
 docker compose --profile mermaid run --build --rm mermaid_diagrams
 docker compose --profile python run --build --rm python_diagrams
 docker compose --profile docx run --build --rm docx_pdf
+docker compose --profile crop run --build --rm crop_pdf python3 scripts/crop_pdf.py path/to/file.pdf
 ```
 
 Запуск всех профилей одной командой:
@@ -436,6 +441,7 @@ task build
 task build
 task mermaid
 task diagrams
+task crop -- path/to/file.pdf
 ```
 
 Или вручную:
@@ -444,9 +450,16 @@ task diagrams
 python scripts/build_all.py
 python scripts/compile_mermaid.py
 python scripts/compile_python_diagrams.py
+python scripts/crop_pdf.py path/to/file.pdf
 ```
 
 Скрипт `scripts/convert_docx_to_pdf.py` обычно запускается внутри Docker-профиля `docx`, потому что ему нужны LibreOffice, Ghostscript и qpdf.
+
+Если локально нет `pdfcrop` и Ghostscript, используйте Alpine-профиль:
+
+```bash
+task crop:docker -- path/to/file.pdf
+```
 
 ## Сравнение PDF между коммитами
 

@@ -61,6 +61,16 @@ tasks:
     cmds:
       - python scripts/update_pdf_hash.py {{.CLI_ARGS}}
 
+  crop:
+    desc: Обрезать поля PDF через pdfcrop и обновить исходный файл
+    cmds:
+      - python scripts/crop_pdf.py {{.CLI_ARGS}}
+
+  crop:docker:
+    desc: Обрезать поля PDF через pdfcrop в Docker и обновить исходный файл
+    cmds:
+      - docker compose --profile crop run --build --rm crop_pdf python3 scripts/crop_pdf.py {{.CLI_ARGS}}
+
   diff:
     desc: Сравнить PDF между коммитами; аргументы передаются после --
     cmds:
