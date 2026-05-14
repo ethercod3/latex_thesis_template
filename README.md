@@ -61,6 +61,9 @@ SHAKE-128 (256-bit output): `d9f0ce6c07fd0130c4766762ee20c33e7aace7cf3a467add3ef
 | `tests/` | Pytest-тесты чистой логики вспомогательных скриптов |
 | `.github/workflows/` | GitHub Actions для Pages, check tools и PDF releases |
 
+<details>
+<summary>Установка Task и служебные команды</summary>
+
 ## Установка Task
 
 Проект использует [Task](https://taskfile.dev/docs/installation) как единую точку входа для сборки и вспомогательных команд. Корневой `Taskfile.yml` подключает тематические файлы из `tasks/`, но публичные команды остаются плоскими: `task build`, `task docs`, `task latex:docker`.
@@ -139,6 +142,9 @@ task python:test
 task backup
 ```
 
+
+</details>
+
 ## Быстрый старт
 
 ```bash
@@ -167,6 +173,9 @@ task build
 - [Git hooks](#git-hooks)
 - [Резервное копирование](#резервное-копирование)
 - [CI/CD и релизы](#cicd-и-релизы)
+
+<details>
+<summary>Документация и Zensical</summary>
 
 ## Документация
 
@@ -210,12 +219,19 @@ zensical serve --config-file zensical.toml
 zensical serve --config-file zensical.en.toml
 ```
 
+
+</details>
+
+<details>
+<summary>Сборка без Docker</summary>
+
 ## Сборка без Docker
 
 Рекомендуемый способ сборки без Docker - `latexmk`. Он сам запускает `lualatex` и `biber` нужное количество раз по правилам из `.latexmkrc`.
 
-!!! warning "Важно"
-    В этом проекте `latexmk` заметно сокращает время повторной компиляции. Первый запуск через `latexmk` занимает около 74 секунд, повторный - около 18 секунд. Режим `--no-latexmk` с ручной цепочкой каждый раз занимает примерно 53-54 секунды.
+> **Важно**
+>
+> В этом проекте `latexmk` заметно сокращает время повторной компиляции. Первый запуск через `latexmk` занимает около 74 секунд, повторный - около 18 секунд. Режим `--no-latexmk` с ручной цепочкой каждый раз занимает примерно 53-54 секунды.
 
 Первый запуск `latexmk` может быть дольше ручной сборки, потому что он строит свое служебное состояние, анализирует зависимости, создает `.fdb_latexmk` и выполняет полный цикл сборки. На следующих запусках `latexmk` использует эту информацию и пересобирает только то, что действительно изменилось.
 
@@ -295,6 +311,12 @@ task latex:manual_chain
 
 Этот режим медленнее на повторных сборках: в текущем проекте около 53-54 секунд каждый раз против примерно 18 секунд при повторном запуске через `latexmk`.
 
+
+</details>
+
+<details>
+<summary>Настройка TeXstudio</summary>
+
 ## Настройка TeXstudio
 
 Проект использует `LuaLaTeX` и `biblatex` с backend `biber`. Рекомендуемый вариант для TeXstudio - запускать `latexmk`, который читает настройки из `.latexmkrc`.
@@ -310,6 +332,12 @@ task latex:manual_chain
 4. В `Default Compiler` выберите `Latexmk`.
 
 Перед первой сборкой убедитесь, что `python`, `latexmk`, `lualatex` и `biber` доступны в `PATH`. При установке `TeX Live` команды `latexmk`, `lualatex` и `biber` обычно уже доступны вместе с дистрибутивом. Python нужен PyLuaTeX во время компиляции LaTeX. Готовый PDF будет создан в корне проекта, вспомогательные файлы - в `.aux_files`.
+
+
+</details>
+
+<details>
+<summary>Компиляция в Docker</summary>
 
 ## Компиляция в Docker
 
@@ -461,6 +489,12 @@ python scripts/crop_pdf.py path/to/file.pdf
 task crop:docker -- path/to/file.pdf
 ```
 
+
+</details>
+
+<details>
+<summary>Сравнение PDF между коммитами</summary>
+
 ## Сравнение PDF между коммитами
 
 ![pdf_diff_example](.github/images/pdf_diff_example.png)
@@ -513,6 +547,12 @@ task diff -- <commit_1> <commit_2> --profiles latex
 В `--profiles` можно передать несколько профилей через запятую: `docx,python`, `mermaid,python`, `docx,mermaid,python`. Скрипт запускает их в порядке `docx` $\rightarrow$ `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex`. Если `latex` не указан явно, он добавляется автоматически, потому что именно этот профиль собирает итоговый PDF для сравнения.
 
 Перед запуском рабочее дерево Git должно быть чистым. После завершения скрипт возвращается на исходный `HEAD`, удаляет временные файлы и восстанавливает текущие файлы из `figures`, а также PDF в корне проекта, например `титульник.pdf` и `задание.pdf`.
+
+
+</details>
+
+<details>
+<summary>Проблемы с компиляцией и титульные страницы</summary>
 
 ## Проблемы с компиляцией
 
@@ -570,6 +610,12 @@ task docx:keep-blank
 Положите код на одном уровне с папкой `LaTeX` кода. При компиляции `LaTeX` обращается по такому пути:
 
 `../vault_diploma/<файл>`
+
+
+</details>
+
+<details>
+<summary>Как работать с диаграммами</summary>
 
 ## Как работать с диаграммами
 
@@ -631,6 +677,12 @@ task diagrams:docker
 
 Или вручную: `docker compose --profile python up`.
 
+
+</details>
+
+<details>
+<summary>Полностью ручная компиляция LaTeX</summary>
+
 ## Полностью ручная компиляция LaTeX
 
 Этот способ нужен только для диагностики или если `latexmk` недоступен. В обычной сборке без Docker используйте `latexmk`, потому что он сам определяет нужное количество запусков `lualatex` и `biber`. Первый запуск `latexmk` в этом проекте может занимать около 74 секунд, зато повторные сборки сокращаются примерно до 18 секунд. Ручная цепочка через `--no-latexmk` каждый раз занимает около 53-54 секунд. В скрипте `scripts/build_latex_manual.py` этот режим включается флагом `--no-latexmk`.
@@ -671,6 +723,12 @@ mv ".aux_files/<файл>.pdf" .
 move ".aux_files\Куприянов_И221_диплом.pdf" .
 ```
 
+
+</details>
+
+<details>
+<summary>Git hooks</summary>
+
 ## Git hooks
 
 Чтобы перед каждым коммитом автоматически обновлялись контрольные суммы итогового PDF в README, подключите локальные hooks:
@@ -690,6 +748,12 @@ task deps
 Или вручную: `pip install -r requirements.txt`.
 
 Hook считает хэши текущего PDF алгоритмами из стандартного `hashlib`. Если PDF отсутствует, README не меняется и коммит продолжается со старым значением.
+
+
+</details>
+
+<details>
+<summary>Резервное копирование</summary>
 
 ## Резервное копирование
 
@@ -790,6 +854,12 @@ BACKUP_RCLONE_DESTINATIONS=remote1:path,remote2:path
 BACKUP_KEEP_WEEKS=30
 ```
 
+
+</details>
+
+<details>
+<summary>CI/CD и релизы</summary>
+
 ## CI/CD и релизы
 
 В `.github/workflows/` настроены GitHub Actions:
@@ -806,6 +876,9 @@ BACKUP_KEEP_WEEKS=30
 Для CI-сборки приложений workflow подтягивает приватный репозиторий `ethercod3/diploma_code` в `vault_diploma`. В настройках GitHub Actions должен быть secret `VIEW_DIPLOMA_CODE` с read-only доступом к этому репозиторию.
 
 Нетривиальная логика CI/CD вынесена из YAML в Python-скрипты `scripts/ci/*.py`: подготовка `.env`, определение release context, скачивание checktool assets и публикация PDF release. Сам workflow вызывает задачи по шагам: `task build`.
+
+
+</details>
 
 ## Лицензия
 
