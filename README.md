@@ -25,6 +25,10 @@
 ![rclone](https://img.shields.io/badge/Backup-rclone-00AEEF?style=flat-square)
 ![LibreOffice](https://img.shields.io/badge/DOCX-LibreOffice-18A303?style=flat-square&logo=libreoffice&logoColor=white)
 
+## Онлайн-документация проекта
+
+https://ethercod3.github.io/diploma_latex/
+
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
