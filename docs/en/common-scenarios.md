@@ -76,6 +76,24 @@ If `python_diagrams/*.py` files changed, rebuild Python diagrams:
 
 After updating diagrams, rebuild the main PDF. Details: [Diagrams](diagrams.md).
 
+## Crop PDF margins
+
+The command updates the source PDF in place, so check the target path before running it.
+
+=== "Task"
+
+    ```bash
+    task crop -- path/to/file.pdf
+    ```
+
+=== "Docker"
+
+    ```bash
+    task crop:docker -- path/to/file.pdf
+    ```
+
+The local variant requires `pdfcrop` and Ghostscript. The Docker variant uses a separate Alpine image with `texlive-binextra` and Ghostscript.
+
 ## Update the title page or assignment
 
 1. Edit the DOCX file in `docx/`.

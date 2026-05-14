@@ -33,8 +33,8 @@ The required toolset depends on how you build the project.
 !!! note "Local build without Docker"
     A build without Docker requires TeX Live, Python, `latexmk`, `lualatex`, and `biber`. On Windows, `latexmk` and `biber` usually come with TeX Live. Python is needed by the LaTeX document itself too: it uses PyLuaTeX and runs the `python` command during compilation.
 
-!!! note "Mermaid without Docker"
-    The local `task mermaid` command requires `mmdc` and `pdfcrop`; `pdfcrop` uses Ghostscript. To generate diagrams without cropping margins, run `task mermaid -- --no-crop`. The Docker profile `task mermaid:docker` already includes these dependencies.
+!!! note "PDF crop without Docker"
+    The local `task mermaid` and `task crop -- path/to/file.pdf` commands require `pdfcrop` and Ghostscript. To generate Mermaid diagrams without cropping margins, run `task mermaid -- --no-crop`. If local dependencies are not installed, use Docker profiles: `task mermaid:docker` or `task crop:docker -- path/to/file.pdf`.
 
 !!! note "Script tests"
     Python dependencies in `requirements.txt` include `pytest`. After `task deps`, run helper-script tests with `task python:test`.

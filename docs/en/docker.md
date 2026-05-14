@@ -81,7 +81,7 @@ Build all Docker images for the project:
 === "Manual"
 
     ```bash
-    docker compose --profile docx --profile mermaid --profile python --profile latex build
+    docker compose --profile docx --profile mermaid --profile python --profile latex --profile crop build
     ```
 
 Build one profile image:
@@ -93,6 +93,7 @@ Build one profile image:
     task build:image -- mermaid
     task build:image -- python
     task build:image -- docx
+    task build:image -- crop
     ```
 
 === "Manual"
@@ -102,6 +103,7 @@ Build one profile image:
     docker compose --profile mermaid build
     docker compose --profile python build
     docker compose --profile docx build
+    docker compose --profile crop build
     ```
 
 Profile commands use `docker compose run --build`, so Docker checks whether images are current before running containers. The first run still takes time because Docker downloads base images and builds the environment.
@@ -116,6 +118,7 @@ The project uses separate Docker Compose profiles:
 | `mermaid` | Generates Mermaid diagrams into `figures/` |
 | `python` | Generates diagrams with Python scripts |
 | `latex` | Builds the final diploma PDF |
+| `crop` | Crops margins of any PDF through `pdfcrop` |
 | `docs` | Builds and runs local bilingual documentation |
 
 Run separate profiles:
@@ -127,6 +130,7 @@ Run separate profiles:
     task mermaid:docker
     task diagrams:docker
     task docx
+    task crop:docker -- path/to/file.pdf
     ```
 
 === "Manual"
@@ -136,6 +140,7 @@ Run separate profiles:
     docker compose --profile mermaid run --build --rm mermaid_diagrams
     docker compose --profile python run --build --rm python_diagrams
     docker compose --profile docx run --build --rm docx_pdf
+    docker compose --profile crop run --build --rm crop_pdf python3 scripts/crop_pdf.py path/to/file.pdf
     ```
 
 Run all profiles with one command:

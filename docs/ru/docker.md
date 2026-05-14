@@ -107,7 +107,7 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
     ```bash
-    docker compose --profile docx --profile mermaid --profile python --profile latex build
+    docker compose --profile docx --profile mermaid --profile python --profile latex --profile crop build
     ```
 
 
@@ -126,6 +126,7 @@ TARGET="Куприянов_И221_диплом.tex"
     task build:image -- mermaid
     task build:image -- python
     task build:image -- docx
+    task build:image -- crop
     ```
 
 
@@ -138,6 +139,7 @@ TARGET="Куприянов_И221_диплом.tex"
     docker compose --profile mermaid build
     docker compose --profile python build
     docker compose --profile docx build
+    docker compose --profile crop build
     ```
 
 
@@ -156,6 +158,7 @@ TARGET="Куприянов_И221_диплом.tex"
 | `mermaid` | Генерирует Mermaid-диаграммы в `figures/` |
 | `python` | Генерирует диаграммы Python-скриптами |
 | `latex` | Собирает итоговый PDF диплома |
+| `crop` | Обрезает поля произвольного PDF через `pdfcrop` |
 | `docs` | Собирает и поднимает локальную двуязычную документацию |
 
 Запуск отдельных профилей:
@@ -170,6 +173,7 @@ TARGET="Куприянов_И221_диплом.tex"
     task mermaid:docker
     task diagrams:docker
     task docx
+    task crop:docker -- path/to/file.pdf
     ```
 
 
@@ -182,6 +186,7 @@ TARGET="Куприянов_И221_диплом.tex"
     docker compose --profile mermaid run --build --rm mermaid_diagrams
     docker compose --profile python run --build --rm python_diagrams
     docker compose --profile docx run --build --rm docx_pdf
+    docker compose --profile crop run --build --rm crop_pdf python3 scripts/crop_pdf.py path/to/file.pdf
     ```
 
 

@@ -33,8 +33,8 @@
 !!! note "Локальная сборка без Docker"
     Для сборки без Docker нужны TeX Live, Python, `latexmk`, `lualatex` и `biber`. Под Windows `latexmk` и `biber` обычно ставятся вместе с TeX Live. Python нужен не только вспомогательным скриптам: LaTeX-документ использует PyLuaTeX и запускает команду `python` во время компиляции.
 
-!!! note "Mermaid без Docker"
-    Для локальной команды `task mermaid` нужны `mmdc` и `pdfcrop`; `pdfcrop` использует Ghostscript. Если нужна генерация без обрезки полей, запустите `task mermaid -- --no-crop`. Docker-профиль `task mermaid:docker` уже содержит эти зависимости.
+!!! note "PDF crop без Docker"
+    Для локальных команд `task mermaid` и `task crop -- path/to/file.pdf` нужны `pdfcrop` и Ghostscript. Если нужна генерация Mermaid без обрезки полей, запустите `task mermaid -- --no-crop`. Если локальных зависимостей нет, используйте Docker-профили `task mermaid:docker` или `task crop:docker -- path/to/file.pdf`.
 
 !!! note "Тесты скриптов"
     Python-зависимости из `requirements.txt` включают `pytest`. После `task deps` можно проверить вспомогательные скрипты командой `task python:test`.
