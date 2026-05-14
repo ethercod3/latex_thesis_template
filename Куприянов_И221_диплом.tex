@@ -287,7 +287,7 @@
 	
 	Алгоритм вывода ключей PBKDF2 (Password-Based Key Derivation Function 2) необходим для вывода стойкого криптографически ключа из строки пользователя. Алгоритм определен в стандарте RFC 8018 \cite{RFC8018} и основан на применении PRF (псевдослучайной функции). 
 	
-	Суть алгоритма заключается в увеличении сложности перебора (Brute Force) паролей за счет применения соли и большого числа итераций. Схема работы алгоритма PBKDF2 представлена на рисунке \ref{fig:PBKDF2}.
+	Суть алгоритма заключается в увеличении сложности перебора (Brute Force) паролей за счет применения соли и большого числа итераций. Схема работы алгоритма PBKDF2 представлена на рисунке.
 	
 	\begin{figure}[h]
 %		\centering\fitgraphics{PBKDF2.pdf}
@@ -839,7 +839,7 @@
 	\item Upsert записи в \texttt{data\_records} с обновлением. \texttt{auth\_hash}, \texttt{header\_json, payload\_hex} и ссылок на DEK.
 	\end{enumerate}
 	
-	Диаграмма сценария представлена на рисунке \ref{fig:load} (с. \pageref{fig:load});
+	Диаграмма сценария представлена на рисунке  \pageref{fig:load});
 	
 	\item Сценарий \texttt{GET /data/\{name\}}
 	
@@ -850,7 +850,7 @@
 	\item Расшифрование \texttt{payload\_hex} и возврат открытого текста в API-ответе.
 	\end{enumerate}
 	
-	Диаграмма сценария представлена на рисунке \ref{fig:get_data} (с. \pageref{fig:get_data});
+	Диаграмма сценария представлена на рисунке \ref{fig:get_data};
 	
 	\begin{figure}[p]
 		\begin{minipage}{0.48\textwidth}
@@ -868,7 +868,7 @@
 		\end{minipage}
 	\end{figure}
 	
-	\FloatBarrier
+%	\FloatBarrier
 	
 	\end{itemize}
 	
@@ -921,7 +921,7 @@
 
 	
 
-%	\FloatBarrier
+	\FloatBarrier
 	
 	\subsubsection*{\textit{Обоснование выбора технологий}}
 	
@@ -1063,7 +1063,7 @@
 	
 	Принципиальная особенность взаимодействия состоит в разделении ролей ключей: KEK никогда не сохраняется в БД, а DEK хранится только в обернутом виде. За счет этого даже при компрометации хранилища нарушитель не получает готовый ключ расшифрования без доступа к окружению выполнения.
 	
-	На рисунках \ref{fig:flow_load} (с. \pageref{fig:flow_load}) и \ref{fig:flow_get} (с. \pageref{fig:flow_get})  представлены диаграммы загрузки данных через CLI и получения данных через API соответственно.
+	На рисунках \ref{fig:flow_load} и \ref{fig:flow_get} представлены диаграммы загрузки данных через CLI и получения данных через API соответственно.
 
 	
 	\begin{figure}[p]
@@ -1131,7 +1131,7 @@ python -m uvicorn vault.api:app --host <host> --port <port> --ssl-keyfile <key> 
 	
 	Если PID-файл существует, CLI пытается извлечь из него идентификатор процесса. При поврежденном JSON или некорректном PID файл удаляется, а пользователю возвращается причина \texttt{invalid\_pid\_file}. Если PID валиден, CLI передает управление операционной системе: в Windows используется \texttt{taskkill /PID <pid> /T /F}, а в Linux/macOS применяется сигнал завершения через \texttt{os.kill(pid, 15)}. После этого CLI делает короткую паузу, проверяет, остался ли процесс активным, удаляет PID-файл и возвращает JSON-ответ \texttt{web-server-down} с признаком \texttt{stopped}.
 	
-	Диаграммы 1 и 2 представлены на рисунках \ref{fig:web-up} (с. \pageref{fig:web-up}) и \ref{fig:web-down} (с. \pageref{fig:web-down}) соответственно.
+	Диаграммы 1 и 2 представлены на рисунках \ref{fig:web-up} и \ref{fig:web-down} соответственно.
 	
 	\begin{figure}[p]
 		\centering\includegraphics[angle=90, width=\textwidth]{web_up.pdf}
@@ -1146,7 +1146,7 @@ python -m uvicorn vault.api:app --host <host> --port <port> --ssl-keyfile <key> 
 		\label{fig:web-down}
 	\end{figure}
 	
-	\FloatBarrier
+%	\FloatBarrier
 	
 	\subsubsection{Схема управления ключами}
 	
@@ -1156,7 +1156,7 @@ python -m uvicorn vault.api:app --host <host> --port <port> --ssl-keyfile <key> 
 	
 	Первая диаграмма описывает подготовку master KEK. В обоих вариантах, генерации и импорте, CLI либо создает значение ключа, либо нормализует уже существующий ключ в шестнадцатеричном формате, после чего возвращает его оператору без записи в таблицу \texttt{keys}. Завершающим шагом является перенос значения в \texttt{VAULT\_MASTER\_KEK\_HEX}, то есть в контур runtime-конфигурации, а не в контур долговременного хранения.
 	
-	Диаграмма представлена на рисунке \ref{fig:master_kek_prepare} (с. \pageref{fig:master_kek_prepare}).
+	Диаграмма представлена на рисунке \ref{fig:master_kek_prepare}.
 	
 	\begin{figure}[p]
 		\centering\includegraphics[angle=90, height=0.95\textheight]{master_kek_prepare.pdf}
@@ -1168,7 +1168,7 @@ python -m uvicorn vault.api:app --host <host> --port <port> --ssl-keyfile <key> 
 	
 	Вторая диаграмма показывает цикл постановки DEK на хранение. Независимо от того, был ли ключ данных сгенерирован внутри приложения или импортирован из файла, перед сохранением он обязательно связывается с master KEK через операцию \texttt{wrap\_dek\_hex}. В результате в БД попадает не открытый DEK, а сериализованный обернутый пакет с \texttt{nonce}, шифртекстом и тегом аутентификации, что снижает последствия компрометации таблицы \texttt{keys}.
 	
-	Диаграмма представлена на рисунке \ref{fig:create_or_import_dek} (с. \pageref{fig:create_or_import_dek}).
+	Диаграмма представлена на рисунке \ref{fig:create_or_import_dek}.
 	
 	\begin{figure}[p]
 		\centering\includegraphics[angle=90, height=0.95\textheight]{create_or_import_dek.pdf}
@@ -1180,7 +1180,7 @@ python -m uvicorn vault.api:app --host <host> --port <port> --ssl-keyfile <key> 
 	
 	Третья диаграмма отражает эксплуатационную фазу работы с ключом данных. Runtime-компонент CLI или API извлекает из БД обернутое представление DEK, считывает master KEK из окружения и выполняет \texttt{unwrap\_dek\_hex} через \texttt{key\_manager}. Открытый DEK появляется только в оперативной памяти процесса и используется немедленно для криптографической операции, после чего не сохраняется обратно в хранилище.
 	
-	Диаграмма представлена на рисунке \ref{fig:store_dek} (с. \pageref{fig:store_dek}).
+	Диаграмма представлена на рисунке \ref{fig:store_dek}.
 	
 
 	\begin{figure}[p]
@@ -1189,7 +1189,7 @@ python -m uvicorn vault.api:app --host <host> --port <port> --ssl-keyfile <key> 
 		\label{fig:store_dek}
 	\end{figure}	
 
-	\FloatBarrier	
+%	\FloatBarrier	
 	
 	\subsection{Обоснование выбора методики разработки}
 		
