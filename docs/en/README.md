@@ -28,6 +28,8 @@
 
 This repository contains the source files for the diploma project: `LaTeX` documents, `Mermaid` diagrams, Python diagrams, DOCX templates for title pages, and Docker profiles for reproducible builds.
 
+This work was prepared as a graduation qualification project at the federal state budgetary educational institution of higher education "Amur State University". The university is mentioned only as the academic context of the work and is not identified as a rights holder for the repository materials unless a separate agreement states otherwise.
+
 ## Main workflow
 
 !!! info "Required tools"
