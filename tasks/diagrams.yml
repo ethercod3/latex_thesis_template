@@ -4,12 +4,12 @@ tasks:
   mermaid:
     desc: Сгенерировать Mermaid-диаграммы локально
     cmds:
-      - python scripts/compile_mermaid.py
+      - python scripts/compile_mermaid.py {{.CLI_ARGS}}
 
   mermaid:docker:
     desc: Сгенерировать Mermaid-диаграммы в Docker
     cmds:
-      - docker compose --profile mermaid run --build --rm mermaid_diagrams
+      - docker compose --profile mermaid run --build --rm mermaid_diagrams python3 scripts/compile_mermaid.py {{.CLI_ARGS}}
 
   diagrams:
     desc: Сгенерировать Python-диаграммы локально

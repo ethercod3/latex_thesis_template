@@ -423,6 +423,13 @@ def checks() -> list[Check]:
             fix="Установите @mermaid-js/mermaid-cli или используйте task mermaid:docker.",
         ),
         command_check(
+            "pdfcrop",
+            "pdfcrop",
+            ["pdfcrop", "--version"],
+            required=False,
+            fix="Установите pdfcrop из TeX Live/MiKTeX, используйте task mermaid -- --no-crop или task mermaid:docker.",
+        ),
+        command_check(
             "LibreOffice",
             "soffice",
             ["soffice", "--version"],

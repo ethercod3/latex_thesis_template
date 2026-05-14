@@ -19,6 +19,7 @@ RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula sele
     chromium=147.0.7727.137-1~deb12u1 \
     fontconfig=2.14.1-4 \
     fonts-noto-core=20201225-1 \
+    texlive-extra-utils \
     ttf-mscorefonts-installer=3.8.1 \
     && fc-cache -fv \
     && fc-match "Trebuchet MS" \
