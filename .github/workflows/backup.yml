@@ -2,9 +2,6 @@ name: Backup git bundle
 
 on:
   workflow_dispatch:
-  schedule:
-    # 05:00 Asia/Yakutsk (UTC+9) every Sunday
-    - cron: "0 20 * * 6"
 
 permissions:
   contents: read
