@@ -129,6 +129,8 @@ def main() -> int:
 
     max_workers = min(MAX_WORKERS_LIMIT, len(files))
 
+    has_errors = False
+
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = {executor.submit(process_file, f, mmdc, pdfcrop): f for f in files}
 
@@ -137,11 +139,14 @@ def main() -> int:
                 result = future.result()
                 if result:
                     print(result)
+                    if result.startswith("[ОШИБКА]"):
+                        has_errors = True
             except Exception as e:
                 f = futures[future]
                 print(f"[ОШИБКА] Не удалось обработать {f.name}: {e}")
+                has_errors = True
 
-    return 0
+    return 1 if has_errors else 0
 
 
 if __name__ == "__main__":
