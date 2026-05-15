@@ -9,6 +9,8 @@ RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula sele
     apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y --no-install-recommends \
     python3 \
     python-is-python3 \
+    ghostscript \
+    qpdf \
     latexmk \
     biber \
     texlive-base \
