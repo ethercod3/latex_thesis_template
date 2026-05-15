@@ -33,12 +33,12 @@ https://ethercod3.github.io/diploma_latex/
 <!-- DIPLOMA_HASHES_START -->
 ## Контрольные суммы PDF
 
-MD5: `fd76faf6005bc0107a5b082ab929b685`<br>
-SHA-1: `02b2a3bac4752a7dfad5098ca5d03f731e003546`<br>
-SHA-256: `6fea67af307c71e3b2403247fab5366f7a6fc7873a73e33d40f8b15b72ea2d14`<br>
-SHA3-256: `de96d5c0a8d3f27971af87355c4aa9aed1357b98f870642453a80069674ef5c8`<br>
-BLAKE2s: `65130a96e044a6aecef7bdfa0c203336fdf398a37225a68e53a7883f97b19e72`<br>
-SHAKE-128 (256-bit output): `d9f0ce6c07fd0130c4766762ee20c33e7aace7cf3a467add3ef016603fbdfa52`<br>
+MD5: `30d0db48ede971540899415ccc3805ce`<br>
+SHA-1: `510ef166a33a2438378d6b5c0ade2768656853d4`<br>
+SHA-256: `c74ef957e3d0a4f083306ef853650f207e749fe525916dc489cb11a96220ffb8`<br>
+SHA3-256: `a85d5e2736ad2aeff1f22f0f2d2133b39c2a52a6abcac26dda58d125af7fae49`<br>
+BLAKE2s: `e7e796001311e3ed5d248646acab706ab41d23abefb6c346a295936ab0533127`<br>
+SHAKE-128 (256-bit output): `feaa843d34a0d78935c2b6fced0cf3fd2ba2e1ce87115b72ed3a9c390a81fe92`<br>
 <!-- DIPLOMA_HASHES_END -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.

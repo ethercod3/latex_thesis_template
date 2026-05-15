@@ -25,7 +25,7 @@
 \setlength{\headsep}{0.5\baselineskip}
 
 % Настройки приложений
-\newcommand{\listingsappendix}{Б}
+\newcommand{\listingsappendix}{А}
 \newcommand{\currentappendixletter}{\Asbuk{appendixcount}}
 \newpagestyle{appendixcontstyle}{
     \sethead{}{Продолжение Приложения \currentappendixletter}{}
@@ -1483,7 +1483,7 @@ PS> python main.py web-server down
 
 \subsubsection*{\textit{Создание контейнера}}
 
-Для глубокой интеграции с процессом разработки для создания контейнеров был выбран подход создания программного API для шифрования контейнеров вместо традиционного создания CLI команд. API реализован в виде функции \texttt{encrypt\_container} из модуля \texttt{vault.crypto}. Пример скрипта, который создает зашифрованный контейнер представлен в листинге \ref{lst:container_api} (Приложение А, с. \pageref{lst:container_api}).
+Для глубокой интеграции с процессом разработки для создания контейнеров был выбран подход создания программного API для шифрования контейнеров вместо традиционного создания CLI команд. API реализован в виде функции \texttt{encrypt\_container} из модуля \texttt{vault.crypto}. Пример скрипта, который создает зашифрованный контейнер представлен в листинге \ref{lst:container_api} (Приложение Б, с. \pageref{lst:container_api}).
 
 Сценарии, в которых такой подход оправдан:
 
@@ -1545,8 +1545,8 @@ PS> python main.py web-server down
 	includehead
 	}
 
-	\input{appendix/appendix_b.tex}
-	\newpage
 	\input{appendix/include_listings.tex}
+	\newpage
+	\input{appendix/appendix_b.tex}
 
 \end{document}
