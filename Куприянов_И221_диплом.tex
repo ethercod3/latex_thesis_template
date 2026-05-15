@@ -18,8 +18,8 @@
 \setlength{\parindent}{1.25cm} % абзацный отступ
 % Отступы после рисунков, таблиц, и.т.д
 \setlength{\floatsep}{0pt}
-\setlength{\intextsep}{0.5\baselineskip}
-\setlength{\textfloatsep}{0.5\baselineskip}
+\setlength{\intextsep}{0.8\baselineskip}
+\setlength{\textfloatsep}{0.8\baselineskip}
 \setlength{\belowcaptionskip}{0pt}
 % Базовый отступ от заголовков
 \setlength{\headsep}{0.5\baselineskip}
@@ -694,9 +694,9 @@
 	
 	Результаты проведенного анализа схематично показаны на рисунке \ref{fig:solutions_quadrant}.
 	
-	\begin{figure}[H]
-		\centering\fitgraphics{quadrant\_choice.pdf}
-%		\centering\includegraphics[width=10cm]{quadrant\_choice.pdf}
+	\begin{figure}[!hbt]
+%		\centering\fitgraphics{quadrant\_choice.pdf}
+		\centering\includegraphics[width=10cm]{quadrant\_choice.pdf}
 		\caption{Сравнение решений для управления секретами}
 		\label{fig:solutions_quadrant}
 	\end{figure}	
@@ -1302,9 +1302,7 @@ python -m uvicorn vault.api:app --host <host> --port <port> --ssl-keyfile <key> 
 	
 	Наиболее важной CLI-командой является \texttt{load}, поскольку она объединяет почти все компоненты системы. Команда получает входной контейнер, проверяет формат, извлекает \texttt{dek\_in} и \texttt{dek\_out} из БД, считывает master KEK из \texttt{VAULT\_MASTER\_KEK\_HEX}, выполняет извлечение обоих DEK, расшифровывает входной \texttt{payload} и повторно шифрует его целевым алгоритмом. После этого в \texttt{data\_records} сохраняется уже новый контейнер, а Bearer-заголовок передается в репозиторий только для хеширования и сохранения в поле \texttt{auth\_hash}.
 	
-	Завершающим прикладным слоем стал модуль \texttt{vault/api.py}. В нем реализована фабрика \texttt{create\_app}\calloutfullreffootnote{lst:func:create_app}, которая создает FastAPI-приложение, и endpoint \texttt{GET /data/{name}}. API выполняет последовательность проверок в безопасном порядке: сначала ищет запись, затем проверяет \texttt{Authorization}, затем валидирует заголовок контейнера, после этого получает \texttt{dek\_out}, выполняет извлечение через master KEK и только затем расшифровывает \texttt{payload}. Такой порядок принципиален: извлечение ключа и криптографическая операция не выполняются до успешной авторизации клиента.
-	
-	Процесс разработки производился как последовательное расширение ядра приложения. В начале были реализованы функции, отвечающие за криптографическую обработку данных. Затем появились контракты данных и слой хранения. После этого были добавлены команды CLI и сетевой API. Такой порядок позволил сохранить контролируемую сложность проекта: каждый новый слой опирался на уже проверенные нижележащие модули, а не дублировал их логику.	
+	Завершающим прикладным слоем стал модуль \texttt{vault/api.py}. В нем реализована фабрика \texttt{create\_app}\calloutfullreffootnote{lst:func:create_app}, которая создает FastAPI-приложение, и endpoint \texttt{GET /data/{name}}. API выполняет последовательность проверок в безопасном порядке: сначала ищет запись, затем проверяет \texttt{Authorization}, затем валидирует заголовок контейнера, после этого получает \texttt{dek\_out}, выполняет извлечение через master KEK и только затем расшифровывает \texttt{payload}. Такой порядок принципиален: извлечение ключа и криптографическая операция не выполняются до успешной авторизации клиента. Процесс разработки производился как последовательное расширение ядра приложения. В начале были реализованы функции, отвечающие за криптографическую обработку данных. Затем появились контракты данных и слой хранения. После этого были добавлены команды CLI и сетевой API. Такой порядок позволил сохранить контролируемую сложность проекта: каждый новый слой опирался на уже проверенные нижележащие модули, а не дублировал их логику.	
 	
 	\newpage
 	
@@ -1331,6 +1329,8 @@ PS> python main.py --db-url sqlite:///vault.db generate-kek --name master --alg 
 \subsubsection*{\textit{Импорт ключей данных}}
 
 Эти команды показывают постановку DEK на хранение. На вход CLI получает ключи в шестнадцатеричном формате из файлов, однако в БД попадают не исходные значения, а результат \texttt{wrap\_dek\_hex}, сформированный с использованием master KEK. Важно подчеркнуть, что логические имена <<\texttt{src}>> (листинг \ref{lst:load_src_dek}) и <<\texttt{dst}>> (листинг \ref{lst:load_dst_dek}) позволяют явно разделить входной и выходной контур шифрования при последующем перешифровании контейнера.
+
+\needspace{1.5cm}
 
 \begin{lstlisting}[style=bashcommand, caption={Создание src DEK}, label=lst:load_src_dek]
 PS> python main.py --db-url sqlite:///vault.db add-dek --name src -f src_dek.hex
@@ -1367,8 +1367,7 @@ PS> python main.py --db-url sqlite:///vault.db add-dek --name dst -f dst_dek.hex
     "updated_at": "2026-04-25T08:02:30.774061Z"
   },
   "dek_stored_as_wrapped": true
-}
-\end{lstlisting}
+}\end{lstlisting}
 
 \subsubsection*{\textit{Загрузка и перешифрование контейнера}}
 
