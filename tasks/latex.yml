@@ -21,6 +21,6 @@ tasks:
       - docker compose --profile latex run --build --rm latex
 
   pdf:split-color:
-    desc: Разделить PDF на *_color.pdf и *_bw.pdf через Ghostscript в Docker
+    desc: Разделить PDF на *_color.pdf и *_bw.pdf через Ghostscript и qpdf в Docker
     cmds:
       - docker compose --profile latex run --build --rm latex python3 scripts/split_pdf_color.py {{.CLI_ARGS}}

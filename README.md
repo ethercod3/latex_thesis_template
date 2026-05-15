@@ -454,6 +454,7 @@ task build
 task mermaid
 task diagrams
 task crop -- path/to/file.pdf
+task pdf:split-color -- path/to/file.pdf
 ```
 
 Или вручную:
@@ -463,9 +464,16 @@ python scripts/build_all.py
 python scripts/compile_mermaid.py
 python scripts/compile_python_diagrams.py
 python scripts/crop_pdf.py path/to/file.pdf
+python scripts/split_pdf_color.py path/to/file.pdf
 ```
 
 Скрипт `scripts/convert_docx_to_pdf.py` обычно запускается внутри Docker-профиля `docx`, потому что ему нужны LibreOffice, Ghostscript и qpdf.
+
+Скрипт `scripts/split_pdf_color.py` делит PDF на два файла рядом с исходником: `*_color.pdf` с цветными страницами и `*_bw.pdf` с черно-белыми страницами. Ghostscript используется для анализа `inkcov`, а `qpdf` экспортирует страницы без перерисовки, чтобы сохранить поворот и геометрию страниц:
+
+```bash
+task pdf:split-color -- Куприянов_И221_диплом.pdf
+```
 
 Если локально нет `pdfcrop` и Ghostscript, используйте Alpine-профиль:
 

@@ -36,7 +36,7 @@ This work was prepared as a graduation qualification project at the federal stat
     If you are opening the project for the first time, start with [Requirements](requirements.md). It briefly lists the tools needed for Docker builds, local builds, and PDF comparison.
 
 !!! tip "If you already know what to do"
-    Open [Common scenarios](common-scenarios.md): it contains short instructions for building the PDF, updating diagrams and title pages, connecting source code, and comparing versions.
+    Open [Common scenarios](common-scenarios.md): it contains short instructions for building the PDF, updating diagrams and title pages, splitting PDF into color/B/W pages, connecting source code, and comparing versions.
 
 Install Task:
 

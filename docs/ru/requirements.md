@@ -12,7 +12,8 @@
 | biber | Библиография при локальной сборке | `biber --version` |
 | Mermaid CLI | Локальная сборка Mermaid-диаграмм | `mmdc --version` |
 | pdfcrop | Обрезка PDF после локальной сборки Mermaid | `pdfcrop --version` |
-| Ghostscript | Нужен `pdfcrop` и DOCX-конвертации | `gs --version` |
+| Ghostscript | Нужен `pdfcrop`, DOCX-конвертации и анализ цветности страниц PDF | `gs --version` |
+| qpdf | Извлечение страниц PDF без изменения поворота и геометрии | `qpdf --version` |
 | diff-pdf | Визуальное сравнение PDF между коммитами | `diff-pdf --help` |
 | rclone | Резервное копирование `git bundle` в облачные хранилища | `rclone version` |
 
@@ -36,6 +37,9 @@
 !!! note "PDF crop без Docker"
     Для локальных команд `task mermaid` и `task crop -- path/to/file.pdf` нужны `pdfcrop` и Ghostscript. Если нужна генерация Mermaid без обрезки полей, запустите `task mermaid -- --no-crop`. Если локальных зависимостей нет, используйте Docker-профили `task mermaid:docker` или `task crop:docker -- path/to/file.pdf`.
 
+!!! note "Разделение PDF на цветные и ЧБ страницы"
+    Команда `task pdf:split-color -- path/to/file.pdf` запускается в LaTeX Docker-образе. Внутри контейнера Ghostscript определяет цветные страницы через `inkcov`, а `qpdf` экспортирует выбранные страницы в `*_color.pdf` и `*_bw.pdf` без перерисовки исходных страниц.
+
 !!! note "Тесты скриптов"
     Python-зависимости из `requirements.txt` включают `pytest`. После `task deps` можно проверить вспомогательные скрипты командой `task python:test`.
 
@@ -50,6 +54,7 @@
 | Пересобрать диаграммы | [Диаграммы](diagrams.md) |
 | Подключить код приложения | [Код в приложениях](source-code.md) |
 | Сравнить PDF между коммитами | [Сравнение PDF между коммитами](pdf-diff.md) |
+| Разделить PDF на цветные и ЧБ страницы | [Разделение PDF на цветные и ЧБ страницы](pdf-color-split.md) |
 | Настроить резервное копирование | [Резервное копирование](backup.md) |
 | Разобрать ошибку сборки | [Проблемы с компиляцией](troubleshooting.md) |
 | Проверить CI/CD и релизные артефакты | [CI/CD и релизы](ci.md) |

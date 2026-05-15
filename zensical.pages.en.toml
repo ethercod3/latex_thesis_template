@@ -28,6 +28,7 @@ nav = [
   ]},
   {"Tools" = [
     {"PDF comparison between commits" = "pdf-diff.md"},
+    {"Splitting PDF into color and B/W pages" = "pdf-color-split.md"},
     {"Compilation issues" = "troubleshooting.md"},
     {"Git hooks" = "git-hooks.md"},
     {"Backups" = "backup.md"},

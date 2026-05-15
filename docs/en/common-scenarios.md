@@ -94,6 +94,24 @@ The command updates the source PDF in place, so check the target path before run
 
 The local variant requires `pdfcrop` and Ghostscript. The Docker variant uses a separate Alpine image with `texlive-binextra` and Ghostscript.
 
+## Split PDF into color and B/W pages
+
+The command creates two files next to the source PDF: `*_color.pdf` with color pages only and `*_bw.pdf` with black-and-white pages only.
+
+=== "Task"
+
+    ```bash
+    task pdf:split-color -- path/to/file.pdf
+    ```
+
+=== "Manual"
+
+    ```bash
+    docker compose --profile latex run --build --rm latex python3 scripts/split_pdf_color.py path/to/file.pdf
+    ```
+
+Ghostscript detects color pages through C/M/Y ink coverage, while `qpdf` exports pages without changing rotation. Details: [Splitting PDF into color and B/W pages](pdf-color-split.md).
+
 ## Update the title page or assignment
 
 1. Edit the DOCX file in `docx/`.

@@ -94,6 +94,24 @@
 
 Локальный вариант требует `pdfcrop` и Ghostscript. Docker-вариант использует отдельный Alpine-образ с `texlive-binextra` и Ghostscript.
 
+## Разделить PDF на цветные и ЧБ страницы
+
+Команда создает два файла рядом с исходным PDF: `*_color.pdf` только с цветными страницами и `*_bw.pdf` только с черно-белыми страницами.
+
+=== "Task"
+
+    ```bash
+    task pdf:split-color -- path/to/file.pdf
+    ```
+
+=== "Ручной"
+
+    ```bash
+    docker compose --profile latex run --build --rm latex python3 scripts/split_pdf_color.py path/to/file.pdf
+    ```
+
+Ghostscript определяет цветные страницы через покрытие C/M/Y, а `qpdf` экспортирует страницы без изменения поворота. Подробнее: [Разделение PDF на цветные и ЧБ страницы](pdf-color-split.md).
+
 ## Обновить титульник или задание
 
 1. Измените DOCX-файл в `docx/`.

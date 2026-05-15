@@ -12,7 +12,8 @@ The required toolset depends on how you build the project.
 | biber | Bibliography for local builds | `biber --version` |
 | Mermaid CLI | Local Mermaid diagram build | `mmdc --version` |
 | pdfcrop | Cropping PDFs after local Mermaid build | `pdfcrop --version` |
-| Ghostscript | Required by `pdfcrop` and DOCX conversion | `gs --version` |
+| Ghostscript | Required by `pdfcrop`, DOCX conversion, and PDF page color analysis | `gs --version` |
+| qpdf | Extracting PDF pages without changing rotation or geometry | `qpdf --version` |
 | diff-pdf | Visual PDF comparison between commits | `diff-pdf --help` |
 | rclone | Backing up `git bundle` files to cloud storage | `rclone version` |
 
@@ -36,6 +37,9 @@ The required toolset depends on how you build the project.
 !!! note "PDF crop without Docker"
     The local `task mermaid` and `task crop -- path/to/file.pdf` commands require `pdfcrop` and Ghostscript. To generate Mermaid diagrams without cropping margins, run `task mermaid -- --no-crop`. If local dependencies are not installed, use Docker profiles: `task mermaid:docker` or `task crop:docker -- path/to/file.pdf`.
 
+!!! note "Splitting PDF into color and B/W pages"
+    `task pdf:split-color -- path/to/file.pdf` runs in the LaTeX Docker image. Inside the container, Ghostscript detects color pages through `inkcov`, and `qpdf` exports the selected pages into `*_color.pdf` and `*_bw.pdf` without redrawing the original pages.
+
 !!! note "Script tests"
     Python dependencies in `requirements.txt` include `pytest`. After `task deps`, run helper-script tests with `task python:test`.
 
@@ -50,6 +54,7 @@ The required toolset depends on how you build the project.
 | Rebuild diagrams | [Diagrams](diagrams.md) |
 | Connect application source code | [Source code in appendices](source-code.md) |
 | Compare PDFs between commits | [PDF comparison between commits](pdf-diff.md) |
+| Split PDF into color and B/W pages | [Splitting PDF into color and B/W pages](pdf-color-split.md) |
 | Configure backups | [Backups](backup.md) |
 | Investigate a build error | [Compilation issues](troubleshooting.md) |
 | Check CI/CD and release assets | [CI/CD and releases](ci.md) |
