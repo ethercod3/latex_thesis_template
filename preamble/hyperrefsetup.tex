@@ -1,8 +1,13 @@
+\begin{python}
+import secrets
+build_id = secrets.token_hex(4)
+\end{python}
+
 \hypersetup{
     pdftitle={Разработка системы защещенного хранения данных},
     pdfauthor={Куприянов Артём Максимович},
     pdfsubject={Дипломная работа},
     pdfkeywords={latex, диплом, безопасность},
     pdfcreator={LuaLaTeX},
-    pdfproducer={TeX Live}
+    pdfproducer={TeX Live. Build id: \py{build_id}}
 }
