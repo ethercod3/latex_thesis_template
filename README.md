@@ -30,7 +30,10 @@
 
 https://ethercod3.github.io/diploma_latex/
 
-<!-- DIPLOMA_HASHES_START -->
+<!-- [[[cog
+from update_pdf_hash import cog_readme_block
+cog.out(cog_readme_block())
+]]] -->
 ## Контрольные суммы PDF
 
 MD5: `0841e5a1c12fa92dd2651bc9c6912937`<br>
@@ -39,7 +42,7 @@ SHA-256: `12147dd98835abd71e5192be81903bd294b66a79fd48f4808978882d1d2b08da`<br>
 SHA3-256: `8b1ea0d578aeaa64e6c4eaacd1635305560c7a989b1643fafcfd7e04f106d192`<br>
 BLAKE2s: `32cdd0953b98b5f826b1561127b6e88b4732682099410dd96822e0bd5d76efa1`<br>
 SHAKE-128 (256-bit output): `497593e07c8a3098f47cd805e01ca195bd39edebd2db6811de12c5030b585fbe`<br>
-<!-- DIPLOMA_HASHES_END -->
+<!-- [[[end]]] -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
 
@@ -731,7 +734,7 @@ task hooks
 
 Или вручную: `git config core.hooksPath .githooks`.
 
-Для работы hook нужен Python-пакет `python-dotenv`. Он уже указан в `requirements.txt`; если окружение еще не подготовлено, установите зависимости:
+Для работы hook нужны Python-пакеты `python-dotenv` и `cogapp`. Они уже указаны в `requirements.txt`; если окружение еще не подготовлено, установите зависимости:
 
 ```bash
 task deps
@@ -739,7 +742,7 @@ task deps
 
 Или вручную: `pip install -r requirements.txt`.
 
-Hook считает хэши текущего PDF алгоритмами из стандартного `hashlib`. Если PDF отсутствует, README не меняется и коммит продолжается со старым значением.
+Hook считает хэши текущего PDF алгоритмами из стандартного `hashlib` и обновляет управляемый блок README через `cogapp`. Если PDF отсутствует, README не меняется и коммит продолжается со старым значением.
 
 
 </details>

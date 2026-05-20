@@ -1,23 +1,22 @@
 """Обновление контрольных сумм итогового PDF в README.
 
-Считает набор hash-алгоритмов для собранного диплома и заменяет управляемый
-блок Markdown между маркерами, сохраняя остальной README без изменений.
+Считает набор hash-алгоритмов для собранного диплома и обновляет управляемый
+блок README через cog.
 """
 
 from __future__ import annotations
 
 import argparse
 import hashlib
-import re
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 from common import PROJECT_DIR, ScriptError, env_value, script_main
 
 README_PATH = PROJECT_DIR / "README.md"
-START_MARKER = "<!-- DIPLOMA_HASHES_START -->"
-END_MARKER = "<!-- DIPLOMA_HASHES_END -->"
-LEGACY_START_MARKER = "<!-- DIPLOMA_SHA256_START -->"
-LEGACY_END_MARKER = "<!-- DIPLOMA_SHA256_END -->"
+PDF_ENV_VAR = "DIPLOMA_HASH_PDF"
 
 HASH_ALGORITHMS = (
     ("md5", "MD5", None),
@@ -32,6 +31,10 @@ HASH_ALGORITHMS = (
 def target_pdf_path(pdf_arg: str | None) -> Path:
     if pdf_arg:
         return (PROJECT_DIR / pdf_arg).resolve()
+
+    env_pdf = os.environ.get(PDF_ENV_VAR)
+    if env_pdf:
+        return Path(env_pdf).resolve()
 
     target = env_value("TARGET")
     if target:
@@ -61,34 +64,43 @@ def file_hashes(path: Path) -> list[tuple[str, str]]:
     ]
 
 
-def readme_block(hashes: list[tuple[str, str]]) -> str:
+def readme_body(hashes: list[tuple[str, str]]) -> str:
     hash_lines = "\n".join(f"{label}: `{digest}`<br>" for label, digest in hashes)
-    return f"{START_MARKER}\n" "## Контрольные суммы PDF\n\n" f"{hash_lines}\n" f"{END_MARKER}"
+    return "## Контрольные суммы PDF\n\n" f"{hash_lines}\n"
 
 
-def update_readme(hashes: list[tuple[str, str]]) -> bool:
-    content = README_PATH.read_text(encoding="utf-8")
-    block = readme_block(hashes)
-    pattern = re.compile(
-        rf"(?:{re.escape(START_MARKER)}.*?{re.escape(END_MARKER)}|"
-        rf"{re.escape(LEGACY_START_MARKER)}.*?{re.escape(LEGACY_END_MARKER)})",
-        flags=re.DOTALL,
+def cog_readme_block() -> str:
+    pdf_path = target_pdf_path(None)
+    if not pdf_path.is_file():
+        raise FileNotFoundError(f"PDF-файл не найден: {pdf_path}")
+
+    return readme_body(file_hashes(pdf_path))
+
+
+def run_cog(pdf_path: Path) -> bool:
+    before = README_PATH.read_text(encoding="utf-8")
+    env = os.environ.copy()
+    env[PDF_ENV_VAR] = str(pdf_path)
+    env["PYTHONPATH"] = os.pathsep.join(
+        [str(PROJECT_DIR / "scripts"), *(path for path in [env.get("PYTHONPATH")] if path)]
     )
 
-    if pattern.search(content):
-        updated = pattern.sub(block, content)
-    else:
-        title_end = content.find("\n\n")
-        if title_end == -1:
-            updated = f"{content.rstrip()}\n\n{block}\n"
-        else:
-            updated = f"{content[:title_end]}\n\n{block}\n\n{content[title_end + 2:]}"
+    result = subprocess.run(
+        [sys.executable, "-m", "cogapp", "-r", str(README_PATH)],
+        cwd=PROJECT_DIR,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        details = (result.stderr or result.stdout).strip()
+        if "No module named cogapp" in details:
+            details = "Установите зависимость: python -m pip install -r requirements.txt"
+        raise ScriptError(f"Не удалось обновить README через cog.\n{details}")
 
-    if updated == content:
-        return False
-
-    README_PATH.write_text(updated, encoding="utf-8", newline="\n")
-    return True
+    after = README_PATH.read_text(encoding="utf-8")
+    return before != after
 
 
 def parse_args() -> argparse.Namespace:
@@ -109,8 +121,7 @@ def main() -> int:
         print(f"PDF-файл не найден, хеши в README.md оставлены без изменений: {pdf_path}")
         return 0
 
-    hashes = file_hashes(pdf_path)
-    changed = update_readme(hashes)
+    changed = run_cog(pdf_path)
 
     if changed:
         print("Хеши в README.md обновлены.")
