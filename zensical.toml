@@ -89,7 +89,7 @@ on_undefined = "strict"
 emoji_index = "zensical.extensions.emoji.twemoji"
 emoji_generator = "zensical.extensions.emoji.to_svg"
 [project.markdown_extensions.pymdownx.snippets]
-auto_append = ["../includes/abbreviations.md"]
+auto_append = ["docs/includes/abbreviations.md"]
 [project.markdown_extensions.pymdownx.tasklist]
 custom_checkbox = true
 
