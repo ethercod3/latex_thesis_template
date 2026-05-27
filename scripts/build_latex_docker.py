@@ -10,12 +10,28 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from common import ScriptError, run_command, script_main
+from plumbum import local
+import typer
+
+from common import ScriptError
 
 AUX_DIR = Path(".aux_files_docker")
 
 
-def main() -> int:
+def run_checked(command: list[str]) -> tuple[int, str, str]:
+    print(f"==> {' '.join(command)}", flush=True)
+    runner = local[command[0]]
+    for arg in command[1:]:
+        runner = runner[arg]
+
+    code, stdout, stderr = runner.run()
+    if code != 0:
+        details = stderr.strip() or stdout.strip() or "вывода нет"
+        raise ScriptError(f"Команда завершилась с ошибкой (код {code}): {' '.join(command)}\n{details}")
+    return code, stdout, stderr
+
+
+def main() -> None:
     target = os.environ.get("TARGET")
     if not target:
         raise ScriptError("Не задан TARGET. Укажите TARGET в файле .env.")
@@ -28,7 +44,7 @@ def main() -> int:
 
     AUX_DIR.mkdir(exist_ok=True)
 
-    run_command(
+    run_checked(
         [
             "latexmk",
             "-lualatex",
@@ -45,8 +61,6 @@ def main() -> int:
             f"PDF-файл не был создан там, где ожидалось: {pdf_path}. " "Проверьте сообщения latexmk выше."
         )
 
-    return 0
-
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

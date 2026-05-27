@@ -4,9 +4,14 @@
 запишут итоговые изображения в figures/.
 """
 
+from __future__ import annotations
+
 import sys
 
-from common import PROJECT_DIR, ScriptError, run_command, script_main
+from plumbum import local
+import typer
+
+from common import PROJECT_DIR, ScriptError
 
 SOURCE_DIR = PROJECT_DIR / "python_diagrams"
 OUTPUT_DIR = PROJECT_DIR / "figures"
@@ -25,18 +30,18 @@ def run_diagram(script_name: str) -> int:
 
     print(f"==> {script_name}", flush=True)
 
-    result = run_command(
-        [sys.executable, str(script_path)],
-        check=False,
-    )
+    code, stdout, stderr = local[sys.executable][str(script_path)].run()
 
-    if result.returncode == 0:
+    if code == 0:
         print(f"[OK] {script_name}")
+    else:
+        details = stderr.strip() or stdout.strip() or "вывода нет"
+        print(f"[ОШИБКА] {script_name}\n{details}")
 
-    return result.returncode
+    return code
 
 
-def main() -> int:
+def main() -> None:
     if not SOURCE_DIR.is_dir():
         raise ScriptError(f"Папка со скриптами диаграмм не найдена: {SOURCE_DIR}")
 
@@ -45,10 +50,8 @@ def main() -> int:
     for script_name in DIAGRAM_SCRIPTS:
         exit_code = run_diagram(script_name)
         if exit_code != 0:
-            return exit_code
-
-    return 0
+            raise typer.Exit(code=exit_code)
 
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

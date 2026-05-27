@@ -6,7 +6,10 @@ on:
     branches:
       - main
     paths:
+      - "pyproject.toml"
+      - "uv.lock"
       - "scripts/check_tools.py"
+      - "scripts/check_tools_lib/**"
       - "scripts/check_tools_exe.py"
       - "scripts/check_python_requirements.py"
       - "scripts/common.py"
@@ -15,7 +18,10 @@ on:
       - ".github/workflows/check-tools-exe.yml"
   pull_request:
     paths:
+      - "pyproject.toml"
+      - "uv.lock"
       - "scripts/check_tools.py"
+      - "scripts/check_tools_lib/**"
       - "scripts/check_tools_exe.py"
       - "scripts/check_python_requirements.py"
       - "scripts/common.py"

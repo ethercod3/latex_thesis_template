@@ -11,7 +11,7 @@ tasks:
     desc: Build the Windows check tools exe
     dir: ../..
     cmds:
-      - uv run --with pyinstaller pyinstaller --onefile --name diploma-latex-check --paths scripts scripts/check_tools.py
+      - uv run --with pyinstaller --with rich pyinstaller --onefile --name diploma-latex-check --paths scripts scripts/check_tools.py
 
   smoke:
     desc: Run the generated exe without failing on missing runner tools

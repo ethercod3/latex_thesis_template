@@ -7,12 +7,10 @@
 from __future__ import annotations
 
 import os
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-from common import ScriptError, capture_command, run_command, script_main
+from plumbum import local
+import typer
 
 NIGHTLY_TAG = "nightly"
 
@@ -34,20 +32,30 @@ def write_github_env(name: str, value: str) -> None:
 def workflow_dispatch_tag() -> str:
     tag = os.environ.get("INPUT_TAG")
     if not tag:
-        raise ScriptError("INPUT_TAG не задан для workflow_dispatch.")
+        raise typer.BadParameter("INPUT_TAG не задан для workflow_dispatch.")
     return tag
 
 
+def run_checked(command: list[str]) -> tuple[int, str, str]:
+    runner = local[command[0]]
+    for arg in command[1:]:
+        runner = runner[arg]
+    return runner.run()
+
+
 def tags_pointing_at_head() -> list[str]:
-    run_command(["git", "fetch", "--tags", "--force"])
-    output = capture_command(["git", "tag", "--points-at", "HEAD", "--list", "v*"])
-    return sorted(line.strip() for line in output.splitlines() if line.strip())
+    run_checked(["git", "fetch", "--tags", "--force"])
+    code, stdout, stderr = run_checked(["git", "tag", "--points-at", "HEAD", "--list", "v*"])
+    if code != 0:
+        details = stderr.strip() or stdout.strip() or "вывода нет"
+        raise typer.Exit(code=code)
+    return sorted(line.strip() for line in stdout.splitlines() if line.strip())
 
 
 def workflow_run_tag() -> str:
     tags = tags_pointing_at_head()
     if not tags:
-        raise ScriptError("Не найден тег v*, указывающий на HEAD workflow_run checkout.")
+        raise typer.BadParameter("Не найден тег v*, указывающий на HEAD workflow_run checkout.")
     return tags[-1]
 
 
@@ -61,7 +69,7 @@ def release_tag_for_event() -> str:
         return workflow_run_tag()
     tag = os.environ.get("GITHUB_REF_NAME")
     if not tag:
-        raise ScriptError("Не удалось определить release tag.")
+        raise typer.BadParameter("Не удалось определить release tag.")
     return tag
 
 
@@ -71,13 +79,12 @@ def checktool_source_tag(release_tag: str) -> str:
     return release_tag
 
 
-def main() -> int:
+def main() -> None:
     release_tag = release_tag_for_event()
     write_github_env("CURRENT_TAG", release_tag)
     write_github_env("CHECKTOOL_SOURCE_TAG", checktool_source_tag(release_tag))
     print(f"Release tag: {release_tag}")
-    return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

@@ -1,53 +1,39 @@
-"""Публикация Windows checktool и checksum-файла в GitHub Release.
-
-Скрипт ожидает tag-контекст CI и токен GitHub, после чего загружает
-подготовленные dist-артефакты как release assets.
-"""
+"""Проверки перед публикацией Windows checktool-релиза."""
 
 from __future__ import annotations
 
-from pathlib import Path
 import os
-import sys
+from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from plumbum import local
+import typer
 
-from common import ScriptError, run_command, script_main
+ROOT = Path(__file__).resolve().parents[2]
+CHECKSUM_PATH = ROOT / "dist" / "SHA256SUMS.txt"
 
 
-def main() -> int:
-    tag = os.environ.get("GITHUB_REF_NAME")
+def run_checked(command: list[str]) -> tuple[int, str, str]:
+    runner = local[command[0]]
+    for arg in command[1:]:
+        runner = runner[arg]
+    return runner.run()
+
+
+def main() -> None:
     token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
-
-    if not tag:
-        raise ScriptError("GITHUB_REF_NAME не задан, публикация release assets невозможна.")
-
     if not token:
-        raise ScriptError("GH_TOKEN или GITHUB_TOKEN не задан, публикация release assets невозможна.")
+        raise typer.BadParameter("GH_TOKEN или GITHUB_TOKEN не задан.")
 
-    assets = [Path("dist/diploma-latex-check.exe"), Path("dist/SHA256SUMS.txt")]
-    missing = [str(path) for path in assets if not path.is_file()]
-    if missing:
-        raise ScriptError(f"Не найдены файлы для release assets: {', '.join(missing)}")
+    if not CHECKSUM_PATH.is_file():
+        raise typer.BadParameter(f"Не найден файл checksum: {CHECKSUM_PATH}")
 
-    release = run_command(["gh", "release", "view", tag], check=False)
-    if release.returncode != 0:
-        run_command(
-            [
-                "gh",
-                "release",
-                "create",
-                tag,
-                "--title",
-                tag,
-                "--notes",
-                "Автоматическая сборка",
-            ]
-        )
+    code, stdout, stderr = run_checked(["gh", "release", "list"])
+    if code != 0:
+        details = stderr.strip() or stdout.strip() or "вывода нет"
+        raise typer.Exit(code=code)
 
-    run_command(["gh", "release", "upload", tag, *(str(path) for path in assets), "--clobber"])
-    return 0
+    print(details if (details := stdout.strip()) else "release list OK")
 
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

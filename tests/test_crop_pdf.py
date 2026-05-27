@@ -14,18 +14,17 @@ def test_crop_pdf_replaces_source_with_cropped_file(monkeypatch, tmp_path: Path)
 
     calls: list[tuple[str, ...]] = []
 
-    def fake_run(command: list[str], **kwargs: object) -> object:
-        calls.append(tuple(command))
-        Path(command[2]).write_text("cropped", encoding="utf-8")
-        return object()
+    def fake_run(source_path: Path, cropped_path: Path) -> tuple[int, str, str]:
+        calls.append((str(source_path), str(cropped_path)))
+        cropped_path.write_text("cropped", encoding="utf-8")
+        return 0, "", ""
 
-    monkeypatch.setattr(crop_pdf, "command_path", lambda command: "pdfcrop" if command == "pdfcrop" else None)
-    monkeypatch.setattr(crop_pdf.subprocess, "run", fake_run)
+    monkeypatch.setattr(crop_pdf, "run_pdfcrop", fake_run)
 
     crop_pdf.crop_pdf(source)
 
     assert source.read_text(encoding="utf-8") == "cropped"
-    assert calls == [("pdfcrop", str(source.resolve()), str(source.with_name("document.pdfcrop-tmp.pdf").resolve()))]
+    assert calls == [(str(source.resolve()), str(source.with_name("document.pdfcrop-tmp.pdf").resolve()))]
     assert not source.with_name("document.pdfcrop-tmp.pdf").exists()
 
 

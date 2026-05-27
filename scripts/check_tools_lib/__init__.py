@@ -1,15 +1,14 @@
-"""Совместимый входной файл для проверки окружения проекта."""
+"""Пакет с модульной реализацией check_tools."""
 
 from __future__ import annotations
 
-from check_tools_lib import (
+from .checks import (
     Check,
     checks,
     command_check,
     docker_compose_check,
     diagram_state_checks,
     first_line,
-    main,
     ok_check,
     path_only_check,
     project_state_checks,
@@ -18,6 +17,7 @@ from check_tools_lib import (
     uv_environment_check,
     warning_check,
 )
+from .cli import main
 
 __all__ = [
     "Check",
@@ -35,7 +35,3 @@ __all__ = [
     "uv_environment_check",
     "warning_check",
 ]
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

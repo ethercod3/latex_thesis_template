@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
-import argparse
 import re
-import subprocess
 from dataclasses import dataclass
 from pathlib import Path
+import subprocess
 
-from common import ScriptError, command_path, script_main
+from plumbum import local
+import typer
+
+from common import ScriptError, command_path
 
 TIMEOUT_SECONDS = 300
 INKCOV_RE = re.compile(
@@ -31,20 +33,6 @@ class PageInk:
         return max(self.cyan, self.magenta, self.yellow) > threshold
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Создать PDF только с цветными страницами (*_color.pdf) и только с ЧБ страницами (*_bw.pdf)."
-    )
-    parser.add_argument("pdf", type=Path, help="Путь к исходному PDF.")
-    parser.add_argument(
-        "--threshold",
-        type=float,
-        default=0.00001,
-        help="Минимальное покрытие C/M/Y, выше которого страница считается цветной.",
-    )
-    return parser.parse_args()
-
-
 def normalize_pdf_path(pdf_path: Path) -> Path:
     return Path(str(pdf_path).replace("\\", "/"))
 
@@ -65,43 +53,23 @@ def qpdf_path() -> str:
 
 
 def run_ghostscript(command: list[str]) -> subprocess.CompletedProcess[str]:
-    try:
-        return subprocess.run(
-            command,
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=TIMEOUT_SECONDS,
-        )
-    except subprocess.CalledProcessError as e:
-        stdout = e.stdout.strip() if e.stdout else "вывода нет"
-        stderr = e.stderr.strip() if e.stderr else "вывода ошибок нет"
-        raise ScriptError(
-            "Ghostscript завершился с ошибкой.\n"
-            f"Команда: {' '.join(e.cmd)}\n"
-            f"Обычный вывод:\n{stdout}\n"
-            f"Вывод ошибок:\n{stderr}"
-        ) from e
+    return subprocess.run(
+        command,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=TIMEOUT_SECONDS,
+    )
 
 
 def run_qpdf(command: list[str]) -> subprocess.CompletedProcess[str]:
-    try:
-        return subprocess.run(
-            command,
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=TIMEOUT_SECONDS,
-        )
-    except subprocess.CalledProcessError as e:
-        stdout = e.stdout.strip() if e.stdout else "вывода нет"
-        stderr = e.stderr.strip() if e.stderr else "вывода ошибок нет"
-        raise ScriptError(
-            "qpdf завершился с ошибкой.\n"
-            f"Команда: {' '.join(e.cmd)}\n"
-            f"Обычный вывод:\n{stdout}\n"
-            f"Вывод ошибок:\n{stderr}"
-        ) from e
+    return subprocess.run(
+        command,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=TIMEOUT_SECONDS,
+    )
 
 
 def read_page_inks(pdf_path: Path, gs: str) -> list[PageInk]:
@@ -204,11 +172,17 @@ def split_pdf_color(pdf_path: Path, threshold: float = 0.00001) -> tuple[list[in
     return color_pages, bw_pages
 
 
-def main() -> int:
-    args = parse_args()
-    split_pdf_color(args.pdf, threshold=args.threshold)
+def main(
+    pdf: Path = typer.Argument(..., help="Путь к исходному PDF."),
+    threshold: float = typer.Option(
+        0.00001,
+        "--threshold",
+        help="Минимальное покрытие C/M/Y, выше которого страница считается цветной.",
+    ),
+) -> None:
+    split_pdf_color(pdf, threshold=threshold)
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

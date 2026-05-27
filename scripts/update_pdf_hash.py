@@ -6,14 +6,15 @@
 
 from __future__ import annotations
 
-import argparse
 import hashlib
 import os
-import subprocess
-import sys
 from pathlib import Path
+import sys
 
-from common import PROJECT_DIR, ScriptError, env_value, script_main
+from plumbum import local
+import typer
+
+from common import PROJECT_DIR, ScriptError, env_value
 
 README_PATH = PROJECT_DIR / "README.md"
 PDF_ENV_VAR = "DIPLOMA_HASH_PDF"
@@ -85,16 +86,13 @@ def run_cog(pdf_path: Path) -> bool:
         [str(PROJECT_DIR / "scripts"), *(path for path in [env.get("PYTHONPATH")] if path)]
     )
 
-    result = subprocess.run(
-        [sys.executable, "-m", "cogapp", "-r", str(README_PATH)],
-        cwd=PROJECT_DIR,
-        env=env,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
-    if result.returncode != 0:
-        details = (result.stderr or result.stdout).strip()
+    cog = local["python"]
+    for arg in ("-m", "cogapp", "-r", str(README_PATH)):
+        cog = cog[arg]
+    cog = cog.with_cwd(PROJECT_DIR).with_env(**env)
+    retcode, stdout, stderr = cog.run(retcode=None)
+    if retcode != 0:
+        details = (stderr or stdout).strip()
         if "No module named cogapp" in details:
             details = "Синхронизируйте окружение через: uv sync"
         raise ScriptError(f"Не удалось обновить README через cog.\n{details}")
@@ -103,33 +101,30 @@ def run_cog(pdf_path: Path) -> bool:
     return before != after
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Обновить хеши PDF-файла в README.md.")
-    parser.add_argument(
+def main(
+    pdf: str | None = typer.Option(
+        None,
         "--pdf",
-        default=None,
         help="Имя или путь к PDF-файлу. По умолчанию берется TARGET из .env с расширением .pdf.",
-    )
-    return parser.parse_args()
+    ),
+) -> None:
+    try:
+        pdf_path = target_pdf_path(pdf)
 
+        if not pdf_path.is_file():
+            print(f"PDF-файл не найден, хеши в README.md оставлены без изменений: {pdf_path}")
+            return
 
-def main() -> int:
-    args = parse_args()
-    pdf_path = target_pdf_path(args.pdf)
+        changed = run_cog(pdf_path)
 
-    if not pdf_path.is_file():
-        print(f"PDF-файл не найден, хеши в README.md оставлены без изменений: {pdf_path}")
-        return 0
-
-    changed = run_cog(pdf_path)
-
-    if changed:
-        print("Хеши в README.md обновлены.")
-    else:
-        print("Хеши в README.md уже актуальны.")
-
-    return 0
+        if changed:
+            print("Хеши в README.md обновлены.")
+        else:
+            print("Хеши в README.md уже актуальны.")
+    except ScriptError as error:
+        print(f"Ошибка: {error}", file=sys.stderr)
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

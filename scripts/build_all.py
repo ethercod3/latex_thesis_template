@@ -4,7 +4,14 @@
 и LaTeX, останавливая цепочку на первом неуспешном профиле.
 """
 
-from common import docker_compose_command, run_command, script_main
+from __future__ import annotations
+
+import sys
+
+from plumbum import local
+import typer
+
+from common import ScriptError, docker_compose_command
 
 PROFILES = [
     ("docx", "docx_pdf"),
@@ -16,22 +23,25 @@ PROFILES = [
 
 def run_profile(profile: str, service: str) -> int:
     print(f"\n==> {profile}", flush=True)
-    result = run_command(
-        [*docker_compose_command(), "--profile", profile, "run", "--build", "--rm", service],
-        check=False,
-    )
-
-    return result.returncode
-
-
-def main() -> int:
-    for profile, service in PROFILES:
-        exit_code = run_profile(profile, service)
-        if exit_code != 0:
-            return exit_code
-
+    command = [*docker_compose_command(), "--profile", profile, "run", "--build", "--rm", service]
+    proc = local[command[0]]
+    for arg in command[1:]:
+        proc = proc[arg]
+    code, stdout, stderr = proc.run()
+    if code != 0:
+        details = (stderr or stdout).strip()
+        raise ScriptError(f"Профиль {profile} завершился с ошибкой.\n{details}")
     return 0
 
 
+def main() -> None:
+    try:
+        for profile, service in PROFILES:
+            run_profile(profile, service)
+    except ScriptError as error:
+        print(f"Ошибка: {error}", file=sys.stderr)
+        raise typer.Exit(code=1)
+
+
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

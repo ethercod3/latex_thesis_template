@@ -8,40 +8,40 @@ from __future__ import annotations
 
 from pathlib import Path
 import hashlib
-import sys
 
-from common import run_command, script_main
+from plumbum import local
+import typer
 
 EXE_PATH = Path("dist/diploma-latex-check.exe")
 CHECKSUM_PATH = Path("dist/SHA256SUMS.txt")
 
+app = typer.Typer(add_completion=False)
 
-def smoke() -> int:
-    result = run_command([str(EXE_PATH)], check=False)
-    if result.returncode:
+
+def run_exe() -> tuple[int, str, str]:
+    runner = local[str(EXE_PATH)]
+    return runner.run()
+
+
+@app.command()
+def smoke() -> None:
+    code, stdout, stderr = run_exe()
+    if code:
         print(
-            f"Smoke test finished with exit code {result.returncode}. "
+            f"Smoke test finished with exit code {code}. "
             "This is allowed because the runner may not have TeX Live or Docker."
         )
-    return 0
+        if stdout.strip():
+            print(stdout.strip())
+        if stderr.strip():
+            print(stderr.strip())
 
 
-def checksum() -> int:
+@app.command()
+def checksum() -> None:
     digest = hashlib.sha256(EXE_PATH.read_bytes()).hexdigest()
     CHECKSUM_PATH.write_text(f"{digest}  {EXE_PATH.name}\n", encoding="utf-8")
-    return 0
-
-
-def main() -> int:
-    commands = {
-        "smoke": smoke,
-        "checksum": checksum,
-    }
-    if len(sys.argv) != 2 or sys.argv[1] not in commands:
-        print("Использование: python scripts/check_tools_exe.py smoke|checksum", file=sys.stderr)
-        return 2
-    return commands[sys.argv[1]]()
 
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    app()
