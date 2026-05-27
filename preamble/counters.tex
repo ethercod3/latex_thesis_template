@@ -4,7 +4,7 @@
 
 %  ------------- РЕГИСТРАЦИЯ ---------
 \regtotcounter{table}
-\regtotcounter{lstlisting}
+\regtotcounter{figure}
 \newcounter{bibcount}
 \newcounter{appendixcount}
 \newcounter{codecallout}
@@ -29,7 +29,7 @@
     \string\gdef\string\tablesBeforeBib{\number\value{table}}%
   }%
   \immediate\write\@auxout{%
-    \string\gdef\string\listingsBeforeBib{\number\value{lstlisting}}%
+    \string\gdef\string\figuresBeforeBib{\number\value{figure}}%
   }%
 }
 \makeatother
@@ -55,7 +55,7 @@
 
 \providecommand{\totalbibitems}{0}
 \providecommand{\tablesBeforeBib}{0}
-\providecommand{\listingsBeforeBib}{0}
+\providecommand{\figuresBeforeBib}{0}
 \providecommand{\totalappendices}{0}
 
 % -----------------------------------

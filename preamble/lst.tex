@@ -1,8 +1,18 @@
 % --------------------------------------
-%            НАСТРОЙКИ ЛИСТИНГОВ
+%            НАСТРОЙКИ БЛОКОВ КОДА
 % --------------------------------------
 
-\renewcommand{\lstlistingname}{Листинг}
+\renewcommand{\lstlistingname}{Рисунок}
+\addto\captionsrussian{\renewcommand{\lstlistingname}{Рисунок}}
+
+\makeatletter
+\providecommand{\p@lstlisting}{}
+\AtBeginDocument{%
+  \let\c@lstlisting\c@figure
+  \let\thelstlisting\thefigure
+  \let\p@lstlisting\p@figure
+}
+\makeatother
 
 \newcommand{\vaultpath}{\py{__import__("os").environ.get("VAULT_PATH") or "../vault_diploma"}}
 
@@ -117,13 +127,13 @@
 
 \newcommand{\calloutfullref}[1]{
   \codecalloutref{#1}
-  (см. с.~\pageref{#1}, листинг~\codecalloutlistingref{#1}, приложение~\listingsappendix{})
+  (см. с.~\pageref{#1}, рисунок~\codecalloutlistingref{#1}, приложение~\listingsappendix{})
 }
 
-\newcommand{\calloutfullreffootnote}[1]{\footnote{Метка \codecalloutref{#1}, листинг \ref{#1@listing}, приложение~\listingsappendix{}, с.~\pageref{#1}}}
+\newcommand{\calloutfullreffootnote}[1]{\footnote{Метка \codecalloutref{#1}, рисунок \ref{#1@listing}, приложение~\listingsappendix{}, с.~\pageref{#1}}}
 
 \newcommand{\calloutfullreffootnotetextonly}[1]{
-   \codecalloutref{#1}, листинг~\codecalloutlistingref{#1}, приложение~\listingsappendix{}, с.~\pageref{#1}
+   \codecalloutref{#1}, рисунок~\codecalloutlistingref{#1}, приложение~\listingsappendix{}, с.~\pageref{#1}
 }
 
 % --------------------------------------
