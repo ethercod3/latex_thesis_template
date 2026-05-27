@@ -13,7 +13,7 @@ If you need to inspect the visual difference between two diploma versions, use t
 === "Manual"
 
     ```bash
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2>
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2>
     ```
 
 The script accepts two commit hashes, checks out each one in sequence, builds the PDF through Docker, stores both versions in a temporary directory, and opens `diff-pdf`.[^diff-pdf]
@@ -46,10 +46,10 @@ The result can be opened, saved, or both:
 === "Manual"
 
     ```bash
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view --save
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save path/to/diff.pdf
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view --save
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save path/to/diff.pdf
     ```
 
 Without `--view` and `--save`, the script opens the diff. With `--save` and no path, the result is saved to `.pdf_diff/saved`.
@@ -84,12 +84,12 @@ To limit the build, pass `--profiles`:
 === "Manual"
 
     ```bash
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles all
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles docx
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles python
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid,python
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles all
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles docx
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles python
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid,python
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
     ```
 
 Values:

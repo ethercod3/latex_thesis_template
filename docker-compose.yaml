@@ -41,7 +41,7 @@ services:
       - ./.env
     volumes:
       - ./figures:/data/figures
-    command: ["python", "scripts/compile_python_diagrams.py"]
+    command: ["uv", "run", "python", "scripts/compile_python_diagrams.py"]
 
   docx_pdf:
     profiles: ["docx"]

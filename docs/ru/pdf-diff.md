@@ -19,7 +19,7 @@
 
 
     ```bash
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2>
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2>
     ```
 
 
@@ -62,10 +62,10 @@ flowchart TD
 
 
     ```bash
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view --save
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save path/to/diff.pdf
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view --save
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save path/to/diff.pdf
     ```
 
 
@@ -110,12 +110,12 @@ flowchart LR
 
 
     ```bash
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles all
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles docx
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles python
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid,python
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles all
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles docx
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles python
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid,python
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
     ```
 
 

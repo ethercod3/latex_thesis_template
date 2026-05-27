@@ -56,7 +56,7 @@ Run the full Docker build:
 === "Manual"
 
     ```bash
-    python scripts/build_all.py
+    uv run python scripts/build_all.py
     ```
 
 The `scripts/build_all.py` script runs profiles in this order: `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex`.
@@ -90,9 +90,9 @@ All helper Python scripts are started the same way on Windows, Linux, and macOS.
 === "Manual"
 
     ```bash
-    python scripts/build_all.py
-    python scripts/compile_mermaid.py
-    python scripts/compile_python_diagrams.py
+    uv run python scripts/build_all.py
+    uv run python scripts/compile_mermaid.py
+    uv run python scripts/compile_python_diagrams.py
     ```
 
 [^mermaid-fonts]: Mermaid diagrams are best rebuilt in the same environment where the original was prepared: when built through Docker, the font for KaTeX expressions can differ from the Windows result.

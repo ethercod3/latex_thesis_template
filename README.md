@@ -159,7 +159,7 @@ task build
 Максимальная воспроизводимость с оригиналом будет, если вы будете собирать `Mermaid`-диаграммы из-под `Windows`. Если собирать их Docker-ом, то шрифт для `KaTeX` (математических) выражений будет отличаться от оригинала. Если это для вас неважно, просто пользуйтесь скриптом выше.
 
 Для запуска скрипта потребуется Docker. Если вы не планируете использовать Docker, рекомендуемый вариант сборки LaTeX-документа - `latexmk`.
-Если `task` не установлен, используйте исходную команду напрямую: `python scripts/build_all.py`.
+Если `task` не установлен, используйте исходную команду напрямую: `uv run python scripts/build_all.py`.
 
 <details>
 <summary>Документация и Zensical</summary>
@@ -198,10 +198,10 @@ task docs:build:pages
 task docs:pull
 ```
 
-Без Docker Zensical можно установить в Python-окружение:
+Без Docker Zensical можно установить через `uv`:
 
 ```bash
-python -m pip install zensical
+uv tool install zensical
 zensical serve --config-file zensical.toml
 zensical serve --config-file zensical.en.toml
 ```
@@ -226,7 +226,7 @@ zensical serve --config-file zensical.en.toml
 
 - `титульник.pdf` и `задание.pdf` должны лежать в корне проекта. Их можно получить из `docx/*.docx` вручную через Microsoft Word или LibreOffice. см [О титульнике](#о-титульнике)
 - Mermaid-диаграммы из `mermaid/*.mmd` нужно заранее сгенерировать в `figures/`, см. [Как работать с диаграммами](#как-работать-с-диаграммами).
-- Python-диаграммы нужно заранее сгенерировать командой `task diagrams` или вручную `python scripts/compile_python_diagrams.py`.
+   - Python-диаграммы нужно заранее сгенерировать командой `task diagrams` или вручную `uv run python scripts/compile_python_diagrams.py`.
 - Если в приложениях подключается код, он должен лежать по пути, на который указывает проект, см. [Если есть код](#если-есть-код).
 
 Если эти файлы не подготовлены, `latexmk` может завершиться ошибкой из-за отсутствующих PDF, изображений или листингов.
@@ -243,7 +243,7 @@ zensical serve --config-file zensical.en.toml
     Или вручную:
 
     ```bash
-    pip install -r requirements.txt
+    uv sync
     ```
 
 5. Создать в корне проекта файл `.env` и указать в нем основной `.tex` файл:
@@ -278,7 +278,7 @@ zensical serve --config-file zensical.en.toml
 task latex:local
 ```
 
-Или вручную: `python scripts/build_latex_manual.py`.
+    Или вручную: `uv run python scripts/build_latex_manual.py`.
 
 Если нужно собрать другой файл без изменения `.env`, передайте его явно:
 
@@ -286,7 +286,7 @@ task latex:local
 task latex:local -- --target "<файл>.tex"
 ```
 
-Или вручную: `python scripts/build_latex_manual.py --target "<файл>.tex"`.
+    Или вручную: `uv run python scripts/build_latex_manual.py --target "<файл>.tex"`.
 
 Если нужно отключить `latexmk` и запустить старую ручную цепочку `lualatex`, `biber`, `lualatex`, `lualatex`, передайте флаг:
 
@@ -294,7 +294,7 @@ task latex:local -- --target "<файл>.tex"
 task latex:manual_chain
 ```
 
-Или вручную: `python scripts/build_latex_manual.py --no-latexmk`.
+    Или вручную: `uv run python scripts/build_latex_manual.py --no-latexmk`.
 
 Этот режим медленнее на повторных сборках: в текущем проекте около 53-54 секунд каждый раз против примерно 18 секунд при повторном запуске через `latexmk`.
 
@@ -469,11 +469,11 @@ task pdf:split-color -- path/to/file.pdf
 Или вручную:
 
 ```bash
-python scripts/build_all.py
-python scripts/compile_mermaid.py
-python scripts/compile_python_diagrams.py
-python scripts/crop_pdf.py path/to/file.pdf
-python scripts/split_pdf_color.py path/to/file.pdf
+uv run python scripts/build_all.py
+uv run python scripts/compile_mermaid.py
+uv run python scripts/compile_python_diagrams.py
+uv run python scripts/crop_pdf.py path/to/file.pdf
+uv run python scripts/split_pdf_color.py path/to/file.pdf
 ```
 
 Скрипт `scripts/convert_docx_to_pdf.py` обычно запускается внутри Docker-профиля `docx`, потому что ему нужны LibreOffice, Ghostscript и qpdf.
@@ -506,7 +506,7 @@ task crop:docker -- path/to/file.pdf
 task diff -- <commit_1> <commit_2>
 ```
 
-Или вручную: `python scripts/diff_pdf_commits.py <commit_1> <commit_2>`.
+Или вручную: `uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2>`.
 
 Скрипт принимает 2 хэша коммита, по очереди переключается на каждый из них, собирает PDF через Docker, складывает две версии во временную папку и открывает `diff-pdf`.
 
@@ -519,7 +519,7 @@ task diff -- <commit_1> <commit_2> --view --save
 task diff -- <commit_1> <commit_2> --save path/to/diff.pdf
 ```
 
-Для ручного запуска замените начало команды на `python scripts/diff_pdf_commits.py`.
+Для ручного запуска замените начало команды на `uv run python scripts/diff_pdf_commits.py`.
 
 Без `--view` и `--save` скрипт открывает diff. При `--save` без пути результат сохраняется в `.pdf_diff/saved`.
 
@@ -646,7 +646,7 @@ GitHub не всегда показывает содержимое файлов 
 task mermaid
 ```
 
-Или вручную: `python scripts/compile_mermaid.py`.
+Или вручную: `uv run python scripts/compile_mermaid.py`.
 
 После генерации скрипт обрезает поля через `pdfcrop`, которому нужен Ghostscript. Если локально доступны только `mmdc` и нужно собрать PDF без обрезки, запустите `task mermaid -- --no-crop`.
 
@@ -661,14 +661,14 @@ task mermaid:docker
 ### Генерация диаграмм Python вручную
 
 1. Установите интерпретатор `python` (использовалась версия `3.13+`)
-2. Установите в окружение библиотеки: `task deps` или вручную `pip install -r requirements.txt`
+2. Установите в окружение библиотеки: `task deps` или вручную `uv sync`
 3. Теперь вы можете запустить скрипт и получить на выходе файл диаграммы
 
     ```bash
     task diagrams
     ```
 
-    Или вручную: `python scripts/compile_python_diagrams.py`.
+    Или вручную: `uv run python scripts/compile_python_diagrams.py`.
 
 ### Генерация диаграмм Python через Docker
 
@@ -740,13 +740,13 @@ task hooks
 
 Или вручную: `git config core.hooksPath .githooks`.
 
-Для работы hook нужны Python-пакеты `python-dotenv` и `cogapp`. Они уже указаны в `requirements.txt`; если окружение еще не подготовлено, установите зависимости:
+Для работы hook нужны Python-пакеты `python-dotenv` и `cogapp`. Они уже указаны в `pyproject.toml` и `uv.lock`; если окружение еще не подготовлено, установите зависимости:
 
 ```bash
 task deps
 ```
 
-Или вручную: `pip install -r requirements.txt`.
+Или вручную: `uv sync`.
 
 Hook считает хэши текущего PDF алгоритмами из стандартного `hashlib` и обновляет управляемый блок README через `cogapp`. Если PDF отсутствует, README не меняется и коммит продолжается со старым значением.
 

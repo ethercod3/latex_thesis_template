@@ -16,7 +16,7 @@
 === "Ручной"
 
     ```bash
-    python scripts/build_all.py
+    uv run python scripts/build_all.py
     ```
 
 После сборки итоговый PDF появится в корне проекта. Если команда падает, откройте [Проблемы с компиляцией](troubleshooting.md).
@@ -57,7 +57,7 @@
 === "Ручной"
 
     ```bash
-    python scripts/compile_mermaid.py
+    uv run python scripts/compile_mermaid.py
     ```
 
 Если менялись `python_diagrams/*.py`, пересоберите Python-диаграммы:
@@ -71,7 +71,7 @@
 === "Ручной"
 
     ```bash
-    python scripts/compile_python_diagrams.py
+    uv run python scripts/compile_python_diagrams.py
     ```
 
 После обновления диаграмм пересоберите основной PDF. Подробнее: [Диаграммы](diagrams.md).
@@ -129,7 +129,7 @@ Ghostscript определяет цветные страницы через по
 
     ```bash
     docker compose --profile docx up
-    python scripts/build_all.py
+    uv run python scripts/build_all.py
     ```
 
 Если пустые страницы нужно сохранить, используйте `task docx:keep-blank`. Подробнее: [Титульник и задание](title-pages.md).
@@ -161,7 +161,7 @@ VAULT_OS_PATH="../vault_diploma"
 === "Ручной"
 
     ```bash
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2>
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2>
     ```
 
 Подробнее: [Сравнение PDF между коммитами](pdf-diff.md).

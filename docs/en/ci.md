@@ -55,7 +55,7 @@ They can be overridden with the `BACKUP_RCLONE_DESTINATIONS` repository variable
 
 ## CI caches
 
-The Windows workflow for `diploma-latex-check.exe` enables the `pip` cache keyed by `requirements.txt`. The PDF workflow uses `docker-compose.ci-cache.yaml`: Docker BuildKit stores build layers in GitHub Actions cache separately for `latex`, `docx`, `mermaid`, and `python`.
+The Windows workflow for `diploma-latex-check.exe` enables the `uv` cache keyed by `uv.lock`. The PDF workflow uses `docker-compose.ci-cache.yaml`: Docker BuildKit stores build layers in GitHub Actions cache separately for `latex`, `docx`, `mermaid`, and `python`.
 
 ## Private code repository
 

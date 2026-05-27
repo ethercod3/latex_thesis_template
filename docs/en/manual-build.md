@@ -14,7 +14,7 @@ The first `latexmk` run can be longer than a manual build because it builds its 
 
     - `титульник.pdf` and `задание.pdf` must be in the project root. They can be created manually from `docx/*.docx` through Microsoft Word or LibreOffice; see [Title pages](title-pages.md).
     - Mermaid diagrams from `mermaid/*.mmd` must be generated in advance into `figures/`; see [Diagrams](diagrams.md).
-    - Python diagrams must be generated in advance with `task diagrams` or manually with `python scripts/compile_python_diagrams.py`.
+    - Python diagrams must be generated in advance with `task diagrams` or manually with `uv run python scripts/compile_python_diagrams.py`.
     - If appendix code is included, it must be located at the expected path; see [Source code in appendices](source-code.md).
 
     If these files are not prepared, `latexmk` can fail because of missing PDFs, images, or listings.
@@ -36,7 +36,7 @@ The first `latexmk` run can be longer than a manual build because it builds its 
 === "Manual"
 
     ```bash
-    pip install -r requirements.txt
+    uv sync
     ```
 
 6. Create a `.env` file in the project root and specify the main `.tex` file:
@@ -90,7 +90,7 @@ If it is more convenient to read `TARGET` from `.env`, use the script. By defaul
 === "Manual"
 
     ```bash
-    python scripts/build_latex_manual.py
+    uv run python scripts/build_latex_manual.py
     ```
 
 To build another file without changing `.env`, pass it explicitly:
@@ -104,7 +104,7 @@ To build another file without changing `.env`, pass it explicitly:
 === "Manual"
 
     ```bash
-    python scripts/build_latex_manual.py --target "<file>.tex"
+    uv run python scripts/build_latex_manual.py --target "<file>.tex"
     ```
 
 To disable `latexmk` and run the old manual chain `lualatex`, `biber`, `lualatex`, `lualatex`, pass the flag:
@@ -118,7 +118,7 @@ To disable `latexmk` and run the old manual chain `lualatex`, `biber`, `lualatex
 === "Manual"
 
     ```bash
-    python scripts/build_latex_manual.py --no-latexmk
+    uv run python scripts/build_latex_manual.py --no-latexmk
     ```
 
 !!! note "When manual mode is needed"

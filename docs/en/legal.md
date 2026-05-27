@@ -40,7 +40,7 @@ The repository contains configuration and instructions for third-party tools, bu
 | TeX Live, LuaLaTeX, latexmk, biber, Python | LaTeX document build |
 | Zensical | documentation build |
 | Mermaid CLI | Mermaid diagram generation |
-| Python libraries from `requirements.txt` | helper scripts and diagrams |
+| Python libraries from `pyproject.toml` and `uv.lock` | helper scripts and diagrams |
 | diff-pdf | visual PDF comparison |
 
 Before distributing built artifacts or Docker images, take the licenses of these dependencies and images into account.

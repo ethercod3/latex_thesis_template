@@ -55,7 +55,7 @@ gdrive:diploma_latex_backups,ydisk:diploma_latex_backups
 
 ## Кэши CI
 
-В Windows workflow для `diploma-latex-check.exe` включен `pip` cache по `requirements.txt`. В PDF workflow подключен `docker-compose.ci-cache.yaml`: Docker BuildKit сохраняет слои сборочных образов в GitHub Actions cache отдельно для `latex`, `docx`, `mermaid` и `python`.
+В Windows workflow для `diploma-latex-check.exe` включен cache `uv` по `uv.lock`. В PDF workflow подключен `docker-compose.ci-cache.yaml`: Docker BuildKit сохраняет слои сборочных образов в GitHub Actions cache отдельно для `latex`, `docx`, `mermaid` и `python`.
 
 ## Приватный репозиторий с кодом
 

@@ -39,8 +39,8 @@ flowchart LR
 | --- | --- |
 | `Куприянов_И221_диплом.tex` | Основной LaTeX-файл диплома |
 | `bibliography.bib` | Библиография для `biblatex` |
-| `requirements.txt` | Python-зависимости для скриптов и диаграмм |
-| `pyproject.toml` | Настройки Python-инструментов, включая Black |
+| `pyproject.toml` | Python-зависимости и настройки Python-инструментов, включая Black |
+| `uv.lock` | Зафиксированные версии зависимостей |
 | `docker-compose.yaml` | Docker Compose профили проекта |
 | `docker-compose.ci-cache.yaml` | CI-only Compose override для кэша Docker BuildKit в GitHub Actions |
 | `Taskfile.yml` | Единая точка входа Task, подключающая файлы из `tasks/` |

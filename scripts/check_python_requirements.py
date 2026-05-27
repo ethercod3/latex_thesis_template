@@ -1,4 +1,4 @@
-"""Проверка доступности Python-зависимостей из requirements.txt.
+"""Проверка доступности Python-зависимостей из файла зависимостей.
 
 Используется как легкая диагностика окружения: читает закрепленные
 зависимости и сообщает, каких пакетов не хватает в текущем интерпретаторе.
@@ -36,7 +36,7 @@ def missing_requirements(requirements_path: Path) -> list[str]:
 
 def main() -> int:
     if len(sys.argv) != 2:
-        print("Использование: python scripts/check_python_requirements.py requirements.txt", file=sys.stderr)
+        print("Использование: python scripts/check_python_requirements.py <file>", file=sys.stderr)
         return 2
 
     requirements_path = Path(sys.argv[1])

@@ -55,7 +55,7 @@ task --list
 === "Ручной"
 
     ```bash
-    python scripts/build_all.py
+    uv run python scripts/build_all.py
     ```
 
 `scripts/build_all.py` запускает профили по порядку: `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex`. Так титульные страницы и диаграммы успевают обновиться до сборки основного PDF.
@@ -91,9 +91,9 @@ task python:test
 === "Ручной"
 
     ```bash
-    python scripts/build_all.py
-    python scripts/compile_mermaid.py
-    python scripts/compile_python_diagrams.py
+    uv run python scripts/build_all.py
+    uv run python scripts/compile_mermaid.py
+    uv run python scripts/compile_python_diagrams.py
     ```
 
 [^mermaid-fonts]: Mermaid-диаграммы лучше пересобирать в той же среде, где готовился оригинал. При сборке через Docker шрифт для KaTeX-выражений может отличаться от результата из Windows.

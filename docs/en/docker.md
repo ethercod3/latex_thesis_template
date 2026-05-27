@@ -191,7 +191,7 @@ flowchart LR
 === "Manual"
 
     ```bash
-    python scripts/build_all.py
+    uv run python scripts/build_all.py
     ```
 
 `scripts/build_all.py` runs profiles in the order `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex` and stops at the first error.

@@ -71,7 +71,7 @@ mmdc -i <file.mmd> -o <file.pdf> -f
 
 
     ```bash
-    python scripts/compile_mermaid.py
+    uv run python scripts/compile_mermaid.py
     ```
 
 
@@ -136,7 +136,7 @@ Python-диаграммы лежат в папке `python_diagrams/`.
 
 
     ```bash
-    pip install -r requirements.txt
+    uv sync
     ```
 
 
@@ -160,7 +160,7 @@ Python-диаграммы лежат в папке `python_diagrams/`.
 
 
     ```bash
-    python scripts/compile_python_diagrams.py
+    uv run python scripts/compile_python_diagrams.py
     ```
 
 

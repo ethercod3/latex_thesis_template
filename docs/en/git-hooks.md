@@ -14,7 +14,7 @@ To automatically update final PDF checksums in README before each commit, enable
     git config core.hooksPath .githooks
     ```
 
-The hook requires the Python package `python-dotenv`. It is listed in `requirements.txt`.
+The hook requires the Python package `python-dotenv`. It is listed in `pyproject.toml` and `uv.lock`.
 
 If the environment is not prepared yet, install dependencies:
 
@@ -27,7 +27,7 @@ If the environment is not prepared yet, install dependencies:
 === "Manual"
 
     ```bash
-    pip install -r requirements.txt
+    uv sync
     ```
 
 The hook calculates hashes of the current PDF using algorithms from the standard `hashlib` module.[^pdf-hash] If the PDF is missing, README is not changed and the commit continues with the old value.

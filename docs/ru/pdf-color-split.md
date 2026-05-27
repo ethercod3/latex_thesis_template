@@ -55,5 +55,5 @@ Docker-команда использует LaTeX-образ проекта, гд
 | qpdf | `qpdf --version` |
 
 ```bash
-python scripts/split_pdf_color.py document.pdf
+uv run python scripts/split_pdf_color.py document.pdf
 ```

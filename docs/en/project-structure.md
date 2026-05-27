@@ -39,8 +39,8 @@ Key files:
 | --- | --- |
 | `Куприянов_И221_диплом.tex` | Main LaTeX file of the diploma |
 | `bibliography.bib` | Bibliography for `biblatex` |
-| `requirements.txt` | Python dependencies for scripts and diagrams |
-| `pyproject.toml` | Python tooling settings, including Black |
+| `pyproject.toml` | Python dependencies and tooling settings, including Black |
+| `uv.lock` | Locked dependency versions |
 | `docker-compose.yaml` | Docker Compose profiles for the project |
 | `docker-compose.ci-cache.yaml` | CI-only Compose override for Docker BuildKit cache in GitHub Actions |
 | `Taskfile.yml` | Single Task entry point that includes files from `tasks/` |
