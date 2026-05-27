@@ -5,15 +5,13 @@ tasks:
     desc: Install dependencies for the check tools exe build
     dir: ../..
     cmds:
-      - python -m pip install --upgrade pip
-      - python -m pip install -r requirements.txt
-      - python -m pip install pyinstaller
+      - uv sync --locked
 
   build:
     desc: Build the Windows check tools exe
     dir: ../..
     cmds:
-      - pyinstaller --onefile --name diploma-latex-check --paths scripts scripts/check_tools.py
+      - uv run --with pyinstaller pyinstaller --onefile --name diploma-latex-check --paths scripts scripts/check_tools.py
 
   smoke:
     desc: Run the generated exe without failing on missing runner tools
