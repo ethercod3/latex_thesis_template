@@ -166,6 +166,37 @@ Before running the command, make sure the Git working tree is clean.
 
 Details: [PDF comparison between commits](pdf-diff.md).
 
+## Open Stirling PDF
+
+Stirling PDF is a local web interface that is convenient for manual PDF review and browser-based checking.
+
+=== "Task"
+
+    ```bash
+    task stirling
+    ```
+
+=== "Manual"
+
+    ```bash
+    docker compose --profile stirling up -d stirling_pdf
+    ```
+
+After startup, open:
+
+```text
+http://localhost:8080
+```
+
+Available helper commands:
+
+```bash
+task stirling:logs
+task stirling:down
+```
+
+The port and initial administrator password are stored in `.env`. Details: [Stirling PDF](stirling.md).
+
 ## Back up Git history
 
 Create and verify a local bundle without uploading it:

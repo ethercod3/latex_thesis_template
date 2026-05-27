@@ -20,3 +20,18 @@ tasks:
     desc: Остановить сервисы Docker Compose
     cmds:
       - docker compose down
+
+  stirling:
+    desc: Запустить Stirling PDF для ручного сравнения PDF на http://localhost:8080
+    cmds:
+      - docker compose --profile stirling up -d stirling_pdf
+
+  stirling:logs:
+    desc: Показать логи Stirling PDF
+    cmds:
+      - docker compose --profile stirling logs -f stirling_pdf
+
+  stirling:down:
+    desc: Остановить Stirling PDF
+    cmds:
+      - docker compose --profile stirling stop stirling_pdf

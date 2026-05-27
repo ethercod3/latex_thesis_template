@@ -436,6 +436,7 @@ docker compose --profile stirling up -d stirling_pdf
 ```
 
 После запуска Stirling PDF доступен по адресу `http://localhost:8080`. Если порт занят, задайте другой порт через переменную окружения, например `STIRLING_PORT=8081 task stirling`. Остановить сервис можно командой `task stirling:down`.
+Стартовый пароль администратора задается через `STIRLING_ADMIN_PASSWORD` в `.env`. Он применяется только при первом запуске, до создания данных в `/configs`.
 
 Запуск всех профилей одной командой:
 

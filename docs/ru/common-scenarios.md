@@ -166,6 +166,37 @@ VAULT_OS_PATH="../vault_diploma"
 
 Подробнее: [Сравнение PDF между коммитами](pdf-diff.md).
 
+## Открыть Stirling PDF
+
+Stirling PDF - это локальный веб-интерфейс, который удобно использовать для ручной проверки и сверки PDF в браузере.
+
+=== "Task"
+
+    ```bash
+    task stirling
+    ```
+
+=== "Ручной"
+
+    ```bash
+    docker compose --profile stirling up -d stirling_pdf
+    ```
+
+После запуска откройте:
+
+```text
+http://localhost:8080
+```
+
+Для управления доступны команды:
+
+```bash
+task stirling:logs
+task stirling:down
+```
+
+Настройки порта и стартового пароля администратора хранятся в `.env`. Подробнее: [Stirling PDF](stirling.md).
+
 ## Создать резервную копию Git-истории
 
 Локально создать и проверить bundle без загрузки:
