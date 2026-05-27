@@ -16,7 +16,7 @@ This page helps you choose the shortest path when you do not need to read the wh
 === "Manual"
 
     ```bash
-    python scripts/build_all.py
+    uv run python scripts/build_all.py
     ```
 
 After the build, the final PDF appears in the project root. If the command fails, go to [Compilation issues](troubleshooting.md).
@@ -57,7 +57,7 @@ If `mermaid/*.mmd` files changed, rebuild Mermaid diagrams:
 === "Manual"
 
     ```bash
-    python scripts/compile_mermaid.py
+    uv run python scripts/compile_mermaid.py
     ```
 
 If `python_diagrams/*.py` files changed, rebuild Python diagrams:
@@ -71,7 +71,7 @@ If `python_diagrams/*.py` files changed, rebuild Python diagrams:
 === "Manual"
 
     ```bash
-    python scripts/compile_python_diagrams.py
+    uv run python scripts/compile_python_diagrams.py
     ```
 
 After updating diagrams, rebuild the main PDF. Details: [Diagrams](diagrams.md).
@@ -129,7 +129,7 @@ Ghostscript detects color pages through C/M/Y ink coverage, while `qpdf` exports
 
     ```bash
     docker compose --profile docx up
-    python scripts/build_all.py
+    uv run python scripts/build_all.py
     ```
 
 If blank pages must be preserved, use `task docx:keep-blank`. Details: [Title page and assignment](title-pages.md).
@@ -161,7 +161,7 @@ Before running the command, make sure the Git working tree is clean.
 === "Manual"
 
     ```bash
-    python scripts/diff_pdf_commits.py <commit_1> <commit_2>
+    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2>
     ```
 
 Details: [PDF comparison between commits](pdf-diff.md).

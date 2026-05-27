@@ -257,7 +257,7 @@ flowchart LR
 
 
     ```bash
-    python scripts/build_all.py
+    uv run python scripts/build_all.py
     ```
 
 `scripts/build_all.py` запускает профили по порядку `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex` и останавливается на первой ошибке.

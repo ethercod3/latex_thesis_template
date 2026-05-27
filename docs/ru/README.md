@@ -68,7 +68,7 @@ task --list
 === "Ручной"
 
     ```bash
-    python scripts/build_all.py
+    uv run python scripts/build_all.py
     ```
 
 Готовый PDF появится в корне проекта. Для этого сценария нужен Docker; если вы собираете без него, используйте [Сборка без Docker](manual-build.md).

@@ -14,7 +14,7 @@
 
     - `титульник.pdf` и `задание.pdf` должны лежать в корне проекта. Их можно получить из `docx/*.docx` вручную через Microsoft Word или LibreOffice, см. [Титульники](title-pages.md).
     - Mermaid-диаграммы из `mermaid/*.mmd` нужно заранее сгенерировать в `figures/`, см. [Диаграммы](diagrams.md).
-    - Python-диаграммы нужно заранее сгенерировать командой `task diagrams` или вручную `python scripts/compile_python_diagrams.py`.
+    - Python-диаграммы нужно заранее сгенерировать командой `task diagrams` или вручную `uv run python scripts/compile_python_diagrams.py`.
     - Если в приложениях подключается код, он должен лежать по ожидаемому пути, см. [Код в приложениях](source-code.md).
 
     Если эти файлы не подготовлены, `latexmk` может завершиться ошибкой из-за отсутствующих PDF, изображений или листингов.
@@ -42,7 +42,7 @@
 
 
     ```bash
-    pip install -r requirements.txt
+    uv sync
     ```
 
 
@@ -126,7 +126,7 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
     ```bash
-    python scripts/build_latex_manual.py
+    uv run python scripts/build_latex_manual.py
     ```
 
 
@@ -150,7 +150,7 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
     ```bash
-    python scripts/build_latex_manual.py --target "<файл>.tex"
+    uv run python scripts/build_latex_manual.py --target "<файл>.tex"
     ```
 
 
@@ -174,7 +174,7 @@ TARGET="Куприянов_И221_диплом.tex"
 
 
     ```bash
-    python scripts/build_latex_manual.py --no-latexmk
+    uv run python scripts/build_latex_manual.py --no-latexmk
     ```
 
 

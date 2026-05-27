@@ -68,7 +68,7 @@ task --list
 === "Manual"
 
     ```bash
-    python scripts/build_all.py
+    uv run python scripts/build_all.py
     ```
 
 The result is closest to the original if Mermaid diagrams are built on Windows. When Mermaid is built through Docker, the font used for KaTeX expressions can differ from the original.

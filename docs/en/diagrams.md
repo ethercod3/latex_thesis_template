@@ -65,7 +65,7 @@ Run the script:
 === "Manual"
 
     ```bash
-    python scripts/compile_mermaid.py
+    uv run python scripts/compile_mermaid.py
     ```
 
 The script processes all files from `mermaid/`, places the result into `figures/`, and crops margins through `pdfcrop` after generation. If `pdfcrop` or Ghostscript is not installed, temporarily disable cropping:
@@ -110,7 +110,7 @@ Manual build:
 === "Manual"
 
     ```bash
-    pip install -r requirements.txt
+    uv sync
     ```
 
 3. Run generation:
@@ -124,7 +124,7 @@ Manual build:
 === "Manual"
 
     ```bash
-    python scripts/compile_python_diagrams.py
+    uv run python scripts/compile_python_diagrams.py
     ```
 
 Build through Docker:

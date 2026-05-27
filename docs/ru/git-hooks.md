@@ -24,7 +24,7 @@
 
 
 
-Для работы hook нужен Python-пакет `python-dotenv`. Он указан в `requirements.txt`.
+Для работы hook нужен Python-пакет `python-dotenv`. Он указан в `pyproject.toml` и `uv.lock`.
 
 Если окружение еще не подготовлено, установите зависимости:
 
@@ -43,7 +43,7 @@
 
 
     ```bash
-    pip install -r requirements.txt
+    uv sync
     ```
 
 
