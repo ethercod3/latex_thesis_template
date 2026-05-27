@@ -133,7 +133,7 @@
 	
 	\vspace*{\baselineskip}
 	
-	Дипломная работа содержит \pageref*{bib:end} с., \tablesBeforeBib{} \russianTables{\tablesBeforeBib}, \figuresBeforeBib{} \russianFigures{\figuresBeforeBib}, \totalappendices{} \russianAppendices{\totalappendices}, \totalbibitems{} \russianSources{\totalbibitems}
+	Дипломная работа содержит \pageref*{bib:end} с., \tablesBeforeBib{} \russianTables{\tablesBeforeBib}, \totalappendices{} \russianAppendices{\totalappendices}, \totalbibitems{} \russianSources{\totalbibitems}
 	
 	\vspace*{\baselineskip}
 	
@@ -694,18 +694,19 @@
 	
 	Результаты проведенного анализа схематично показаны на рисунке \ref{fig:solutions_quadrant}.
 	
+	Также сравнительный анализ решений представлен в таблице \ref{tab:solutions_compare_full}.
+
+%	\Needspace{0.55\textheight}
+	{\fontsize{12pt}{14pt}\selectfont
+	\input{tables/solutions_table.tex}
+	}
+
 	\begin{figure}[!hbt]
 %		\centering\fitgraphics{quadrant\_choice.pdf}
 		\centering\includegraphics[width=10cm]{quadrant\_choice.pdf}
 		\caption{Сравнение решений для управления секретами}
 		\label{fig:solutions_quadrant}
 	\end{figure}	
-	
-	Также сравнительный анализ решений представлен в таблице \ref{tab:solutions_compare_full}.
-
-	{\fontsize{12pt}{14pt}\selectfont
-	\input{tables/solutions_table.tex}
-	}
 	
 	Выполненный анализ показал, что существующие на данный момент платформы хорошо решают задачу управления секретами в промышленном масштабе, но не оптимальны для сценария, в котором необходимы:
 		
@@ -714,11 +715,13 @@
 	\item контролируемая сложность внедрения;
 	\item отсутствие зависимости от внешних облачных сервисов;
 	\item единый поток работы для <<dev>> и <<prod>> с воспроизводимыми командами.
-	\end{itemize}
+	\end{itemize}	
+	
+	Именно поэтому в данной работе выбран подход создания специализированного сервиса. Он решает ключевые практические потребности: безопасное хранение DEK в обернутом виде, использование KEK вне базы данных, перешифрование данных между алгоритмами, авторизованный доступ по API и тестируемость всех критических операций. Такой подход обеспечивает баланс между реализуемостью и безопасностью. 	
 		
-	Именно поэтому в данной работе выбран подход создания специализированного сервиса. Он решает ключевые практические потребности: безопасное хранение DEK в обернутом виде, использование KEK вне базы данных, перешифрование данных между алгоритмами, авторизованный доступ по API и тестируемость всех критических операций. Такой подход обеспечивает баланс между реализуемостью и безопасностью. 
-		
-	\newpage
+	\FloatBarrier	
+	
+	\clearpage
 	
 	\section[Практический раздел]{ПРАКТИЧЕСКИЙ РАЗДЕЛ}
 	
