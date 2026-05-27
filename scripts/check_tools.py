@@ -9,13 +9,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 import os
-import re
 import subprocess
 import sys
 
 from common import ENV_PATH, PROJECT_DIR, command_path, env_value, script_main
-
-REQUIREMENTS_PATH = PROJECT_DIR / "requirements.txt"
 
 
 def configure_output_encoding() -> None:
@@ -225,35 +222,45 @@ def diagram_state_checks(name: str, source_dir: Path, pattern: str) -> list[Chec
     return [ok_check(name, f"проверено файлов: {len(source_files)}")]
 
 
-def python_check() -> Check:
-    path = command_path("python")
-    if path is None:
+def uv_environment_check() -> Check:
+    if command_path("uv") is None:
         return Check(
-            name="Python",
+            name="uv",
             ok=False,
             required=True,
-            detail="команда не найдена: python",
-            fix="Установите Python 3.13+ и убедитесь, что команда python доступна в PATH.",
+            detail="команда не найдена: uv",
+            fix="Установите uv: https://docs.astral.sh/uv/",
         )
 
-    result = run(["python", "--version"])
-    version = first_line(result.stdout if result else "")
-    warning = False
-    detail = f"{path}"
-    if version:
-        detail += f"; {version}"
-        match = re.search(r"Python\s+(\d+)\.(\d+)", version)
-        if match and (int(match.group(1)), int(match.group(2))) < (3, 13):
-            warning = True
-            detail += "; инструменты проекта настроены на Python 3.13+"
+    result = run(["uv", "sync", "--check"], timeout=120)
+    if result is None:
+        return Check(
+            name="uv environment",
+            ok=False,
+            required=True,
+            detail="проверка uv sync --check не завершилась",
+            fix="Синхронизируйте окружение через: uv sync",
+        )
+
+    if result.returncode != 0:
+        detail = "окружение uv не синхронизировано"
+        first = first_line(result.stdout)
+        if first:
+            detail += f": {first}"
+        return Check(
+            name="uv environment",
+            ok=False,
+            required=True,
+            detail=detail,
+            fix="Синхронизируйте окружение через: uv sync",
+        )
 
     return Check(
-        name="Python",
+        name="uv environment",
         ok=True,
         required=True,
-        warning=warning,
-        detail=detail,
-        fix="Установите Python 3.13+ и убедитесь, что команда python доступна в PATH.",
+        detail="окружение синхронизировано",
+        fix="Синхронизируйте окружение через: uv sync",
     )
 
 
@@ -319,71 +326,14 @@ def pyluatex_check() -> Check:
     )
 
 
-def requirements_check() -> Check:
-    if not REQUIREMENTS_PATH.is_file():
-        return Check(
-            name="Python-пакеты",
-            ok=False,
-            required=True,
-            detail="requirements.txt не найден",
-            fix="Восстановите requirements.txt.",
-        )
-
-    python = command_path("python")
-    if python is None:
-        return Check(
-            name="Python-пакеты",
-            ok=False,
-            required=True,
-            detail="невозможно проверить пакеты: команда python не найдена",
-            fix="Установите Python 3.13+ и затем запустите: task deps",
-        )
-
-    result = run([python, str(PROJECT_DIR / "scripts" / "check_python_requirements.py"), str(REQUIREMENTS_PATH)])
-    if result is None or result.returncode != 0:
-        detail = "проверка Python-пакетов завершилась с ошибкой"
-        if result and first_line(result.stdout):
-            detail += f": {first_line(result.stdout)}"
-        return Check(
-            name="Python-пакеты",
-            ok=True,
-            required=True,
-            warning=True,
-            detail=detail,
-            fix="Проверьте Python и при необходимости запустите: task deps",
-        )
-
-    missing = [line.strip() for line in result.stdout.splitlines() if line.strip()]
-
-    if missing:
-        shown = ", ".join(missing[:8])
-        if len(missing) > 8:
-            shown += f", ... (всего {len(missing)})"
-        return Check(
-            name="Python-пакеты",
-            ok=False,
-            required=True,
-            detail=f"не установлены пакеты: {shown}",
-            fix="Запустите: task deps",
-        )
-
-    return Check(
-        name="Python-пакеты",
-        ok=True,
-        required=True,
-        detail="все пакеты из requirements.txt установлены",
-        fix="Запустите: task deps",
-    )
-
-
 def checks() -> list[Check]:
     return [
         command_check(
             "Task", "task", ["task", "--version"], required=True, fix="Установите Task: https://taskfile.dev/"
         ),
         command_check("Git", "git", ["git", "--version"], required=True, fix="Установите Git и добавьте его в PATH."),
-        python_check(),
-        requirements_check(),
+        command_check("uv", "uv", ["uv", "--version"], required=True, fix="Установите uv: https://docs.astral.sh/uv/"),
+        uv_environment_check(),
         command_check("Docker", "docker", ["docker", "--version"], required=True, fix="Установите Docker Desktop."),
         docker_compose_check(),
         command_check(

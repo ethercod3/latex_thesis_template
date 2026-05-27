@@ -34,8 +34,10 @@ RUN useradd -m appuser
 
 WORKDIR /data
 
-COPY ./requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir uv
+
+COPY ./pyproject.toml ./uv.lock .
+RUN uv sync --frozen --no-install-project
 
 RUN mkdir -p figures scripts
 

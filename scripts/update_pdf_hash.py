@@ -96,7 +96,7 @@ def run_cog(pdf_path: Path) -> bool:
     if result.returncode != 0:
         details = (result.stderr or result.stdout).strip()
         if "No module named cogapp" in details:
-            details = "Установите зависимость: python -m pip install -r requirements.txt"
+            details = "Синхронизируйте окружение через: uv sync"
         raise ScriptError(f"Не удалось обновить README через cog.\n{details}")
 
     after = README_PATH.read_text(encoding="utf-8")

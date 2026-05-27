@@ -4,4 +4,4 @@ tasks:
   build:
     desc: Полная последовательная сборка через Docker (docx -> mermaid -> python -> latex)
     cmds:
-      - python scripts/build_all.py
+      - uv run python scripts/build_all.py
