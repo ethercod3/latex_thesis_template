@@ -119,6 +119,7 @@ The project uses separate Docker Compose profiles:
 | `python` | Generates diagrams with Python scripts |
 | `latex` | Builds the final diploma PDF |
 | `crop` | Crops margins of any PDF through `pdfcrop` |
+| `stirling` | Starts Stirling PDF for manual PDF review in the browser |
 | `docs` | Builds and runs local bilingual documentation |
 
 Run separate profiles:
@@ -131,6 +132,7 @@ Run separate profiles:
     task diagrams:docker
     task docx
     task crop:docker -- path/to/file.pdf
+    task stirling
     ```
 
 === "Manual"
@@ -141,7 +143,17 @@ Run separate profiles:
     docker compose --profile python run --build --rm python_diagrams
     docker compose --profile docx run --build --rm docx_pdf
     docker compose --profile crop run --build --rm crop_pdf python3 scripts/crop_pdf.py path/to/file.pdf
+    docker compose --profile stirling up -d stirling_pdf
     ```
+
+Additional Stirling PDF commands:
+
+```bash
+task stirling:logs
+task stirling:down
+```
+
+Launch details, environment variables, and the initial admin password are documented on a separate page: [Stirling PDF](stirling.md).
 
 Run all profiles with one command:
 

@@ -36,7 +36,7 @@ This work was prepared as a graduation qualification project at the federal stat
     If you are opening the project for the first time, start with [Requirements](requirements.md). It briefly lists the tools needed for Docker builds, local builds, and PDF comparison.
 
 !!! tip "If you already know what to do"
-    Open [Common scenarios](common-scenarios.md): it contains short instructions for building the PDF, updating diagrams and title pages, splitting PDF into color/B/W pages, connecting source code, and comparing versions.
+    Open [Common scenarios](common-scenarios.md): it contains short instructions for building the PDF, updating diagrams and title pages, splitting PDF into color/B/W pages, connecting source code, comparing versions, and launching Stirling PDF.
 
 Install Task:
 
@@ -74,3 +74,5 @@ task --list
 The result is closest to the original if Mermaid diagrams are built on Windows. When Mermaid is built through Docker, the font used for KaTeX expressions can differ from the original.
 
 The main workflow requires Docker. If Docker is not used, see [Build without Docker](manual-build.md).
+
+If you want browser-based PDF viewing without a local viewer on your machine, use [Stirling PDF](stirling.md).

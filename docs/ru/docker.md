@@ -159,6 +159,7 @@ TARGET="Куприянов_И221_диплом.tex"
 | `python` | Генерирует диаграммы Python-скриптами |
 | `latex` | Собирает итоговый PDF диплома |
 | `crop` | Обрезает поля произвольного PDF через `pdfcrop` |
+| `stirling` | Поднимает Stirling PDF для ручной проверки PDF в браузере |
 | `docs` | Собирает и поднимает локальную двуязычную документацию |
 
 Запуск отдельных профилей:
@@ -174,6 +175,7 @@ TARGET="Куприянов_И221_диплом.tex"
     task diagrams:docker
     task docx
     task crop:docker -- path/to/file.pdf
+    task stirling
     ```
 
 
@@ -187,7 +189,17 @@ TARGET="Куприянов_И221_диплом.tex"
     docker compose --profile python run --build --rm python_diagrams
     docker compose --profile docx run --build --rm docx_pdf
     docker compose --profile crop run --build --rm crop_pdf python3 scripts/crop_pdf.py path/to/file.pdf
+    docker compose --profile stirling up -d stirling_pdf
     ```
+
+Для Stirling PDF доступны дополнительные команды:
+
+```bash
+task stirling:logs
+task stirling:down
+```
+
+Подробности по запуску, переменным окружения и стартовому паролю администратора вынесены в отдельную страницу: [Stirling PDF](stirling.md).
 
 
 

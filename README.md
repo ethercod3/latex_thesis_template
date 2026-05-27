@@ -36,12 +36,12 @@ cog.out(cog_readme_block())
 ]]] -->
 ## Контрольные суммы PDF
 
-MD5: `b443c8b72a18ce05283f268489f984b9`<br>
-SHA-1: `7b9258202725164c047d602a1cc7540e0c2fceff`<br>
-SHA-256: `462304fddfca25e5a7ad3f4fefa70fd87c4d3a082f0f9d998be6bd11a8429191`<br>
-SHA3-256: `b14edfa8da94c692a5d618a36932b1cc594cafa4481c35dc7a41c801f21ad18a`<br>
-BLAKE2s: `a59fb0f7324a262f77a1f3a1401e9cdf163adf8256f0266ad6b0edcea97a6b43`<br>
-SHAKE-128 (256-bit output): `3e05750a36886b1a8f58fe4e5ce5f8ce95e9f5364b0d8fc058535252808173e3`<br>
+MD5: `dcab52222ec401aa4e08c6ebafd18e6b`<br>
+SHA-1: `b998f5766ffa4ddad47f6f8d982a0626cfbe34e7`<br>
+SHA-256: `e1515e39db3dc26ca3ec2f2326a340de25812875759c278bebe80b9022585301`<br>
+SHA3-256: `bf5d6091a2c311a167aefa11b79d83dbd483c6e493b32158d380095fa927466b`<br>
+BLAKE2s: `33b5407d10b36889b237469f724b2b1baf56bb76a345fd0f2307abc32db95e35`<br>
+SHAKE-128 (256-bit output): `8f3028a821354ed25c74323d3a72587975020f934b1f7cc9bc1e514513ee247e`<br>
 <!-- [[[end]]] -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.
@@ -436,6 +436,7 @@ docker compose --profile stirling up -d stirling_pdf
 ```
 
 После запуска Stirling PDF доступен по адресу `http://localhost:8080`. Если порт занят, задайте другой порт через переменную окружения, например `STIRLING_PORT=8081 task stirling`. Остановить сервис можно командой `task stirling:down`.
+Стартовый пароль администратора задается через `STIRLING_ADMIN_PASSWORD` в `.env`. Он применяется только при первом запуске, до создания данных в `/configs`.
 
 Запуск всех профилей одной командой:
 
