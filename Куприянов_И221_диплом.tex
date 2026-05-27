@@ -1373,7 +1373,7 @@ PS> python main.py --db-url sqlite:///vault.db add-dek --name dst -f dst_dek.hex
 
 Данная команда является ключевой демонстрацией результата работы системы, поскольку объединяет все основные подсистемы проекта. CLI считывает входной контейнер из \texttt{container.json}, проверяет структуру заголовка, извлекает из БД \texttt{src} и \texttt{dst} в обернутом виде, выполняет их извлечение через \texttt{VAULT\_MASTER\_KEK\_HEX}, расшифровывает данные исходным алгоритмом AES-128-GCM, затем повторно шифрует алгоритмом ChaCha20-Poly1305 и сохраняет новый контейнер в таблице \texttt{data\_records}. Одновременно \texttt{Authorization: Bearer 123} не сохраняется в открытом виде, а преобразуется в PBKDF2-хеш. Этот рисунок подтверждает достижение основной цели работы: централизованное управление ключами и контролируемое перешифрование данных. Команда представлена на рисунке \ref{lst:load_data}.
 
-\begin{lstlisting}[style=bashcommand, caption={Загрузка данных из контейнера.}, label=lst:load_data]
+\begin{lstlisting}[style=bashcommand, caption={Загрузка данных из контейнера}, label=lst:load_data]
 PS> python main.py --db-url sqlite:///vault.db load --name admin_data -f container.json --auth "Bearer 123" --alg-in AES-128-GCM --alg-out ChaCha20-Poly1305 --dek-in src --dek-out dst
 {
   "status": "ok",
