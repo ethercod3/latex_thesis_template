@@ -34,3 +34,4 @@ docs-site/
 coverage.xml
 htmlcov/
 dnevnik.md
+pdf_diff/
