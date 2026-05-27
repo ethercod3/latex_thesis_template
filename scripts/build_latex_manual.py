@@ -6,11 +6,14 @@
 
 from __future__ import annotations
 
-import argparse
 from pathlib import Path
 import shutil
+import sys
 
-from common import PROJECT_DIR, ScriptError, env_value, require_command, run_command, script_main
+from plumbum import local
+import typer
+
+from common import PROJECT_DIR, ScriptError, env_value
 
 AUX_DIR = PROJECT_DIR / ".aux_files"
 
@@ -55,11 +58,23 @@ def output_pdf_path(target: Path) -> Path:
     return PROJECT_DIR / f"{target.stem}.pdf"
 
 
+def run_external(command: list[str]) -> tuple[int, str, str]:
+    print(f"==> {' '.join(command)}", flush=True)
+    proc = local[command[0]]
+    for arg in command[1:]:
+        proc = proc[arg]
+    proc = proc.with_cwd(PROJECT_DIR)
+    return proc.run()
+
+
 def build_with_latexmk(target: Path) -> Path:
     if not target.is_file():
         raise ScriptError(f"Указанный .tex-файл не найден: {target}")
 
-    run_command(latexmk_command(target))
+    code, stdout, stderr = run_external(latexmk_command(target))
+    if code != 0:
+        details = (stderr or stdout).strip()
+        raise ScriptError(f"latexmk завершился с ошибкой.\n{details}")
 
     output_pdf = output_pdf_path(target)
     if not output_pdf.is_file():
@@ -75,10 +90,16 @@ def build_without_latexmk(target: Path) -> Path:
         raise ScriptError(f"Указанный .tex-файл не найден: {target}")
 
     AUX_DIR.mkdir(exist_ok=True)
-    run_command(lualatex_command(target))
-    run_command(["biber", str(AUX_DIR / f"{target.stem}.bcf")])
-    run_command(lualatex_command(target))
-    run_command(lualatex_command(target))
+    for command in (
+        lualatex_command(target),
+        ["biber", str(AUX_DIR / f"{target.stem}.bcf")],
+        lualatex_command(target),
+        lualatex_command(target),
+    ):
+        code, stdout, stderr = run_external(command)
+        if code != 0:
+            details = (stderr or stdout).strip()
+            raise ScriptError(f"Команда завершилась с ошибкой: {' '.join(command)}\n{details}")
 
     aux_pdf = AUX_DIR / f"{target.stem}.pdf"
     output_pdf = output_pdf_path(target)
@@ -90,36 +111,30 @@ def build_without_latexmk(target: Path) -> Path:
     return output_pdf
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Собрать LaTeX-документ через latexmk.")
-    parser.add_argument(
+def main(
+    target: str | None = typer.Option(
+        None,
         "--target",
-        default=None,
         help="Путь к .tex-файлу. По умолчанию берется TARGET из .env.",
-    )
-    parser.add_argument(
+    ),
+    no_latexmk: bool = typer.Option(
+        False,
         "--no-latexmk",
-        action="store_true",
-        help=("Не использовать latexmk. Запустить старую ручную цепочку: " "lualatex, biber, lualatex, lualatex."),
-    )
-    return parser.parse_args()
+        help="Не использовать latexmk. Запустить ручную цепочку: lualatex, biber, lualatex, lualatex.",
+    ),
+) -> None:
+    try:
+        target_path = target_tex_path(target)
+        if no_latexmk:
+            output_pdf = build_without_latexmk(target_path)
+        else:
+            output_pdf = build_with_latexmk(target_path)
 
-
-def main() -> int:
-    args = parse_args()
-
-    target = target_tex_path(args.target)
-    if args.no_latexmk:
-        require_command("lualatex")
-        require_command("biber")
-        output_pdf = build_without_latexmk(target)
-    else:
-        require_command("latexmk")
-        output_pdf = build_with_latexmk(target)
-
-    print(f"\nГотово: {output_pdf.relative_to(PROJECT_DIR)}")
-    return 0
+        print(f"\nГотово: {output_pdf.relative_to(PROJECT_DIR)}")
+    except ScriptError as error:
+        print(f"Ошибка: {error}", file=sys.stderr)
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

@@ -6,11 +6,12 @@
 
 from __future__ import annotations
 
-import argparse
 import shutil
 from pathlib import Path
 
-from common import ScriptError, script_main
+import typer
+
+from common import ScriptError
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -131,22 +132,16 @@ def remove_path(path: Path, dry_run: bool) -> None:
         path.unlink()
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Remove generated project artifacts.")
-    parser.add_argument("--dry-run", action="store_true", help="Print targets without removing them.")
-    args = parser.parse_args()
-
+def main(dry_run: bool = typer.Option(False, "--dry-run", help="Показать цели без удаления.")) -> None:
     targets = collect_targets()
 
     if not targets:
         print("nothing to clean")
-        return 0
+        return
 
     for target in targets:
-        remove_path(target, args.dry_run)
-
-    return 0
+        remove_path(target, dry_run)
 
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

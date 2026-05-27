@@ -7,12 +7,10 @@
 from __future__ import annotations
 
 import os
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import typer
 
-from common import PROJECT_DIR, script_main
+from common import PROJECT_DIR
 
 ENV_PATH = PROJECT_DIR / ".env"
 TARGET = "Куприянов_И221_диплом.tex"
@@ -28,7 +26,7 @@ def host_gid() -> int:
     return getgid() if getgid else 0
 
 
-def main() -> int:
+def main() -> None:
     env_content = "\n".join(
         [
             'VAULT_PATH="/vault_code"',
@@ -44,4 +42,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

@@ -7,12 +7,12 @@
 from __future__ import annotations
 
 import os
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from plumbum import local
+import typer
 
-from common import PROJECT_DIR, ScriptError, run_command, script_main
+from common import PROJECT_DIR, ScriptError
 
 PDF_PATH = PROJECT_DIR / "Куприянов_И221_диплом.pdf"
 DIST_DIR = PROJECT_DIR / "dist"
@@ -26,9 +26,27 @@ def current_tag() -> str:
     return tag
 
 
+def run_command(command: list[str], check: bool = True):
+    runner = local[command[0]]
+    for arg in command[1:]:
+        runner = runner[arg]
+    code, stdout, stderr = runner.run()
+
+    class Result:
+        pass
+
+    result = Result()
+    result.returncode = code
+    result.stdout = stdout
+    result.stderr = stderr
+    if check and code != 0:
+        raise ScriptError(f"Команда завершилась с ошибкой (код {code}): {' '.join(command)}")
+    return result
+
+
 def ensure_release(tag: str) -> None:
-    result = run_command(["gh", "release", "view", tag], check=False)
-    if result.returncode == 0:
+    result = run_command(["gh", "release", "view", tag])
+    if getattr(result, "returncode", 1) == 0:
         return
 
     run_command(
@@ -53,13 +71,13 @@ def move_nightly_tag(tag: str) -> None:
     run_command(["git", "push", "origin", f"refs/tags/{tag}", "--force"])
 
 
-def upload_if_exists(tag: str, local_path, asset_name: str) -> None:
+def upload_if_exists(tag: str, local_path: Path, asset_name: str) -> None:
     if not local_path.is_file():
         return
     run_command(["gh", "release", "upload", tag, f"{local_path}#{asset_name}", "--clobber"])
 
 
-def main() -> int:
+def main() -> None:
     tag = current_tag()
     move_nightly_tag(tag)
     ensure_release(tag)
@@ -70,4 +88,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

@@ -4,14 +4,18 @@
 экспортирует PDF и по умолчанию удаляет пустые страницы из результата.
 """
 
+from __future__ import annotations
+
 from pathlib import Path
 import os
 import shutil
-import subprocess
 import sys
 import tempfile
 
-from common import ScriptError, require_command, run_command, script_main
+from plumbum import local
+import typer
+
+from common import ScriptError, require_command
 
 INPUT_DIR = Path(os.environ.get("DOCX_INPUT_DIR", "/data/docx"))
 OUTPUT_DIR = Path(os.environ.get("PDF_OUTPUT_DIR", "/data"))
@@ -32,19 +36,29 @@ def is_blank_bbox_line(line: str) -> bool:
     return parts[1:5] == ["0", "0", "0", "0"]
 
 
+def run_external(command: list[str]) -> tuple[int, str, str]:
+    runner = local[command[0]]
+    for arg in command[1:]:
+        runner = runner[arg]
+    return runner.run()
+
+
+def run_checked(command: list[str]) -> tuple[int, str, str]:
+    print(f"==> {' '.join(command)}", flush=True)
+    code, stdout, stderr = run_external(command)
+    if code != 0:
+        details = stderr.strip() or stdout.strip() or "вывода нет"
+        raise ScriptError(f"Команда завершилась с ошибкой (код {code}): {' '.join(command)}\n{details}")
+    return code, stdout, stderr
+
+
 def remove_blank_pages(input_file: Path, output_file: Path, tmp_dir: Path) -> None:
-    bbox_result = subprocess.run(
-        ["gs", "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=bbox", str(input_file)],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.PIPE,
-        text=True,
-        check=True,
-    )
+    _, _, stderr = run_checked(["gs", "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=bbox", str(input_file)])
 
     keep_pages: list[str] = []
     page = 0
 
-    for line in bbox_result.stderr.splitlines():
+    for line in stderr.splitlines():
         if not line.startswith("%%BoundingBox:"):
             continue
 
@@ -69,9 +83,7 @@ def remove_blank_pages(input_file: Path, output_file: Path, tmp_dir: Path) -> No
 
     reduced_file = tmp_dir / f"{input_file.stem}.without_blank_pages.pdf"
 
-    run_command(
-        ["qpdf", "--empty", "--pages", str(input_file), *keep_pages, "--", str(reduced_file)],
-    )
+    run_checked(["qpdf", "--empty", "--pages", str(input_file), *keep_pages, "--", str(reduced_file)])
 
     copy_pdf_contents(reduced_file, output_file)
 
@@ -80,7 +92,7 @@ def convert_docx(source_file: Path, tmp_dir: Path) -> Path:
     print(f"Конвертирую {source_file}")
     libreoffice_profile = tmp_dir / "libreoffice-profile"
 
-    run_command(
+    run_checked(
         [
             "soffice",
             "--headless",
@@ -105,7 +117,7 @@ def convert_docx(source_file: Path, tmp_dir: Path) -> Path:
     return converted_file
 
 
-def main() -> int:
+def main() -> None:
     required_commands = ["soffice"]
 
     if SKIP_BLANK_PAGES:
@@ -140,8 +152,6 @@ def main() -> int:
 
             converted_file.unlink(missing_ok=True)
 
-    return 0
-
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

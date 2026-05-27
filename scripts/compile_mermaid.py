@@ -5,13 +5,17 @@
 иллюстрациями диплома.
 """
 
-import argparse
+from __future__ import annotations
+
 import os
-import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+import sys
 
-from common import PROJECT_DIR, ScriptError, command_path, script_main
+from plumbum import local
+import typer
+
+from common import PROJECT_DIR, ScriptError, command_path
 
 SRC = PROJECT_DIR / "mermaid"
 DST = PROJECT_DIR / "figures"
@@ -19,16 +23,6 @@ DST = PROJECT_DIR / "figures"
 EXTENSIONS = {".mmd", ".mermaid", ".mmdc"}
 MAX_WORKERS_LIMIT = 4
 TIMEOUT_SECONDS = 60
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Сгенерировать Mermaid-диаграммы из mermaid/ в figures/.")
-    parser.add_argument(
-        "--no-crop",
-        action="store_true",
-        help="Не запускать pdfcrop после генерации PDF.",
-    )
-    return parser.parse_args()
 
 
 def find_mmdc() -> list[str]:
@@ -53,18 +47,22 @@ def find_pdfcrop() -> list[str]:
     return [pdfcrop]
 
 
+def run_external(command: list[str], timeout: int = TIMEOUT_SECONDS) -> tuple[int, str, str]:
+    proc = local[command[0]]
+    for arg in command[1:]:
+        proc = proc[arg]
+    return proc.run(timeout=timeout)
+
+
 def crop_pdf(output_file: Path, pdfcrop: list[str]) -> None:
     cropped_file = output_file.with_name(f"{output_file.stem}.pdfcrop-tmp{output_file.suffix}")
     cmd = [*pdfcrop, str(output_file), str(cropped_file)]
 
     try:
-        subprocess.run(
-            cmd,
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=TIMEOUT_SECONDS,
-        )
+        code, stdout, stderr = run_external(cmd)
+        if code != 0:
+            details = (stderr or stdout).strip()
+            raise ScriptError(f"Не удалось обрезать Mermaid-PDF.\nКоманда: {' '.join(cmd)}\n{details}")
         os.replace(cropped_file, output_file)
     finally:
         if cropped_file.exists():
@@ -79,75 +77,65 @@ def process_file(f: Path, mmdc: list[str], pdfcrop: list[str] | None) -> str | N
         return None
 
     output_file = DST / f"{f.stem}.pdf"
-
     cmd = [*mmdc, "-i", str(f), "-o", str(output_file), "-f"]
 
-    try:
-        subprocess.run(
-            cmd,
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=TIMEOUT_SECONDS,
-        )
-
-        if pdfcrop is not None:
-            crop_pdf(output_file, pdfcrop)
-
-        return f"[OK] {f.name} -> {output_file.name}"
-
-    except subprocess.TimeoutExpired:
-        return f"[ОШИБКА] {f.name}: сборка заняла больше {TIMEOUT_SECONDS} секунд"
-
-    except subprocess.CalledProcessError as e:
-        stdout = e.stdout.strip() if e.stdout else "вывода нет"
-        stderr = e.stderr.strip() if e.stderr else "вывода ошибок нет"
-
+    code, stdout, stderr = run_external(cmd)
+    if code != 0:
+        details = (stderr or stdout).strip()
         return (
             f"[ОШИБКА] Не удалось собрать диаграмму {f.name}\n"
-            f"Команда: {' '.join(e.cmd)}\n"
-            f"Обычный вывод:\n{stdout}\n"
-            f"Вывод ошибок:\n{stderr}"
+            f"Команда: {' '.join(cmd)}\n"
+            f"Обычный вывод:\n{stdout.strip() or 'вывода нет'}\n"
+            f"Вывод ошибок:\n{details or 'вывода ошибок нет'}"
         )
 
+    if pdfcrop is not None:
+        crop_pdf(output_file, pdfcrop)
 
-def main() -> int:
-    args = parse_args()
+    return f"[OK] {f.name} -> {output_file.name}"
 
-    if not SRC.exists():
-        raise ScriptError(f"Папка с Mermaid-диаграммами не найдена: {SRC}")
 
-    DST.mkdir(parents=True, exist_ok=True)
-    mmdc = find_mmdc()
-    pdfcrop = None if args.no_crop else find_pdfcrop()
+def main(
+    no_crop: bool = typer.Option(False, "--no-crop", help="Не запускать pdfcrop после генерации PDF."),
+) -> None:
+    try:
+        if not SRC.exists():
+            raise ScriptError(f"Папка с Mermaid-диаграммами не найдена: {SRC}")
 
-    files = [f for f in SRC.iterdir() if f.is_file() and f.suffix.lower() in EXTENSIONS]
+        DST.mkdir(parents=True, exist_ok=True)
+        mmdc = find_mmdc()
+        pdfcrop = None if no_crop else find_pdfcrop()
 
-    if not files:
-        print(f"В папке {SRC} не найдены Mermaid-файлы для сборки.")
-        return 0
+        files = [f for f in SRC.iterdir() if f.is_file() and f.suffix.lower() in EXTENSIONS]
 
-    max_workers = min(MAX_WORKERS_LIMIT, len(files))
+        if not files:
+            print(f"В папке {SRC} не найдены Mermaid-файлы для сборки.")
+            return
 
-    has_errors = False
+        max_workers = min(MAX_WORKERS_LIMIT, len(files))
+        has_errors = False
 
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = {executor.submit(process_file, f, mmdc, pdfcrop): f for f in files}
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = {executor.submit(process_file, f, mmdc, pdfcrop): f for f in files}
 
-        for future in as_completed(futures):
-            try:
-                result = future.result()
-                if result:
-                    print(result)
-                    if result.startswith("[ОШИБКА]"):
-                        has_errors = True
-            except Exception as e:
-                f = futures[future]
-                print(f"[ОШИБКА] Не удалось обработать {f.name}: {e}")
-                has_errors = True
+            for future in as_completed(futures):
+                try:
+                    result = future.result()
+                    if result:
+                        print(result)
+                        if result.startswith("[ОШИБКА]"):
+                            has_errors = True
+                except Exception as e:
+                    f = futures[future]
+                    print(f"[ОШИБКА] Не удалось обработать {f.name}: {e}")
+                    has_errors = True
 
-    return 1 if has_errors else 0
+        if has_errors:
+            raise typer.Exit(code=1)
+    except ScriptError as error:
+        print(f"Ошибка: {error}", file=sys.stderr)
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

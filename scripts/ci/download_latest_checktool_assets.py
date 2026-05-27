@@ -14,7 +14,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from common import PROJECT_DIR, ScriptError, capture_command, run_command, script_main
+from plumbum import local
+import typer
+
+from common import PROJECT_DIR, ScriptError
 
 DIST_DIR = PROJECT_DIR / "dist"
 DOWNLOAD_PATTERNS = [
@@ -23,6 +26,16 @@ DOWNLOAD_PATTERNS = [
     "SHA256SUMS.txt",
     "checktool-SHA256SUMS.txt",
 ]
+
+
+def capture_command(command: list[str]) -> str:
+    proc = local[command[0]]
+    for arg in command[1:]:
+        proc = proc[arg]
+    code, stdout, stderr = proc.run()
+    if code != 0:
+        raise ScriptError(stderr.strip() or stdout.strip() or "Команда завершилась с ошибкой.")
+    return stdout.strip()
 
 
 def current_tag() -> str:
@@ -62,11 +75,9 @@ def checktool_source_tag(current_release_tag: str) -> str | None:
 
 
 def download_pattern(tag: str, pattern: str) -> None:
-    result = run_command(
-        ["gh", "release", "download", tag, "--pattern", pattern, "--dir", str(DIST_DIR), "--clobber"],
-        check=False,
-    )
-    if result.returncode != 0:
+    proc = local.gh.release.download[tag, "--pattern", pattern, "--dir", str(DIST_DIR), "--clobber"]
+    code, stdout, stderr = proc.run()
+    if code != 0:
         print(f"Asset pattern not found in {tag}: {pattern}")
 
 
@@ -82,21 +93,24 @@ def normalize_assets() -> None:
         shutil.copy2(checksum_alias, checksum_canonical)
 
 
-def main() -> int:
-    DIST_DIR.mkdir(exist_ok=True)
+def main() -> None:
+    try:
+        DIST_DIR.mkdir(exist_ok=True)
 
-    tag = checktool_source_tag(current_tag())
-    if tag is None:
-        print("No previous release found; skipping check tool assets.")
-        return 0
+        tag = checktool_source_tag(current_tag())
+        if tag is None:
+            print("No previous release found; skipping check tool assets.")
+            return
 
-    print(f"Downloading check tool assets from {tag}")
-    for pattern in DOWNLOAD_PATTERNS:
-        download_pattern(tag, pattern)
+        print(f"Downloading check tool assets from {tag}")
+        for pattern in DOWNLOAD_PATTERNS:
+            download_pattern(tag, pattern)
 
-    normalize_assets()
-    return 0
+        normalize_assets()
+    except ScriptError as error:
+        print(f"Ошибка: {error}", file=sys.stderr)
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

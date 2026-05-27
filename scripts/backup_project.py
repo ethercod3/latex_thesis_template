@@ -7,11 +7,13 @@
 from __future__ import annotations
 
 import argparse
-import subprocess
 from datetime import datetime
 from pathlib import Path
 
-from common import PROJECT_DIR, ScriptError, env_value, require_command, run_command, script_main
+from plumbum import local
+import typer
+
+from common import PROJECT_DIR, ScriptError, env_value, require_command
 
 DEFAULT_DESTINATIONS = "gdrive:diploma_latex_backups,ydisk:diploma_latex_backups"
 DEFAULT_KEEP = 30
@@ -46,21 +48,51 @@ def backup_filename(now: datetime | None = None) -> str:
     return f"{BACKUP_PREFIX}_{timestamp}{BACKUP_SUFFIX}"
 
 
+def run_command(command: list[str], *, check: bool = True, cwd: Path = PROJECT_DIR):
+    print(f"==> {' '.join(command)}", flush=True)
+    runner = local[command[0]]
+    for arg in command[1:]:
+        runner = runner[arg]
+
+    with local.cwd(cwd):
+        code, stdout, stderr = runner.run()
+
+    class Result:
+        pass
+
+    result = Result()
+    result.returncode = code
+    result.stdout = stdout
+    result.stderr = stderr
+    if check and code != 0:
+        raise ScriptError(
+            f"Команда завершилась с ошибкой (код {code}): {' '.join(command)}\n{stderr.strip() or stdout.strip()}"
+        )
+    return result
+
+
+def run_checked(command: list[str], *, cwd: Path = PROJECT_DIR) -> tuple[int, str, str]:
+    result = run_command(command)
+    if result is None:
+        return 0, "", ""
+    code = getattr(result, "returncode", 0)
+    stdout = getattr(result, "stdout", "")
+    stderr = getattr(result, "stderr", "")
+    if code != 0:
+        details = stderr.strip() or stdout.strip() or "вывода нет"
+        raise ScriptError(f"Команда завершилась с ошибкой (код {code}): {' '.join(command)}\n{details}")
+    return code, stdout, stderr
+
+
 def git_worktree_is_dirty() -> bool:
-    result = subprocess.run(
-        ["git", "status", "--porcelain"],
-        cwd=PROJECT_DIR,
-        check=True,
-        text=True,
-        capture_output=True,
-    )
-    return bool(result.stdout.strip())
+    _, stdout, _ = run_checked(["git", "status", "--porcelain"])
+    return bool(stdout.strip())
 
 
 def create_bundle(bundle_path: Path) -> None:
     BACKUP_DIR.mkdir(parents=True, exist_ok=True)
-    run_command(["git", "bundle", "create", str(bundle_path), "--all", "--tags"])
-    run_command(["git", "bundle", "verify", str(bundle_path)])
+    run_checked(["git", "bundle", "create", str(bundle_path), "--all", "--tags"])
+    run_checked(["git", "bundle", "verify", str(bundle_path)])
 
 
 def upload_bundle(bundle_path: Path, destinations: list[str], dry_run: bool) -> None:
@@ -68,24 +100,19 @@ def upload_bundle(bundle_path: Path, destinations: list[str], dry_run: bool) -> 
         if dry_run:
             print(f"would run: rclone mkdir {destination}")
         else:
-            run_command(["rclone", "mkdir", destination])
+            run_checked(["rclone", "mkdir", destination])
+
         command = ["rclone", "copyto", str(bundle_path), remote_file_path(destination, bundle_path.name)]
         if dry_run:
             command.append("--dry-run")
-        run_command(command)
+        run_checked(command)
 
 
 def list_remote_backups(destination: str) -> list[str]:
-    result = subprocess.run(
-        ["rclone", "lsf", "--files-only", "--format", "p", destination],
-        cwd=PROJECT_DIR,
-        check=True,
-        text=True,
-        capture_output=True,
-    )
+    _, stdout, _ = run_checked(["rclone", "lsf", "--files-only", "--format", "p", destination])
     return sorted(
         line.strip()
-        for line in result.stdout.splitlines()
+        for line in stdout.splitlines()
         if line.strip().startswith(f"{BACKUP_PREFIX}_") and line.strip().endswith(BACKUP_SUFFIX)
     )
 
@@ -102,7 +129,7 @@ def prune_remote_backups(destination: str, keep: int, dry_run: bool) -> None:
         command = ["rclone", "deletefile", remote_file_path(destination, filename)]
         if dry_run:
             command.append("--dry-run")
-        run_command(command)
+        run_checked(command)
 
 
 def parse_args() -> argparse.Namespace:
@@ -138,43 +165,67 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main() -> int:
-    args = parse_args()
-
-    if args.keep < 0:
-        raise ScriptError("--keep не может быть отрицательным.")
+def main(
+    destinations: str | None = typer.Option(
+        None,
+        "--destinations",
+        help=(
+            "Список rclone destinations через запятую. "
+            f"По умолчанию BACKUP_RCLONE_DESTINATIONS или {DEFAULT_DESTINATIONS}."
+        ),
+    ),
+    keep: int = typer.Option(
+        int(env_value("BACKUP_KEEP_WEEKS") or DEFAULT_KEEP),
+        "--keep",
+        help=f"Сколько последних bundle-файлов хранить на каждом remote. По умолчанию {DEFAULT_KEEP}.",
+    ),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Показать rclone-изменения без загрузки и удаления."),
+    local_only: bool = typer.Option(
+        False,
+        "--local-only",
+        help="Только создать и проверить локальный git bundle без rclone-загрузки.",
+    ),
+    no_prune: bool = typer.Option(False, "--no-prune", help="Не удалять старые backup-файлы после загрузки."),
+    require_clean: bool = typer.Option(
+        False,
+        "--require-clean",
+        help="Завершиться ошибкой, если в рабочем дереве есть незакоммиченные изменения.",
+    ),
+) -> None:
+    if keep < 0:
+        raise typer.BadParameter("--keep не может быть отрицательным.")
 
     require_command("git")
-    if not args.local_only:
+    if not local_only:
         require_command("rclone")
 
-    destinations = [] if args.local_only else parse_destinations(args.destinations)
+    remote_destinations = [] if local_only else parse_destinations(destinations)
 
     if git_worktree_is_dirty():
         message = (
             "В рабочем дереве есть незакоммиченные изменения. "
             "git bundle сохраняет только Git-историю, а не текущие незакоммиченные файлы."
         )
-        if args.require_clean:
+        if require_clean:
             raise ScriptError(message)
         print(f"warning: {message}")
 
     bundle_path = BACKUP_DIR / backup_filename()
     create_bundle(bundle_path)
 
-    if args.local_only:
+    if local_only:
         print(f"local backup created: {bundle_path.relative_to(PROJECT_DIR)}")
         return 0
 
-    upload_bundle(bundle_path, destinations, args.dry_run)
+    upload_bundle(bundle_path, remote_destinations, dry_run)
 
-    if not args.no_prune:
-        for destination in destinations:
-            prune_remote_backups(destination, args.keep, args.dry_run)
+    if not no_prune:
+        for destination in remote_destinations:
+            prune_remote_backups(destination, keep, dry_run)
 
     print(f"backup created: {bundle_path.relative_to(PROJECT_DIR)}")
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)

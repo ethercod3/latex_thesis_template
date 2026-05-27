@@ -9,9 +9,8 @@ from __future__ import annotations
 from importlib import metadata
 from pathlib import Path
 import re
-import sys
 
-from common import script_main
+import typer
 
 
 def requirement_name(line: str) -> str:
@@ -34,15 +33,11 @@ def missing_requirements(requirements_path: Path) -> list[str]:
     return missing
 
 
-def main() -> int:
-    if len(sys.argv) != 2:
-        print("Использование: python scripts/check_python_requirements.py <file>", file=sys.stderr)
-        return 2
-
-    requirements_path = Path(sys.argv[1])
-    print("\n".join(missing_requirements(requirements_path)))
-    return 0
+def main(requirements_path: Path = typer.Argument(..., help="Файл зависимостей для проверки.")) -> None:
+    missing = missing_requirements(requirements_path)
+    if missing:
+        print("\n".join(missing))
 
 
 if __name__ == "__main__":
-    raise SystemExit(script_main(main))
+    typer.run(main)
