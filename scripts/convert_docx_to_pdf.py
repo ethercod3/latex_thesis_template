@@ -9,13 +9,11 @@ from __future__ import annotations
 from pathlib import Path
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 
-from plumbum import local
-import typer
-
-from common import ScriptError, require_command
+from common import ScriptError, require_command, script_main
 
 INPUT_DIR = Path(os.environ.get("DOCX_INPUT_DIR", "/data/docx"))
 OUTPUT_DIR = Path(os.environ.get("PDF_OUTPUT_DIR", "/data"))
@@ -37,10 +35,8 @@ def is_blank_bbox_line(line: str) -> bool:
 
 
 def run_external(command: list[str]) -> tuple[int, str, str]:
-    runner = local[command[0]]
-    for arg in command[1:]:
-        runner = runner[arg]
-    return runner.run()
+    result = subprocess.run(command, check=False, capture_output=True, text=True)
+    return result.returncode, result.stdout, result.stderr
 
 
 def run_checked(command: list[str]) -> tuple[int, str, str]:
@@ -117,7 +113,7 @@ def convert_docx(source_file: Path, tmp_dir: Path) -> Path:
     return converted_file
 
 
-def main() -> None:
+def main() -> int:
     required_commands = ["soffice"]
 
     if SKIP_BLANK_PAGES:
@@ -152,6 +148,8 @@ def main() -> None:
 
             converted_file.unlink(missing_ok=True)
 
+    return 0
+
 
 if __name__ == "__main__":
-    typer.run(main)
+    sys.exit(script_main(main))

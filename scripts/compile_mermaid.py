@@ -10,10 +10,8 @@ from __future__ import annotations
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+import subprocess
 import sys
-
-from plumbum import local
-import typer
 
 from common import PROJECT_DIR, ScriptError, command_path
 
@@ -48,10 +46,8 @@ def find_pdfcrop() -> list[str]:
 
 
 def run_external(command: list[str], timeout: int = TIMEOUT_SECONDS) -> tuple[int, str, str]:
-    proc = local[command[0]]
-    for arg in command[1:]:
-        proc = proc[arg]
-    return proc.run(timeout=timeout)
+    result = subprocess.run(command, check=False, capture_output=True, text=True, timeout=timeout)
+    return result.returncode, result.stdout, result.stderr
 
 
 def crop_pdf(output_file: Path, pdfcrop: list[str]) -> None:
@@ -95,9 +91,7 @@ def process_file(f: Path, mmdc: list[str], pdfcrop: list[str] | None) -> str | N
     return f"[OK] {f.name} -> {output_file.name}"
 
 
-def main(
-    no_crop: bool = typer.Option(False, "--no-crop", help="Не запускать pdfcrop после генерации PDF."),
-) -> None:
+def main(no_crop: bool = False) -> int:
     try:
         if not SRC.exists():
             raise ScriptError(f"Папка с Mermaid-диаграммами не найдена: {SRC}")
@@ -110,7 +104,7 @@ def main(
 
         if not files:
             print(f"В папке {SRC} не найдены Mermaid-файлы для сборки.")
-            return
+            return 0
 
         max_workers = min(MAX_WORKERS_LIMIT, len(files))
         has_errors = False
@@ -131,11 +125,23 @@ def main(
                     has_errors = True
 
         if has_errors:
-            raise typer.Exit(code=1)
+            return 1
     except ScriptError as error:
         print(f"Ошибка: {error}", file=sys.stderr)
-        raise typer.Exit(code=1)
+        return 1
+
+    return 0
+
+
+def cli() -> int:
+    args = sys.argv[1:]
+    allowed = {"--no-crop"}
+    unknown = [arg for arg in args if arg not in allowed]
+    if unknown:
+        print(f"Неизвестные аргументы: {' '.join(unknown)}", file=sys.stderr)
+        return 2
+    return main(no_crop="--no-crop" in args)
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    sys.exit(cli())

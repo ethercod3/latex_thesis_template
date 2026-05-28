@@ -4,10 +4,8 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import subprocess
 import sys
-
-from plumbum import local
-import typer
 
 from common import ScriptError, command_path
 
@@ -24,10 +22,8 @@ def run_pdfcrop(source: Path, cropped: Path) -> tuple[int, str, str]:
         raise ScriptError("Не найдена программа pdfcrop. Установите TeX Live/MiKTeX с pdfcrop.")
 
     print(f"==> {pdfcrop} {source} {cropped}", flush=True)
-    command = local[pdfcrop]
-    for arg in (str(source), str(cropped)):
-        command = command[arg]
-    return command.run()
+    result = subprocess.run([pdfcrop, str(source), str(cropped)], check=False, capture_output=True, text=True)
+    return result.returncode, result.stdout, result.stderr
 
 
 def crop_pdf(pdf_path: Path) -> None:
@@ -57,13 +53,19 @@ def crop_pdf(pdf_path: Path) -> None:
     print(f"[OK] {source}")
 
 
-def main(pdf: Path = typer.Argument(..., help="Путь к PDF-файлу.")) -> None:
+def main() -> int:
+    if len(sys.argv) != 2:
+        print("Использование: python scripts/crop_pdf.py <pdf>", file=sys.stderr)
+        return 2
+
     try:
-        crop_pdf(pdf)
+        crop_pdf(Path(sys.argv[1]))
     except ScriptError as error:
         print(f"Ошибка: {error}", file=sys.stderr)
-        raise typer.Exit(code=1)
+        return 1
+
+    return 0
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    sys.exit(main())
