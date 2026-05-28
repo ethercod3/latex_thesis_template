@@ -29,10 +29,18 @@ jobs:
           ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || ((github.event_name == 'workflow_dispatch' && inputs.tag != 'nightly') && inputs.tag || github.ref) }}
 
       - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: ".python-version"
+
+      - name: Set up uv
         uses: astral-sh/setup-uv@v8.1.0
         with:
-          python-version: "3.13.13"
+          version: "0.11.16"
           enable-cache: true
+
+      - name: Verify uv
+        run: uv --version
 
       - name: Install Python dependencies
         run: uv sync --locked
