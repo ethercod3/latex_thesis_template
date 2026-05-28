@@ -9,12 +9,12 @@ from __future__ import annotations
 import json
 import os
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from plumbum import local
 import typer
 
 from common import PROJECT_DIR, ScriptError
@@ -29,13 +29,10 @@ DOWNLOAD_PATTERNS = [
 
 
 def capture_command(command: list[str]) -> str:
-    proc = local[command[0]]
-    for arg in command[1:]:
-        proc = proc[arg]
-    code, stdout, stderr = proc.run()
-    if code != 0:
-        raise ScriptError(stderr.strip() or stdout.strip() or "Команда завершилась с ошибкой.")
-    return stdout.strip()
+    result = subprocess.run(command, check=False, capture_output=True, text=True)
+    if result.returncode != 0:
+        raise ScriptError(result.stderr.strip() or result.stdout.strip() or "Команда завершилась с ошибкой.")
+    return result.stdout.strip()
 
 
 def current_tag() -> str:
@@ -75,9 +72,13 @@ def checktool_source_tag(current_release_tag: str) -> str | None:
 
 
 def download_pattern(tag: str, pattern: str) -> None:
-    proc = local.gh.release.download[tag, "--pattern", pattern, "--dir", str(DIST_DIR), "--clobber"]
-    code, stdout, stderr = proc.run()
-    if code != 0:
+    result = subprocess.run(
+        ["gh", "release", "download", tag, "--pattern", pattern, "--dir", str(DIST_DIR), "--clobber"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
         print(f"Asset pattern not found in {tag}: {pattern}")
 
 

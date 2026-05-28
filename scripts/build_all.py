@@ -6,9 +6,9 @@
 
 from __future__ import annotations
 
+import subprocess
 import sys
 
-from plumbum import local
 import typer
 
 from common import ScriptError, docker_compose_command
@@ -24,12 +24,9 @@ PROFILES = [
 def run_profile(profile: str, service: str) -> int:
     print(f"\n==> {profile}", flush=True)
     command = [*docker_compose_command(), "--profile", profile, "run", "--build", "--rm", service]
-    proc = local[command[0]]
-    for arg in command[1:]:
-        proc = proc[arg]
-    code, stdout, stderr = proc.run()
-    if code != 0:
-        details = (stderr or stdout).strip()
+    result = subprocess.run(command, check=False, capture_output=True, text=True)
+    if result.returncode != 0:
+        details = (result.stderr or result.stdout).strip()
         raise ScriptError(f"Профиль {profile} завершился с ошибкой.\n{details}")
     return 0
 

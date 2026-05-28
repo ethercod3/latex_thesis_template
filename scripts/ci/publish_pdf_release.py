@@ -7,10 +7,10 @@
 from __future__ import annotations
 
 import os
+import subprocess
 import sys
 from pathlib import Path
 
-from plumbum import local
 import typer
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -29,27 +29,16 @@ def current_tag() -> str:
     return tag
 
 
-def run_command(command: list[str], check: bool = True):
-    runner = local[command[0]]
-    for arg in command[1:]:
-        runner = runner[arg]
-    code, stdout, stderr = runner.run()
-
-    class Result:
-        pass
-
-    result = Result()
-    result.returncode = code
-    result.stdout = stdout
-    result.stderr = stderr
-    if check and code != 0:
-        raise ScriptError(f"Команда завершилась с ошибкой (код {code}): {' '.join(command)}")
+def run_command(command: list[str], check: bool = True) -> subprocess.CompletedProcess[str]:
+    result = subprocess.run(command, check=False, capture_output=True, text=True)
+    if check and result.returncode != 0:
+        raise ScriptError(f"Команда завершилась с ошибкой (код {result.returncode}): {' '.join(command)}")
     return result
 
 
 def ensure_release(tag: str) -> None:
-    result = run_command(["gh", "release", "view", tag])
-    if getattr(result, "returncode", 1) == 0:
+    result = run_command(["gh", "release", "view", tag], check=False)
+    if result.returncode == 0:
         return
 
     run_command(

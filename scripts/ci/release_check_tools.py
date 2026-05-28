@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import subprocess
 
-from plumbum import local
 import typer
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -13,10 +13,8 @@ CHECKSUM_PATH = ROOT / "dist" / "SHA256SUMS.txt"
 
 
 def run_checked(command: list[str]) -> tuple[int, str, str]:
-    runner = local[command[0]]
-    for arg in command[1:]:
-        runner = runner[arg]
-    return runner.run()
+    result = subprocess.run(command, check=False, capture_output=True, text=True)
+    return result.returncode, result.stdout, result.stderr
 
 
 def main() -> None:
