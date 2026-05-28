@@ -16,10 +16,14 @@
 % --- Основные настройки ---
 \onehalfspacing % 1.5 отступ 
 \setlength{\parindent}{1.25cm} % абзацный отступ
-% Отступы после рисунков, таблиц, и.т.д
+% Отступы вокруг рисунков, таблиц, и.т.д
+\newlength{\figuresurroundskip}
+\setlength{\figuresurroundskip}{0.8\baselineskip}
+\newlength{\figuretopcompensationskip}
+\setlength{\figuretopcompensationskip}{0.5cm}
 \setlength{\floatsep}{0pt}
-\setlength{\intextsep}{0.8\baselineskip}
-\setlength{\textfloatsep}{0.8\baselineskip}
+\setlength{\intextsep}{\figuresurroundskip}
+\setlength{\textfloatsep}{\figuresurroundskip}
 \setlength{\belowcaptionskip}{0pt}
 % Базовый отступ от заголовков
 \setlength{\headsep}{0.5\baselineskip}
@@ -36,8 +40,10 @@
 \captionsetup[table]{
 	justification=raggedright,
 	singlelinecheck=false,
-	font={stretch=1.5}
+	font={stretch=1.2}
 }
+
+\AtBeginEnvironment{figure}{\vspace{\figuretopcompensationskip}}
 
 % --- Отступы для figure[p] ---
 
