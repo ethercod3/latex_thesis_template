@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import subprocess
-
 import check_tools_exe
 
 
@@ -30,3 +29,7 @@ def test_run_exe_decodes_utf8_output(monkeypatch) -> None:
     assert code == 1
     assert stdout == "Проверка окружения\n"
     assert stderr == "Ошибка\n"
+
+
+def test_encode_safe_replaces_unencodable_characters() -> None:
+    assert check_tools_exe.encode_safe("Проверка", "cp1252") == "????????"

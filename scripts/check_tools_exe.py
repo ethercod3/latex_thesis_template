@@ -9,6 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 import hashlib
 import subprocess
+import sys
 
 import typer
 
@@ -25,6 +26,15 @@ def run_exe() -> tuple[int, str, str]:
     return result.returncode, stdout, stderr
 
 
+def encode_safe(text: str, encoding: str | None) -> str:
+    target_encoding = encoding or "utf-8"
+    return text.encode(target_encoding, errors="replace").decode(target_encoding)
+
+
+def print_safe(text: str) -> None:
+    print(encode_safe(text, sys.stdout.encoding))
+
+
 @app.command()
 def smoke() -> None:
     code, stdout, stderr = run_exe()
@@ -34,9 +44,9 @@ def smoke() -> None:
             "This is allowed because the runner may not have TeX Live or Docker."
         )
         if stdout.strip():
-            print(stdout.strip())
+            print_safe(stdout.strip())
         if stderr.strip():
-            print(stderr.strip())
+            print_safe(stderr.strip())
 
 
 @app.command()
