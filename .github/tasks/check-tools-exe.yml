@@ -17,16 +17,16 @@ tasks:
     desc: Run the generated exe without failing on missing runner tools
     dir: ../..
     cmds:
-      - python scripts/check_tools_exe.py smoke
+      - uv run python scripts/check_tools_exe.py smoke
 
   checksum:
     desc: Create SHA256SUMS.txt for the generated exe
     dir: ../..
     cmds:
-      - python scripts/check_tools_exe.py checksum
+      - uv run python scripts/check_tools_exe.py checksum
 
   release:
     desc: Upload the generated exe and checksum to GitHub Release assets
     dir: ../..
     cmds:
-      - python scripts/ci/release_check_tools.py
+      - uv run python scripts/ci/release_check_tools.py

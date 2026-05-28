@@ -28,10 +28,19 @@ jobs:
         with:
           ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || ((github.event_name == 'workflow_dispatch' && inputs.tag != 'nightly') && inputs.tag || github.ref) }}
 
+      - name: Set up Python
+        uses: astral-sh/setup-uv@v8.1.0
+        with:
+          python-version: "3.13"
+          enable-cache: true
+
+      - name: Install Python dependencies
+        run: uv sync --locked
+
       - name: Resolve release context
         env:
           INPUT_TAG: ${{ inputs.tag }}
-        run: python scripts/ci/resolve_pdf_release_context.py
+        run: uv run python scripts/ci/resolve_pdf_release_context.py
 
       - name: Checkout diploma code repo
         uses: actions/checkout@v4
@@ -57,7 +66,7 @@ jobs:
         uses: crazy-max/ghaction-github-runtime@v3
 
       - name: Prepare CI environment
-        run: python scripts/ci/prepare_pdf_release_env.py
+        run: uv run python scripts/ci/prepare_pdf_release_env.py
 
       - name: Build PDF
         env:
@@ -68,9 +77,9 @@ jobs:
       - name: Download latest check tool assets
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python scripts/ci/download_latest_checktool_assets.py
+        run: uv run python scripts/ci/download_latest_checktool_assets.py
 
       - name: Publish release assets
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python scripts/ci/publish_pdf_release.py
+        run: uv run python scripts/ci/publish_pdf_release.py

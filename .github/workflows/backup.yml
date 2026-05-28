@@ -24,8 +24,17 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      - name: Set up Python
+        uses: astral-sh/setup-uv@v8.1.0
+        with:
+          python-version: "3.13"
+          enable-cache: true
+
       - name: Set up Task
         uses: arduino/setup-task@v2
+
+      - name: Install Python dependencies
+        run: uv sync --locked
 
       - name: Install rclone
         run: |
