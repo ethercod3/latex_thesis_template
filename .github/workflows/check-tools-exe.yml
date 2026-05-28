@@ -42,7 +42,7 @@ jobs:
       - name: Set up Python
         uses: astral-sh/setup-uv@v8.1.0
         with:
-          python-version: "3.13"
+          python-version: "3.13.13"
           enable-cache: true
 
       - name: Set up Task

@@ -1,3 +1,111 @@
 {
-    "python-envs.defaultEnvManager": "ms-python.python:system"
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+    "python.terminal.activateEnvironment": false,
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "black-formatter.args": [
+        "--line-length",
+        "120"
+    ],
+    "editor.formatOnSave": false,
+    "editor.rulers": [
+        120
+    ],
+    "editor.trimAutoWhitespace": true,
+    "files.encoding": "utf8",
+    "files.eol": "\n",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.associations": {
+        "*.tex": "latex",
+        "*.bib": "bibtex",
+        "*.mmd": "mermaid",
+        "*.mermaid": "mermaid",
+        "Taskfile.yml": "yaml",
+        "docker-compose*.yaml": "dockercompose"
+    },
+    "files.exclude": {
+        "**/.aux_files": true,
+        "**/.aux_files_docker": true,
+        "**/.cache": true,
+        "**/.coverage": true,
+        "**/.pytest_cache": true,
+        "**/__pycache__": true,
+        "**/*.synctex.gz": true
+    },
+    "search.exclude": {
+        "**/.aux_files": true,
+        "**/.aux_files_docker": true,
+        "**/.cache": true,
+        "**/.git": true,
+        "**/.pytest_cache": true,
+        "**/.venv": true,
+        "**/docs-site": true,
+        "**/__pycache__": true,
+        "**/*.pdf": true,
+        "**/*.synctex.gz": true
+    },
+    "latex-workshop.latex.rootFile.useSubFile": false,
+    "latex-workshop.latex.rootFile.doNotPrompt": true,
+    "latex-workshop.latex.rootFile.indicator": true,
+    "latex-workshop.latex.outDir": "%DIR%",
+    "latex-workshop.latex.autoBuild.run": "never",
+    "latex-workshop.latex.clean.enabled": false,
+    "latex-workshop.latex.recipe.default": "latexmk (local project script)",
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "latexmk (local project script)",
+            "tools": [
+                "task-latex-local"
+            ]
+        },
+        {
+            "name": "latexmk (docker project script)",
+            "tools": [
+                "task-latex-docker"
+            ]
+        }
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "task-latex-local",
+            "command": "task",
+            "args": [
+                "latex:local"
+            ]
+        },
+        {
+            "name": "task-latex-docker",
+            "command": "task",
+            "args": [
+                "latex:docker"
+            ]
+        }
+    ],
+    "latex-workshop.view.pdf.viewer": "tab",
+    "latex-workshop.synctex.afterBuild.enabled": true,
+    "latex-workshop.intellisense.citation.backend": "biblatex",
+    "latex-workshop.intellisense.package.enabled": true,
+    "latex-workshop.message.warning.show": true,
+    "latex-workshop.message.error.show": true,
+    "yaml.schemas": {
+        "https://taskfile.dev/schema.json": [
+            "Taskfile.yml",
+            "tasks/*.yml"
+        ],
+        "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": [
+            "docker-compose.yaml",
+            "docker-compose.*.yaml"
+        ]
+    },
+    "markdown.preview.breaks": false,
+    "markdown.extension.toc.levels": "2..4",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.cwd": "${workspaceFolder}",
+    "git.inputValidation": true,
+    "git.inputValidationLength": 72
 }

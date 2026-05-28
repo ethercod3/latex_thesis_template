@@ -1,0 +1,12 @@
+{
+    "recommendations": [
+        "james-yu.latex-workshop",
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-python.black-formatter",
+        "redhat.vscode-yaml",
+        "ms-azuretools.vscode-docker",
+        "bierner.markdown-mermaid",
+        "yzhang.markdown-all-in-one"
+    ]
+}

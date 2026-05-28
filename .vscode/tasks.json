@@ -1,0 +1,131 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "project: full build",
+            "type": "shell",
+            "command": "task",
+            "args": [
+                "build"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "latex: local build",
+            "type": "shell",
+            "command": "task",
+            "args": [
+                "latex:local"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "latex: docker build",
+            "type": "shell",
+            "command": "task",
+            "args": [
+                "latex:docker"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "python: test",
+            "type": "shell",
+            "command": "task",
+            "args": [
+                "python:test"
+            ],
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "python: lint",
+            "type": "shell",
+            "command": "task",
+            "args": [
+                "python:lint"
+            ],
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "python: format",
+            "type": "shell",
+            "command": "task",
+            "args": [
+                "python:format"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "diagrams: mermaid",
+            "type": "shell",
+            "command": "task",
+            "args": [
+                "mermaid"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "diagrams: python",
+            "type": "shell",
+            "command": "task",
+            "args": [
+                "diagrams"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "docx: convert to pdf",
+            "type": "shell",
+            "command": "task",
+            "args": [
+                "docx"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "docs: serve",
+            "type": "shell",
+            "command": "task",
+            "args": [
+                "docs"
+            ],
+            "isBackground": true,
+            "problemMatcher": []
+        },
+        {
+            "label": "project: clean",
+            "type": "shell",
+            "command": "task",
+            "args": [
+                "clean"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "tools: check",
+            "type": "shell",
+            "command": "task",
+            "args": [
+                "check"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "uv: sync",
+            "type": "shell",
+            "command": "task",
+            "args": [
+                "deps"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}
