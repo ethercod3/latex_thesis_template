@@ -86,6 +86,7 @@
   \hbadness=10000\relax
 }
 \makeatother
+
 % ------------------------------
 
 \let\oldtexttt\texttt
@@ -1159,7 +1160,8 @@
 	\needspace{2cm}
 	
 	\begin{lstlisting}[language=bash, caption={Строка запуска веб-сервера}, style=bashcommand]
-python -m uvicorn vault.api:app --host <host> --port <port> --ssl-keyfile <key> --ssl-certfile <cert>\end{lstlisting}
+python -m uvicorn vault.api:app --host <host> --port <port> --ssl-keyfile <key> --ssl-certfile <cert>
+\end{lstlisting}
 
 	При запуске в окружение дочернего процесса передается \texttt{VAULT\_DB\_URL}, чтобы API использовал ту же БД, что и CLI-команды. Далее CLI ожидает короткий интервал и проверяет, не завершился ли процесс сразу после старта. Если процесс не смог запуститься, пользователь получает ошибку \texttt{Failed to start web server process.} Если запуск успешен, в \texttt{.vault\_web\_server.json} записываются \texttt{pid, host, port} и  \texttt{db\_url}, а CLI возвращает JSON-ответ со статусом ok и действием \texttt{web-server-up}.
 	
@@ -1317,6 +1319,7 @@ python -m uvicorn vault.api:app --host <host> --port <port> --ssl-keyfile <key> 
 	\newpage
 	
 	\section[Демонстрация результата работы]{ДЕМОНСТРАЦИЯ РЕЗУЛЬТАТА РАБОТЫ}
+	\suppressfloats[t]
 	
 	Результат выполненной работы целесообразно показывать не только как перечень реализованных модулей, но и как воспроизводимый эксплуатационный сценарий. 
 	
@@ -1377,7 +1380,8 @@ PS> python main.py --db-url sqlite:///vault.db add-dek --name dst -f dst_dek.hex
     "updated_at": "2026-04-25T08:02:30.774061Z"
   },
   "dek_stored_as_wrapped": true
-}\end{lstlisting}
+}
+\end{lstlisting}
 
 \subsubsection*{\textit{Загрузка и перешифрование контейнера}}
 
