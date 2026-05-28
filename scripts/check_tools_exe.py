@@ -19,8 +19,10 @@ app = typer.Typer(add_completion=False)
 
 
 def run_exe() -> tuple[int, str, str]:
-    result = subprocess.run([str(EXE_PATH)], check=False, capture_output=True, text=True)
-    return result.returncode, result.stdout, result.stderr
+    result = subprocess.run([str(EXE_PATH)], check=False, capture_output=True)
+    stdout = result.stdout.decode("utf-8", errors="replace")
+    stderr = result.stderr.decode("utf-8", errors="replace")
+    return result.returncode, stdout, stderr
 
 
 @app.command()

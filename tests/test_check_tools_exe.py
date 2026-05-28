@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import subprocess
+
 import check_tools_exe
 
 
@@ -12,3 +14,19 @@ def test_smoke_allows_nonzero_exit_code(monkeypatch, capsys) -> None:
     assert "Smoke test finished with exit code 1" in output
     assert "stdout text" in output
     assert "stderr text" in output
+
+
+def test_run_exe_decodes_utf8_output(monkeypatch) -> None:
+    result = subprocess.CompletedProcess(
+        args=[str(check_tools_exe.EXE_PATH)],
+        returncode=1,
+        stdout="Проверка окружения\n".encode("utf-8"),
+        stderr="Ошибка\n".encode("utf-8"),
+    )
+    monkeypatch.setattr(check_tools_exe.subprocess, "run", lambda *args, **kwargs: result)
+
+    code, stdout, stderr = check_tools_exe.run_exe()
+
+    assert code == 1
+    assert stdout == "Проверка окружения\n"
+    assert stderr == "Ошибка\n"
