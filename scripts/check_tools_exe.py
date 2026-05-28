@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from pathlib import Path
 import hashlib
+import subprocess
 
-from plumbum import local
 import typer
 
 EXE_PATH = Path("dist/diploma-latex-check.exe")
@@ -19,8 +19,8 @@ app = typer.Typer(add_completion=False)
 
 
 def run_exe() -> tuple[int, str, str]:
-    runner = local[str(EXE_PATH)]
-    return runner.run()
+    result = subprocess.run([str(EXE_PATH)], check=False, capture_output=True, text=True)
+    return result.returncode, result.stdout, result.stderr
 
 
 @app.command()
