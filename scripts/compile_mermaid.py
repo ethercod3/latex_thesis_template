@@ -91,7 +91,7 @@ def process_file(f: Path, mmdc: list[str], pdfcrop: list[str] | None) -> str | N
     return f"[OK] {f.name} -> {output_file.name}"
 
 
-def main(no_crop: bool = False) -> int:
+def run(no_crop: bool = False) -> int:
     try:
         if not SRC.exists():
             raise ScriptError(f"Папка с Mermaid-диаграммами не найдена: {SRC}")
@@ -133,6 +133,14 @@ def main(no_crop: bool = False) -> int:
     return 0
 
 
+def main(no_crop: bool = False) -> None:
+    exit_code = run(no_crop=no_crop)
+    if exit_code != 0:
+        import typer
+
+        raise typer.Exit(code=exit_code)
+
+
 def cli() -> int:
     args = sys.argv[1:]
     allowed = {"--no-crop"}
@@ -140,7 +148,7 @@ def cli() -> int:
     if unknown:
         print(f"Неизвестные аргументы: {' '.join(unknown)}", file=sys.stderr)
         return 2
-    return main(no_crop="--no-crop" in args)
+    return run(no_crop="--no-crop" in args)
 
 
 if __name__ == "__main__":
