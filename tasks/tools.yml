@@ -74,4 +74,4 @@ tasks:
   diff:
     desc: Сравнить PDF между коммитами; аргументы передаются после --
     cmds:
-      - uvx --refresh --from ../diff-pdf-commits diff-pdf-commits --config diff_config.toml {{.CLI_ARGS}}
+      - uvx --refresh diff-pdf-commits --config diff_config.toml {{.CLI_ARGS}}
