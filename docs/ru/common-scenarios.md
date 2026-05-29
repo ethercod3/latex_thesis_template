@@ -57,7 +57,7 @@
 === "Ручной"
 
     ```bash
-    uv run python scripts/compile_mermaid.py
+    uvx --from git+https://github.com/ethercod3/compile_mermaid.git compile-mermaid
     ```
 
 Если менялись `python_diagrams/*.py`, пересоберите Python-диаграммы:

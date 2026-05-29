@@ -92,7 +92,7 @@ task python:test
 
     ```bash
     uv run python scripts/build_all.py
-    uv run python scripts/compile_mermaid.py
+    uvx --from git+https://github.com/ethercod3/compile_mermaid.git compile-mermaid
     uv run python scripts/compile_python_diagrams.py
     ```
 

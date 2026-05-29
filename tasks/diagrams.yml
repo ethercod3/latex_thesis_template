@@ -4,7 +4,7 @@ tasks:
   mermaid:
     desc: Сгенерировать Mermaid-диаграммы локально
     cmds:
-      - uv run python scripts/compile_mermaid.py {{.CLI_ARGS}}
+      - uvx --from git+https://github.com/ethercod3/compile_mermaid.git compile-mermaid {{.CLI_ARGS}}
 
   mermaid:docker:
     desc: Сгенерировать Mermaid-диаграммы в Docker

@@ -8,7 +8,7 @@ In Zensical, Mermaid can be inserted directly into Markdown with a `mermaid` cod
 
 ```mermaid
 flowchart LR
-    MMD["mermaid/*.mmd"] --> SCRIPT["scripts/compile_mermaid.py"]
+    MMD["mermaid/*.mmd"] --> SCRIPT["compile-mermaid"]
     SCRIPT --> FIGURES["figures/*.pdf"]
     FIGURES --> LATEX["LaTeX document"]
     MMD -. native preview .-> ZENSICAL["Zensical documentation"]
@@ -65,7 +65,7 @@ Run the script:
 === "Manual"
 
     ```bash
-    uv run python scripts/compile_mermaid.py
+    uvx --from git+https://github.com/ethercod3/compile_mermaid.git compile-mermaid
     ```
 
 The script processes all files from `mermaid/`, places the result into `figures/`, and crops margins through `pdfcrop` after generation. If `pdfcrop` or Ghostscript is not installed, temporarily disable cropping:

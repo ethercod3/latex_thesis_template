@@ -471,7 +471,7 @@ task pdf:split-color -- path/to/file.pdf
 
 ```bash
 uv run python scripts/build_all.py
-uv run python scripts/compile_mermaid.py
+uvx --from git+https://github.com/ethercod3/compile_mermaid.git compile-mermaid
 uv run python scripts/compile_python_diagrams.py
 uv run python scripts/crop_pdf.py path/to/file.pdf
 uv run python scripts/split_pdf_color.py path/to/file.pdf
@@ -618,13 +618,13 @@ GitHub не всегда показывает содержимое файлов 
 
 ### Автоматическая сборка всех Mermaid диаграмм
 
-Запустите скрипт `scripts/compile_mermaid.py` в проекте. Этот скрипт автоматически прогонит все файлы из папки `mermaid` и положит результат в папку `figures`
+Запустите `compile-mermaid` через `uvx`. Инструмент автоматически прогонит все файлы из папки `mermaid` и положит результат в папку `figures`.
 
 ```bash
 task mermaid
 ```
 
-Или вручную: `uv run python scripts/compile_mermaid.py`.
+Или вручную: `uvx --from git+https://github.com/ethercod3/compile_mermaid.git compile-mermaid`.
 
 После генерации скрипт обрезает поля через `pdfcrop`, которому нужен Ghostscript. Если локально доступны только `mmdc` и нужно собрать PDF без обрезки, запустите `task mermaid -- --no-crop`.
 

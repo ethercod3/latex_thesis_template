@@ -57,7 +57,7 @@ If `mermaid/*.mmd` files changed, rebuild Mermaid diagrams:
 === "Manual"
 
     ```bash
-    uv run python scripts/compile_mermaid.py
+    uvx --from git+https://github.com/ethercod3/compile_mermaid.git compile-mermaid
     ```
 
 If `python_diagrams/*.py` files changed, rebuild Python diagrams:
