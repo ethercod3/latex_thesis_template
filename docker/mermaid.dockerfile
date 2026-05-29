@@ -5,6 +5,10 @@ USER root
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PUPPETEER_CACHE_DIR=/usr/local/share/puppeteer
 ENV PUPPETEER_SKIP_DOWNLOAD=true
+ENV UV_CACHE_DIR=/usr/local/share/uv/cache
+ENV UV_TOOL_DIR=/usr/local/share/uv/tools
+
+COPY --from=ghcr.io/astral-sh/uv:0.11.16 /uv /uvx /usr/local/bin/
 
 RUN printf '%s\n' \
     "deb http://snapshot.debian.org/archive/debian/20260502T000000Z bookworm main contrib non-free non-free-firmware" \
@@ -19,6 +23,7 @@ RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula sele
     chromium=147.0.7727.137-1~deb12u1 \
     fontconfig=2.14.1-4 \
     fonts-noto-core=20201225-1 \
+    git \
     ghostscript \
     texlive-extra-utils \
     ttf-mscorefonts-installer=3.8.1 \
@@ -38,11 +43,9 @@ RUN useradd -m appuser
 WORKDIR /data
 
 COPY ./mermaid ./mermaid
-RUN mkdir -p figures scripts
-COPY ./scripts/common.py ./scripts/common.py
-COPY ./scripts/compile_mermaid.py ./scripts/compile_mermaid.py
+RUN mkdir -p figures "${UV_CACHE_DIR}" "${UV_TOOL_DIR}"
 
 RUN printf '%s\n' '{"executablePath":"/usr/bin/chromium","args":["--no-sandbox","--disable-setuid-sandbox","--disable-dev-shm-usage","--disable-gpu","--no-zygote"]}' > puppeteer-config.json && \
-    chown -R appuser:appuser /data
+    chown -R appuser:appuser /data /usr/local/share/uv
 
 USER appuser

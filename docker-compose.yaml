@@ -29,7 +29,7 @@ services:
       - ./.env
     volumes:
       - ./figures:/data/figures
-    command: ["python3", "scripts/compile_mermaid.py"]
+    command: ["uvx", "--from", "git+https://github.com/ethercod3/compile_mermaid.git", "compile-mermaid"]
 
   python_diagrams:
     profiles: ["python"]

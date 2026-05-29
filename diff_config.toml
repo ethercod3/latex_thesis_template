@@ -14,11 +14,11 @@ VAULT_OS_PATH = { from_env = "VAULT_OS_PATH", resolve = true }
 paths = [
     ".env",
     "docker-compose.yaml",
+    "docker/mermaid.dockerfile",
     "docker/latex.dockerfile",
     "титульник.pdf",
     "задание.pdf",
     "scripts/build_all.py",
-    "scripts/compile_mermaid.py",
     "scripts/convert_docx_to_pdf.py",
     "scripts/build_latex_docker.py",
 ]
