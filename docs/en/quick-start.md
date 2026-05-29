@@ -1,6 +1,19 @@
 # Quick start
 
-## Install Task
+## Install Tools
+
+If [mise](https://mise.jdx.dev/) is installed, use it as the shortest path to the required Python, uv, and Task versions:
+
+```bash
+mise trust
+mise install
+mise run setup
+mise run check
+```
+
+After that, run the main commands through `mise run build`, `mise run test`, or directly through `task`.
+
+## Install Task Manually
 
 The project uses [Task](https://taskfile.dev/docs/installation) as the single entry point for builds and helper commands.
 

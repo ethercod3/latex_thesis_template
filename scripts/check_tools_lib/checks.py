@@ -107,7 +107,7 @@ def safe_env_value(name: str) -> str | None:
         return None
 
 
-def diagram_state_checks(name: str, source_dir: Path, pattern: str) -> list[Check]:
+def diagram_state_checks(name: str, source_dir: Path, patterns: str | tuple[str, ...]) -> list[Check]:
     if not source_dir.is_dir():
         return [
             warning_check(
@@ -117,7 +117,9 @@ def diagram_state_checks(name: str, source_dir: Path, pattern: str) -> list[Chec
 
     missing: list[str] = []
     stale: list[str] = []
-    source_files = sorted(source_dir.glob(pattern))
+    if isinstance(patterns, str):
+        patterns = (patterns,)
+    source_files = sorted({source for pattern in patterns for source in source_dir.glob(pattern)})
     for source in source_files:
         output = PROJECT_DIR / "figures" / f"{source.stem}.pdf"
         if not output.is_file():
@@ -190,7 +192,7 @@ def project_state_checks() -> list[Check]:
                 )
             )
 
-    items.extend(diagram_state_checks("Mermaid-диаграммы", PROJECT_DIR / "mermaid", "*.mmd"))
+    items.extend(diagram_state_checks("Mermaid-диаграммы", PROJECT_DIR / "mermaid", ("*.mmd", "*.mermaid", "*.mmdc")))
     items.extend(diagram_state_checks("Python-диаграммы", PROJECT_DIR / "python_diagrams", "*.py"))
     return items
 
@@ -269,12 +271,12 @@ def docker_compose_check() -> Check:
     )
 
 
-def pyluatex_check() -> Check:
+def pyluatex_check(*, required: bool) -> Check:
     if command_path("kpsewhich") is None:
         return Check(
             name="Пакет PyLuaTeX",
             ok=False,
-            required=True,
+            required=required,
             detail="команда kpsewhich не найдена, невозможно найти pyluatex.sty",
             fix="Установите TeX Live или MiKTeX с пакетом pyluatex.",
         )
@@ -285,7 +287,7 @@ def pyluatex_check() -> Check:
         return Check(
             name="Пакет PyLuaTeX",
             ok=False,
-            required=True,
+            required=required,
             detail="kpsewhich не нашел pyluatex.sty",
             fix="Установите TeX-пакет pyluatex или обновите базу имен файлов TeX.",
         )
@@ -293,7 +295,7 @@ def pyluatex_check() -> Check:
     return Check(
         name="Пакет PyLuaTeX",
         ok=True,
-        required=True,
+        required=required,
         detail=path,
         fix="Установите TeX-пакет pyluatex или обновите базу имен файлов TeX.",
     )
@@ -306,38 +308,37 @@ def checks() -> list[Check]:
         ),
         command_check("Git", "git", ["git", "--version"], required=True, fix="Установите Git и добавьте его в PATH."),
         command_check("uv", "uv", ["uv", "--version"], required=True, fix="Установите uv: https://docs.astral.sh/uv/"),
-        uv_environment_check(),
         command_check("Docker", "docker", ["docker", "--version"], required=True, fix="Установите Docker Desktop."),
         docker_compose_check(),
         command_check(
             "LuaLaTeX",
             "lualatex",
             ["lualatex", "--version"],
-            required=True,
-            fix="Установите TeX Live или MiKTeX и добавьте TeX binaries в PATH.",
+            required=False,
+            fix="Установите TeX Live или MiKTeX, если нужна локальная сборка без Docker.",
         ),
         command_check(
             "latexmk",
             "latexmk",
             ["latexmk", "--version"],
-            required=True,
-            fix="Установите latexmk. Обычно он входит в TeX Live.",
+            required=False,
+            fix="Установите latexmk, если нужна локальная сборка без Docker. Обычно он входит в TeX Live.",
         ),
         command_check(
             "biber",
             "biber",
             ["biber", "--version"],
-            required=True,
-            fix="Установите biber. Обычно он входит в TeX Live.",
+            required=False,
+            fix="Установите biber, если нужна локальная сборка без Docker. Обычно он входит в TeX Live.",
         ),
         command_check(
             "kpsewhich",
             "kpsewhich",
             ["kpsewhich", "--version"],
-            required=True,
-            fix="Установите TeX Live или MiKTeX и добавьте TeX binaries в PATH.",
+            required=False,
+            fix="Установите TeX Live или MiKTeX, если нужна локальная сборка без Docker.",
         ),
-        pyluatex_check(),
+        pyluatex_check(required=False),
         command_check(
             "Mermaid CLI",
             "mmdc",

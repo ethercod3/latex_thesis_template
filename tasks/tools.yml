@@ -4,7 +4,7 @@ tasks:
   check:
     desc: Проверить наличие инструментов для сборки проекта
     cmds:
-      - python scripts/check_tools.py
+      - uv run python scripts/check_tools.py
 
   deps:
     desc: Синхронизировать Python-окружение через uv

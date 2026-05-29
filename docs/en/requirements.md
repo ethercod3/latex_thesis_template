@@ -4,6 +4,7 @@ The required toolset depends on how you build the project.
 
 | Tool | When it is needed | How to check |
 | --- | --- | --- |
+| mise | Optional installation of the project Python, uv, and Task versions | `mise --version` |
 | Task | Recommended entry point for project commands | `task --version` |
 | Docker | Full reproducible build, Zensical, DOCX conversion | `docker --version` |
 | Python | Local LaTeX compilation through PyLuaTeX and manual helper-script runs | `python --version` |
@@ -19,10 +20,10 @@ The required toolset depends on how you build the project.
 | rclone | Backing up `git bundle` files to cloud storage | `rclone version` |
 
 !!! tip "Shortest path"
-    If the goal is only to build the final PDF, install Task and Docker, then run the commands from [Quick start](quick-start.md).
+    If mise is installed, run `mise trust`, `mise install`, `mise run setup`, and `mise run check`. If mise is not used, install Task and Docker, then run the commands from [Quick start](quick-start.md).
 
 !!! tip "Environment check"
-    After installing the tools, run `task check`. It checks programs, the `uv` environment, and PyLuaTeX, then reports what is ready and what still needs to be installed.
+    After installing the tools, run `task check`. It checks Docker-first entrypoint tools and project state, while local manual-build tools are reported as optional.
 
     If Python is not installed yet and you only need to check the environment, download `diploma-latex-check.exe` from GitHub Releases, put it into the project root, and run:
 
