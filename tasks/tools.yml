@@ -1,14 +1,5 @@
 version: '3'
 
-vars:
-  DIFF_PDF_BUILD_CMD: >-
-    docker compose --profile mermaid run --build --rm mermaid_diagrams &&
-    docker compose --profile python run --build --rm python_diagrams &&
-    docker compose --profile latex run --build --rm latex
-  DIFF_PDF_VAULT_OS_PATH:
-    sh: >-
-      python -c "from pathlib import Path; import os; value = os.environ.get('VAULT_OS_PATH', ''); env = Path('.env'); lines = env.read_text(encoding='utf-8').splitlines() if env.is_file() else []; found = next((line.split('=', 1)[1].strip().strip(chr(34) + chr(39)) for line in lines if line.strip().startswith('VAULT_OS_PATH=')), ''); value = value or found; print(Path(value).resolve() if value else '')"
-
 tasks:
   check:
     desc: Проверить наличие инструментов для сборки проекта
@@ -83,23 +74,4 @@ tasks:
   diff:
     desc: Сравнить PDF между коммитами; аргументы передаются после --
     cmds:
-      - >-
-        uvx diff-pdf-commits
-        --build "{{.DIFF_PDF_BUILD_CMD}}"
-        --pdf "${TARGET%.tex}.pdf"
-        --env "PYTHONIOENCODING=utf-8"
-        --env "PYTHONUTF8=1"
-        --env "UV_PYTHON=${UV_PYTHON:-}"
-        --env "VAULT_OS_PATH={{.DIFF_PDF_VAULT_OS_PATH}}"
-        --env "VAULT_PATH=${VAULT_PATH}"
-        --view
-        --copy .env
-        --copy docker-compose.yaml
-        --copy docker/latex.dockerfile
-        --copy титульник.pdf
-        --copy задание.pdf
-        --copy scripts/build_all.py
-        --copy scripts/compile_mermaid.py
-        --copy scripts/convert_docx_to_pdf.py
-        --copy scripts/build_latex_docker.py
-        {{.CLI_ARGS}}
+      - uv run python scripts/run_pdf_diff.py {{.CLI_ARGS}}
