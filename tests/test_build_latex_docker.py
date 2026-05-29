@@ -9,11 +9,13 @@ def test_main_builds_through_ascii_entrypoint_and_restores_pdf_name(tmp_path: Pa
     target = tmp_path / "Куприянов_И221_диплом.tex"
     target.write_text(r"\documentclass{article}\begin{document}ok\end{document}", encoding="utf-8")
     calls: list[list[str]] = []
+    build_tex = latex.build_entrypoint_for(Path(target.name))
+    build_pdf = build_tex.with_suffix(".pdf")
 
     def fake_run_checked(command: list[str]) -> tuple[int, str, str]:
         calls.append(command)
-        assert (tmp_path / latex.BUILD_TEX).read_text(encoding="utf-8") == target.read_text(encoding="utf-8")
-        (tmp_path / latex.BUILD_PDF).write_bytes(b"%PDF-1.4\n%%EOF\n")
+        assert (tmp_path / build_tex).read_text(encoding="utf-8") == target.read_text(encoding="utf-8")
+        (tmp_path / build_pdf).write_bytes(b"%PDF-1.4\n%%EOF\n")
         return 0, "", ""
 
     monkeypatch.chdir(tmp_path)
@@ -29,9 +31,11 @@ def test_main_builds_through_ascii_entrypoint_and_restores_pdf_name(tmp_path: Pa
             "-shell-escape",
             f"-auxdir={latex.AUX_DIR}",
             "-outdir=.",
-            str(latex.BUILD_TEX),
+            str(build_tex),
         ]
     ]
-    assert not (tmp_path / latex.BUILD_TEX).exists()
-    assert not (tmp_path / latex.BUILD_PDF).exists()
+    assert build_tex.name.startswith("__latex_build_")
+    assert build_tex.name.isascii()
+    assert not (tmp_path / build_tex).exists()
+    assert not (tmp_path / build_pdf).exists()
     assert (tmp_path / "Куприянов_И221_диплом.pdf").read_bytes() == b"%PDF-1.4\n%%EOF\n"

@@ -7,6 +7,7 @@ docker-специфичной директорией временных файл
 
 from __future__ import annotations
 
+import hashlib
 import os
 from pathlib import Path
 import shutil
@@ -16,8 +17,11 @@ import sys
 from common import ScriptError, script_main
 
 AUX_DIR = Path(".aux_files_docker")
-BUILD_TEX = Path("__latex_build_entrypoint__.tex")
-BUILD_PDF = Path("__latex_build_entrypoint__.pdf")
+
+
+def build_entrypoint_for(target_path: Path) -> Path:
+    digest = hashlib.sha256(target_path.as_posix().encode("utf-8")).hexdigest()[:12]
+    return Path(f"__latex_build_{digest}.tex")
 
 
 def run_checked(command: list[str]) -> tuple[int, str, str]:
@@ -25,7 +29,12 @@ def run_checked(command: list[str]) -> tuple[int, str, str]:
     result = subprocess.run(command, check=False, capture_output=True, text=True)
     code, stdout, stderr = result.returncode, result.stdout, result.stderr
     if code != 0:
-        details = stderr.strip() or stdout.strip() or "вывода нет"
+        parts = []
+        if stdout.strip():
+            parts.append(f"[stdout]\n{stdout.strip()}")
+        if stderr.strip():
+            parts.append(f"[stderr]\n{stderr.strip()}")
+        details = "\n\n".join(parts) or "вывода нет"
         raise ScriptError(f"Команда завершилась с ошибкой (код {code}): {' '.join(command)}\n{details}")
     return code, stdout, stderr
 
@@ -45,13 +54,15 @@ def main() -> int:
 
     base = target_path.stem
     pdf_path = Path(f"{base}.pdf")
+    build_tex = build_entrypoint_for(target_path)
+    build_pdf = build_tex.with_suffix(".pdf")
 
     AUX_DIR.mkdir(exist_ok=True)
-    if BUILD_PDF.exists():
-        BUILD_PDF.unlink()
+    if build_pdf.exists():
+        build_pdf.unlink()
     if pdf_path.exists():
         pdf_path.unlink()
-    shutil.copy2(target_path, BUILD_TEX)
+    shutil.copy2(target_path, build_tex)
 
     try:
         run_checked(
@@ -61,15 +72,15 @@ def main() -> int:
                 "-shell-escape",
                 f"-auxdir={AUX_DIR}",
                 "-outdir=.",
-                str(BUILD_TEX),
+                str(build_tex),
             ]
         )
     finally:
-        if BUILD_TEX.exists():
-            BUILD_TEX.unlink()
+        if build_tex.exists():
+            build_tex.unlink()
 
-    if BUILD_PDF.is_file():
-        shutil.move(str(BUILD_PDF), pdf_path)
+    if build_pdf.is_file():
+        shutil.move(str(build_pdf), pdf_path)
     if not pdf_path.is_file():
         raise ScriptError(
             f"PDF-файл не был создан там, где ожидалось: {pdf_path}. " "Проверьте сообщения latexmk выше."

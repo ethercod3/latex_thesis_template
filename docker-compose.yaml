@@ -7,6 +7,8 @@ services:
     user: "${HOST_UID:-0}:${HOST_GID:-0}"
     environment:
       HOME: /tmp
+      TERM: dumb
+      TARGET: "${TARGET}"
     volumes:
       - ./:/data
       - ${VAULT_OS_PATH}:${VAULT_PATH}
