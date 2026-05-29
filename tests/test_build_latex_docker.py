@@ -1,0 +1,37 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+import build_latex_docker as latex
+
+
+def test_main_builds_through_ascii_entrypoint_and_restores_pdf_name(tmp_path: Path, monkeypatch) -> None:
+    target = tmp_path / "Куприянов_И221_диплом.tex"
+    target.write_text(r"\documentclass{article}\begin{document}ok\end{document}", encoding="utf-8")
+    calls: list[list[str]] = []
+
+    def fake_run_checked(command: list[str]) -> tuple[int, str, str]:
+        calls.append(command)
+        assert (tmp_path / latex.BUILD_TEX).read_text(encoding="utf-8") == target.read_text(encoding="utf-8")
+        (tmp_path / latex.BUILD_PDF).write_bytes(b"%PDF-1.4\n%%EOF\n")
+        return 0, "", ""
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("TARGET", target.name)
+    monkeypatch.setattr(latex, "run_checked", fake_run_checked)
+
+    assert latex.main() == 0
+
+    assert calls == [
+        [
+            "latexmk",
+            "-lualatex",
+            "-shell-escape",
+            f"-auxdir={latex.AUX_DIR}",
+            "-outdir=.",
+            str(latex.BUILD_TEX),
+        ]
+    ]
+    assert not (tmp_path / latex.BUILD_TEX).exists()
+    assert not (tmp_path / latex.BUILD_PDF).exists()
+    assert (tmp_path / "Куприянов_И221_диплом.pdf").read_bytes() == b"%PDF-1.4\n%%EOF\n"

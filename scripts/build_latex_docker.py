@@ -9,12 +9,15 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 
 from common import ScriptError, script_main
 
 AUX_DIR = Path(".aux_files_docker")
+BUILD_TEX = Path("__latex_build_entrypoint__.tex")
+BUILD_PDF = Path("__latex_build_entrypoint__.pdf")
 
 
 def run_checked(command: list[str]) -> tuple[int, str, str]:
@@ -35,23 +38,38 @@ def main() -> int:
     target_path = Path(target)
     if target_path.suffix != ".tex":
         raise ScriptError(f"TARGET должен указывать на .tex файл, получено: {target}")
+    if target_path.is_absolute() or ".." in target_path.parts:
+        raise ScriptError(f"TARGET должен быть путем внутри проекта, получено: {target}")
+    if not target_path.is_file():
+        raise ScriptError(f"TARGET не найден: {target}")
 
     base = target_path.stem
+    pdf_path = Path(f"{base}.pdf")
 
     AUX_DIR.mkdir(exist_ok=True)
+    if BUILD_PDF.exists():
+        BUILD_PDF.unlink()
+    if pdf_path.exists():
+        pdf_path.unlink()
+    shutil.copy2(target_path, BUILD_TEX)
 
-    run_checked(
-        [
-            "latexmk",
-            "-lualatex",
-            "-shell-escape",
-            f"-auxdir={AUX_DIR}",
-            "-outdir=.",
-            target,
-        ]
-    )
+    try:
+        run_checked(
+            [
+                "latexmk",
+                "-lualatex",
+                "-shell-escape",
+                f"-auxdir={AUX_DIR}",
+                "-outdir=.",
+                str(BUILD_TEX),
+            ]
+        )
+    finally:
+        if BUILD_TEX.exists():
+            BUILD_TEX.unlink()
 
-    pdf_path = Path(f"{base}.pdf")
+    if BUILD_PDF.is_file():
+        shutil.move(str(BUILD_PDF), pdf_path)
     if not pdf_path.is_file():
         raise ScriptError(
             f"PDF-файл не был создан там, где ожидалось: {pdf_path}. " "Проверьте сообщения latexmk выше."

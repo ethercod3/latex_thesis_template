@@ -32,6 +32,11 @@ RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula sele
 
 RUN fc-cache -fv
 
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV PYTHONUTF8=1
+ENV PYTHONIOENCODING=utf-8
+
 WORKDIR /data
 
 CMD ["latexmk", "-lualatex", "main.tex"]
