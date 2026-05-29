@@ -23,7 +23,7 @@ The required toolset depends on how you build the project.
     If mise is installed, run `mise trust`, `mise install`, `mise run setup`, and `mise run check`. If mise is not used, install Task and Docker, then run the commands from [Quick start](quick-start.md).
 
 !!! tip "Environment check"
-    After installing the tools, run `task check`. It checks programs, the `uv` environment, and PyLuaTeX, then reports what is ready and what still needs to be installed.
+    After installing the tools, run `task check`. It checks Docker-first entrypoint tools and project state, while local manual-build tools are reported as optional.
 
     If Python is not installed yet and you only need to check the environment, download `diploma-latex-check.exe` from GitHub Releases, put it into the project root, and run:
 
