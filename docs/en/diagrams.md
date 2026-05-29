@@ -68,7 +68,9 @@ Run the script:
     uvx --from git+https://github.com/ethercod3/compile_mermaid.git compile-mermaid
     ```
 
-The script processes all files from `mermaid/`, places the result into `figures/`, and crops margins through `pdfcrop` after generation. If `pdfcrop` or Ghostscript is not installed, temporarily disable cropping:
+The script processes files from `mermaid/`, places the result into `figures/`, and crops margins through `pdfcrop` after generation. By default, it rebuilds only diagrams whose source `.mmd` is newer than the matching PDF, or whose PDF does not exist yet. Use `--force` to rebuild all Mermaid diagrams.
+
+If `pdfcrop` or Ghostscript is not installed, temporarily disable cropping:
 
 ```bash
 task mermaid -- --no-crop

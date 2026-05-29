@@ -626,6 +626,8 @@ task mermaid
 
 Или вручную: `uvx --from git+https://github.com/ethercod3/compile_mermaid.git compile-mermaid`.
 
+По умолчанию пересобираются только диаграммы, у которых исходный `.mmd` новее соответствующего PDF или PDF еще не создан. Чтобы принудительно пересобрать все Mermaid-диаграммы, запустите `task mermaid -- --force`.
+
 После генерации скрипт обрезает поля через `pdfcrop`, которому нужен Ghostscript. Если локально доступны только `mmdc` и нужно собрать PDF без обрезки, запустите `task mermaid -- --no-crop`.
 
 ### Сборка Mermaid через Docker
