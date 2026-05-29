@@ -1,5 +1,6 @@
 [diff_pdf]
 build = "docker compose --profile mermaid run --build --rm mermaid_diagrams && docker compose --profile python run --build --rm python_diagrams && docker compose --profile latex run --build --rm latex"
+env_file = ".env"
 pdf_from_target = true
 view = true
 
@@ -8,7 +9,6 @@ PYTHONIOENCODING = "utf-8"
 PYTHONUTF8 = "1"
 VAULT_PATH = { from_env = "VAULT_PATH" }
 VAULT_OS_PATH = { from_env = "VAULT_OS_PATH", resolve = true }
-UV_PYTHON = { from_env = "UV_PYTHON", default = "" }
 
 [diff_pdf.copy]
 paths = [
