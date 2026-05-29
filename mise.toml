@@ -1,0 +1,53 @@
+[settings]
+python.github_attestations = false
+
+[tools]
+python = "3.13.5"
+uv = "0.11.16"
+task = "3.49.1"
+
+[env]
+_.file = ".env"
+PYTHONIOENCODING = "utf-8"
+PYTHONUTF8 = "1"
+UV_PYTHON = "python"
+
+[tasks.setup]
+description = "Install project tools and sync the Python environment"
+run = "uv sync"
+
+[tasks.check]
+description = "Check local tools and project state"
+run = "task check"
+
+[tasks.build]
+description = "Run the full Docker PDF build"
+run = "task build"
+
+[tasks.clean]
+description = "Remove generated build artifacts"
+run = "task clean"
+
+[tasks.test]
+description = "Run Python tests"
+run = "task python:test"
+
+[tasks.lint]
+description = "Check Python formatting"
+run = "task python:lint"
+
+[tasks.format]
+description = "Format Python files"
+run = "task python:format"
+
+[tasks.mermaid]
+description = "Generate Mermaid diagrams"
+run = "task mermaid"
+
+[tasks.diagrams]
+description = "Generate Python diagrams"
+run = "task diagrams"
+
+[tasks.docs]
+description = "Build documentation"
+run = "task docs"

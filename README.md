@@ -70,7 +70,20 @@ SHAKE-128 (256-bit output): `20b24c7d0be9c74de44e1fb1c5169ba23fa634368adf4fbf4de
 <details>
 <summary>Установка Task и служебные команды</summary>
 
-## Установка Task
+## Установка инструментов
+
+Если у вас установлен [mise](https://mise.jdx.dev/), используйте его как самый короткий путь к нужным версиям Python, uv и Task:
+
+```bash
+mise trust
+mise install
+mise run setup
+mise run check
+```
+
+После этого основные команды можно запускать через `mise run build`, `mise run test` или напрямую через `task`.
+
+## Установка Task вручную
 
 Проект использует [Task](https://taskfile.dev/docs/installation) как единую точку входа для сборки и вспомогательных команд. Корневой `Taskfile.yml` подключает тематические файлы из `tasks/`, но публичные команды остаются плоскими: `task build`, `task docs`, `task latex:docker`.
 
