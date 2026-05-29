@@ -12,13 +12,13 @@ VAULT_OS_PATH = { from_env = "VAULT_OS_PATH", resolve = true }
 
 [diff_pdf.copy]
 paths = [
-  ".env",
-  "docker-compose.yaml",
-  "docker/latex.dockerfile",
-  "титульник.pdf",
-  "задание.pdf",
-  "scripts/build_all.py",
-  "scripts/compile_mermaid.py",
-  "scripts/convert_docx_to_pdf.py",
-  "scripts/build_latex_docker.py",
+    ".env",
+    "docker-compose.yaml",
+    "docker/latex.dockerfile",
+    "титульник.pdf",
+    "задание.pdf",
+    "scripts/build_all.py",
+    "scripts/compile_mermaid.py",
+    "scripts/convert_docx_to_pdf.py",
+    "scripts/build_latex_docker.py",
 ]
