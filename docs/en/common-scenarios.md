@@ -161,7 +161,7 @@ Before running the command, make sure the Git working tree is clean.
 === "Manual"
 
     ```bash
-    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2>
+    uvx diff-pdf-commits --build "<build command>" --pdf "<PDF from TARGET>" --view <commit_1> <commit_2>
     ```
 
 Details: [PDF comparison between commits](pdf-diff.md).

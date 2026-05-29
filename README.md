@@ -501,54 +501,31 @@ task crop:docker -- path/to/file.pdf
 
 ![pdf_diff_example](.github/images/pdf_diff_example.png)
 
-Если нужно посмотреть визуальную разницу между двумя версиями диплома, используйте скрипт:
+Если нужно посмотреть визуальную разницу между двумя версиями диплома, используйте задачу:
 
 ```bash
 task diff -- <commit_1> <commit_2>
 ```
 
-Или вручную: `uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2>`.
+Или вручную: `uvx diff-pdf-commits --build "<команда сборки>" --pdf "<PDF из TARGET>" --view <commit_1> <commit_2>`.
 
-Скрипт принимает 2 хэша коммита, по очереди переключается на каждый из них, собирает PDF через Docker, складывает две версии во временную папку и открывает `diff-pdf`.
+Пакет `diff-pdf-commits` принимает 2 хэша коммита, собирает PDF через Docker в отдельных worktree, складывает две версии во временную папку и открывает `diff-pdf`.
 
-Результат можно только открыть, только сохранить или сделать оба действия:
+По умолчанию задача открывает diff. Результат можно также сохранить в PDF:
 
 ```bash
 task diff -- <commit_1> <commit_2> --view
-task diff -- <commit_1> <commit_2> --save
-task diff -- <commit_1> <commit_2> --view --save
-task diff -- <commit_1> <commit_2> --save path/to/diff.pdf
+task diff -- <commit_1> <commit_2> --diff-output path/to/diff.pdf
+task diff -- <commit_1> <commit_2> --diff-output path/to/diff.pdf --no-view
 ```
 
-Для ручного запуска замените начало команды на `uv run python scripts/diff_pdf_commits.py`.
-
-Без `--view` и `--save` скрипт открывает diff. При `--save` без пути результат сохраняется в `.pdf_diff/saved`.
+Для ручного запуска используйте `uvx diff-pdf-commits`; полный набор параметров для проекта зашит в `task diff`.
 
 Скачать `diff-pdf` можно в [репозитории](https://github.com/vslavik/diff-pdf/)
 
-По умолчанию запускаются все профили в порядке `docx` $\rightarrow$ `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex`. Если нужно ограничить сборку, передайте опцию `--profiles`:
+Задача запускает сборку в порядке `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex`. Если нужно изменить последовательность, правьте переменную `DIFF_PDF_BUILD_CMD` в `tasks/tools.yml`.
 
-```bash
-task diff -- <commit_1> <commit_2> --profiles all
-task diff -- <commit_1> <commit_2> --profiles docx
-task diff -- <commit_1> <commit_2> --profiles mermaid
-task diff -- <commit_1> <commit_2> --profiles python
-task diff -- <commit_1> <commit_2> --profiles mermaid,python
-task diff -- <commit_1> <commit_2> --profiles latex
-```
-
-Пояснение:
-
-- `all`: `docx` $\rightarrow$ `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex`
-- `docx`: `docx` $\rightarrow$ `latex`
-- `mermaid`: `mermaid` $\rightarrow$ `latex`
-- `latex`: только `latex`
-- `python`: `python` $\rightarrow$ `latex`
-- `mermaid,python`: `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex`
-
-В `--profiles` можно передать несколько профилей через запятую: `docx,python`, `mermaid,python`, `docx,mermaid,python`. Скрипт запускает их в порядке `docx` $\rightarrow$ `mermaid` $\rightarrow$ `python` $\rightarrow$ `latex`. Если `latex` не указан явно, он добавляется автоматически, потому что именно этот профиль собирает итоговый PDF для сравнения.
-
-Перед запуском рабочее дерево Git должно быть чистым. После завершения скрипт возвращается на исходный `HEAD`, удаляет временные файлы и восстанавливает текущие файлы из `figures`, а также PDF в корне проекта, например `титульник.pdf` и `задание.pdf`.
+Перед запуском рабочее дерево Git должно быть чистым. Файлы, которые нужны для сборки, но могут отсутствовать в старых коммитах, задача передает через `--copy`: `.env`, титульные PDF и вспомогательные build-скрипты.
 
 
 </details>

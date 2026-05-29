@@ -2,7 +2,7 @@
 
 ![Example of visual PDF comparison](assets/pdf_diff_example.png)
 
-If you need to inspect the visual difference between two diploma versions, use the script:
+If you need to inspect the visual difference between two diploma versions, use the task:
 
 === "Task"
 
@@ -13,101 +13,56 @@ If you need to inspect the visual difference between two diploma versions, use t
 === "Manual"
 
     ```bash
-    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2>
+    uvx diff-pdf-commits --build "<build command>" --pdf "<PDF from TARGET>" --view <commit_1> <commit_2>
     ```
 
-The script accepts two commit hashes, checks out each one in sequence, builds the PDF through Docker, stores both versions in a temporary directory, and opens `diff-pdf`.[^diff-pdf]
+The `diff-pdf-commits` package accepts two commit hashes, builds the PDF in separate Docker-based worktrees, stores both versions in a temporary directory, and opens `diff-pdf`.[^diff-pdf]
 
 ```mermaid
 flowchart TD
     CLEAN{"Working tree<br/>clean?"}
     CLEAN -->|"no"| STOP["stop the run"]
     CLEAN -->|"yes"| A["checkout commit_1"]
-    A --> BUILD_A["build PDF through Docker"]
+    A --> BUILD_A["build PDF through Docker<br/>in a worktree"]
     BUILD_A --> SAVE_A["save first version"]
     SAVE_A --> B["checkout commit_2"]
-    B --> BUILD_B["build PDF through Docker"]
+    B --> BUILD_B["build PDF through Docker<br/>in a worktree"]
     BUILD_B --> SAVE_B["save second version"]
     SAVE_B --> DIFF["diff-pdf"]
-    DIFF --> RESTORE["restore original HEAD<br/>and working files"]
+    DIFF --> CLEANUP["remove temporary worktrees"]
 ```
 
-The result can be opened, saved, or both:
+The task opens the diff by default. The result can also be saved to a PDF:
 
 === "Task"
 
     ```bash
     task diff -- <commit_1> <commit_2> --view
-    task diff -- <commit_1> <commit_2> --save
-    task diff -- <commit_1> <commit_2> --view --save
-    task diff -- <commit_1> <commit_2> --save path/to/diff.pdf
+    task diff -- <commit_1> <commit_2> --diff-output path/to/diff.pdf
+    task diff -- <commit_1> <commit_2> --diff-output path/to/diff.pdf --no-view
     ```
 
 === "Manual"
 
     ```bash
-    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view
-    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save
-    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --view --save
-    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --save path/to/diff.pdf
+    uvx diff-pdf-commits --build "<build command>" --pdf "<PDF from TARGET>" --view <commit_1> <commit_2>
+    uvx diff-pdf-commits --build "<build command>" --pdf "<PDF from TARGET>" --diff-output path/to/diff.pdf <commit_1> <commit_2>
     ```
-
-Without `--view` and `--save`, the script opens the diff. With `--save` and no path, the result is saved to `.pdf_diff/saved`.
 
 Download `diff-pdf` from the repository: <https://github.com/vslavik/diff-pdf/>
 
-## Build profiles
-
-By default, all profiles are started in this order: `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex`.
+## Build
 
 ```mermaid
 flowchart LR
-    DOCX["docx"] --> MERMAID["mermaid"]
-    MERMAID --> PYTHON["python"]
+    MERMAID["mermaid"] --> PYTHON["python"]
     PYTHON --> LATEX["latex"]
     LATEX --> RESULT["PDF for comparison"]
 ```
 
-To limit the build, pass `--profiles`:
-
-=== "Task"
-
-    ```bash
-    task diff -- <commit_1> <commit_2> --profiles all
-    task diff -- <commit_1> <commit_2> --profiles docx
-    task diff -- <commit_1> <commit_2> --profiles mermaid
-    task diff -- <commit_1> <commit_2> --profiles python
-    task diff -- <commit_1> <commit_2> --profiles mermaid,python
-    task diff -- <commit_1> <commit_2> --profiles latex
-    ```
-
-=== "Manual"
-
-    ```bash
-    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles all
-    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles docx
-    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid
-    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles python
-    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles mermaid,python
-    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2> --profiles latex
-    ```
-
-Values:
-
-| Value | What runs |
-| --- | --- |
-| `all` | `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex` |
-| `docx` | `docx` {{ arrow }} `latex` |
-| `mermaid` | `mermaid` {{ arrow }} `latex` |
-| `python` | `python` {{ arrow }} `latex` |
-| `latex` | Only `latex` |
-| `mermaid,python` | `mermaid` {{ arrow }} `python` {{ arrow }} `latex` |
-
-You can pass multiple profiles to `--profiles` separated by commas: `docx,python`, `mermaid,python`, `docx,mermaid,python`. The script starts them in the order `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex`.
-
-If `latex` is not specified explicitly, it is added automatically because this profile builds the final PDF for comparison.
+The `task diff` task passes a ready build command to `uvx diff-pdf-commits`: Mermaid diagrams first, then Python diagrams, then LaTeX. The PDF name is derived from `TARGET` in `.env` by replacing the `.tex` extension with `.pdf`. To change the sequence, edit the `DIFF_PDF_BUILD_CMD` variable in `tasks/tools.yml`.
 
 !!! danger "Git working tree"
-    Before running the script, the Git working tree must be clean. After completion, the script returns to the original `HEAD`, removes temporary files, and restores current files from `figures`, as well as PDFs in the project root such as `титульник.pdf` and `задание.pdf`.
+    Before running the task, the Git working tree must be clean. Files required for the build but possibly absent in old commits are passed with `--copy`: `.env`, title PDFs, and helper build scripts.
 
 [^diff-pdf]: `diff-pdf` compares the visual representation of pages, not the source `.tex`. This is convenient for checking the final document: line breaks, figures, tables, and title pages are visible as changes in the PDF.

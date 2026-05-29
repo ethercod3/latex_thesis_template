@@ -161,7 +161,7 @@ VAULT_OS_PATH="../vault_diploma"
 === "Ручной"
 
     ```bash
-    uv run python scripts/diff_pdf_commits.py <commit_1> <commit_2>
+    uvx diff-pdf-commits --build "<команда сборки>" --pdf "<PDF из TARGET>" --view <commit_1> <commit_2>
     ```
 
 Подробнее: [Сравнение PDF между коммитами](pdf-diff.md).

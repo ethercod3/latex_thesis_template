@@ -1,5 +1,11 @@
 version: '3'
 
+vars:
+  DIFF_PDF_BUILD_CMD: >-
+    docker compose --profile mermaid run --build --rm mermaid_diagrams &&
+    docker compose --profile python run --build --rm python_diagrams &&
+    docker compose --profile latex run --build --rm latex
+
 tasks:
   check:
     desc: Проверить наличие инструментов для сборки проекта
@@ -74,4 +80,21 @@ tasks:
   diff:
     desc: Сравнить PDF между коммитами; аргументы передаются после --
     cmds:
-      - uv run python scripts/diff_pdf_commits.py {{.CLI_ARGS}}
+      - >-
+        uvx diff-pdf-commits
+        --build "{{.DIFF_PDF_BUILD_CMD}}"
+        --pdf "${TARGET%.tex}.pdf"
+        --env "PYTHONIOENCODING=utf-8"
+        --env "PYTHONUTF8=1"
+        --env "UV_PYTHON=${UV_PYTHON:-}"
+        --env "VAULT_OS_PATH=${VAULT_OS_PATH}"
+        --env "VAULT_PATH=${VAULT_PATH}"
+        --view
+        --copy .env
+        --copy титульник.pdf
+        --copy задание.pdf
+        --copy scripts/build_all.py
+        --copy scripts/compile_mermaid.py
+        --copy scripts/convert_docx_to_pdf.py
+        --copy scripts/build_latex_docker.py
+        {{.CLI_ARGS}}
