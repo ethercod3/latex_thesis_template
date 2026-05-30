@@ -1,4 +1,4 @@
-FROM debian:bookworm@sha256:8a8cd02c5912770b4980228a54d4aff9e4f986f1eb2525d2d371dec5232cefcc
+FROM texlive/texlive:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -11,19 +11,6 @@ RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula sele
     python-is-python3 \
     ghostscript \
     qpdf \
-    latexmk \
-    biber \
-    texlive-base \
-    texlive-luatex \
-    texlive-latex-base \
-    texlive-latex-recommended \
-    texlive-latex-extra \
-    texlive-lang-cyrillic \
-    texlive-bibtex-extra \
-    texlive-pictures \
-    texlive-plain-generic \
-    texlive-fonts-recommended \
-    texlive-fonts-extra \
     fonts-paratype \
     fonts-inconsolata \
     fontconfig \
