@@ -1,6 +1,7 @@
 # Исходники диплома
 
 [![Publish Zensical docs](https://github.com/ethercod3/diploma_latex/actions/workflows/pages.yml/badge.svg)](https://github.com/ethercod3/diploma_latex/actions/workflows/pages.yml)
+[![Build PDF](https://github.com/ethercod3/diploma_latex/actions/workflows/pdf-build.yml/badge.svg)](https://github.com/ethercod3/diploma_latex/actions/workflows/pdf-build.yml)
 [![Release PDF](https://github.com/ethercod3/diploma_latex/actions/workflows/pdf-release.yml/badge.svg)](https://github.com/ethercod3/diploma_latex/actions/workflows/pdf-release.yml)
 [![Check tools exe CI](https://github.com/ethercod3/diploma_latex/actions/workflows/check-tools-exe.yml/badge.svg)](https://github.com/ethercod3/diploma_latex/actions/workflows/check-tools-exe.yml)
 [![Backup git bundle](https://github.com/ethercod3/diploma_latex/actions/workflows/backup.yml/badge.svg)](https://github.com/ethercod3/diploma_latex/actions/workflows/backup.yml)

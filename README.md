@@ -1,6 +1,7 @@
 # Исходники диплома
 
 [![Publish Zensical docs](https://github.com/ethercod3/diploma_latex/actions/workflows/pages.yml/badge.svg)](https://github.com/ethercod3/diploma_latex/actions/workflows/pages.yml)
+[![Build PDF](https://github.com/ethercod3/diploma_latex/actions/workflows/pdf-build.yml/badge.svg)](https://github.com/ethercod3/diploma_latex/actions/workflows/pdf-build.yml)
 [![Release PDF](https://github.com/ethercod3/diploma_latex/actions/workflows/pdf-release.yml/badge.svg)](https://github.com/ethercod3/diploma_latex/actions/workflows/pdf-release.yml)
 [![Check tools exe CI](https://github.com/ethercod3/diploma_latex/actions/workflows/check-tools-exe.yml/badge.svg)](https://github.com/ethercod3/diploma_latex/actions/workflows/check-tools-exe.yml)
 [![Backup git bundle](https://github.com/ethercod3/diploma_latex/actions/workflows/backup.yml/badge.svg)](https://github.com/ethercod3/diploma_latex/actions/workflows/backup.yml)
@@ -859,17 +860,20 @@ BACKUP_KEEP_WEEKS=30
 В `.github/workflows/` настроены GitHub Actions:
 
 - `check-tools-exe.yml` собирает `diploma-latex-check.exe` и загружает его в release для тегов `v*`;
-- `pdf-release.yml` собирает PDF через Docker и публикует release assets;
+- `pdf-build.yml` собирает PDF через Docker и загружает artifact `pdf-release-assets`;
+- `pdf-release.yml` скачивает готовый artifact и публикует release assets, а также отправляет PDF в `ethercod3/diploma-pdf-archive`;
 - `pages.yml` публикует Zensical-документацию на GitHub Pages;
 - `backup.yml` еженедельно создает `git bundle` и загружает его в облачные хранилища через `rclone`.
 
-Для тегов `v*` PDF workflow запускается через `workflow_run` после успешного завершения `Release check tools exe`, поэтому в release попадает актуальная версия `checktool-windows-x64.exe`.
+Для тегов `v*` workflow `Build PDF` запускается через `workflow_run` после успешного завершения `Release check tools exe`, поэтому в artifact попадает актуальная версия `checktool-windows-x64.exe`. После успешного `Build PDF` workflow `Release PDF` публикует уже готовый artifact; его можно перезапустить вручную по `build_run_id` без пересборки LaTeX.
 
-Ночная сборка запускается по cron в 04:00 по Якутску и обновляет служебный тег/release `nightly`.
+Ночная сборка запускается по cron в 04:00 по Якутску в `Build PDF` и после успешной сборки обновляет служебный тег/release `nightly`.
+
+Для публикации PDF в отдельный архивный репозиторий нужен secret `PDF_ARCHIVE_TOKEN` с `Contents: Read and write` для `ethercod3/diploma-pdf-archive`. Количество хранимых PDF регулируется переменной `PDF_ARCHIVE_MAX_BUILDS`, по умолчанию `50`.
 
 Для CI-сборки приложений workflow подтягивает приватный репозиторий `ethercod3/diploma_code` в `vault_diploma`. В настройках GitHub Actions должен быть secret `VIEW_DIPLOMA_CODE` с read-only доступом к этому репозиторию.
 
-Нетривиальная логика CI/CD вынесена из YAML в Python-скрипты `scripts/ci/*.py`: подготовка `.env`, определение release context, скачивание checktool assets и публикация PDF release. Сам workflow вызывает задачи по шагам: `task build`.
+Нетривиальная логика CI/CD вынесена из YAML в скрипты `scripts/ci/*`: подготовка `.env`, определение release context, скачивание checktool assets, публикация PDF release и выгрузка PDF в архив. Сам workflow вызывает задачи по шагам: `task build`, `python ...` и `nu ...`.
 
 
 </details>
