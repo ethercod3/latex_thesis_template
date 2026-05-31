@@ -30,6 +30,11 @@ def run-git-redacted [args: list<string>, display_args: list<string>] {
     $result.stdout | str trim
 }
 
+def clear-github-extraheader [] {
+    ^git config --unset-all http.https://github.com/.extraheader out+err> /dev/null
+    ^git config --global --unset-all http.https://github.com/.extraheader out+err> /dev/null
+}
+
 def archive-remote-url [repo: string, token: string] {
     if $repo == "" {
         run-git [remote get-url origin]
@@ -62,6 +67,7 @@ def main [] {
     let repo = (env-or "PDF_ARCHIVE_REPOSITORY" "")
     let token = (env-or "PDF_ARCHIVE_TOKEN" "")
     let remote_url = (archive-remote-url $repo $token)
+    clear-github-extraheader
     let source_sha = (run-git [rev-parse HEAD])
     let short_sha = (run-git [rev-parse --short HEAD])
     let release_tag = (env-or "CURRENT_TAG" "unknown")

@@ -8,6 +8,11 @@ def env-or [name: string, fallback: string] {
     if ($value | str trim) == "" { $fallback } else { $value }
 }
 
+def clear-github-extraheader [] {
+    ^git config --unset-all http.https://github.com/.extraheader out+err> /dev/null
+    ^git config --global --unset-all http.https://github.com/.extraheader out+err> /dev/null
+}
+
 def main [] {
     let repo = (env-or "PDF_ARCHIVE_REPOSITORY" $DEFAULT_ARCHIVE_REPOSITORY)
     let branch = (env-or "PDF_ARCHIVE_BRANCH" $DEFAULT_ARCHIVE_BRANCH)
@@ -26,6 +31,7 @@ def main [] {
     }
 
     let remote_url = $"https://x-access-token:($token)@github.com/($repo).git"
+    clear-github-extraheader
     let result = (^git ls-remote --heads $remote_url $branch | complete)
 
     if $result.exit_code != 0 {
