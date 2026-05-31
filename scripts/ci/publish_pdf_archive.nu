@@ -28,7 +28,9 @@ def archive-remote-url [repo: string, token: string] {
     if $repo == "" {
         run-git [remote get-url origin]
     } else if $token == "" {
-        $"https://github.com/($repo).git"
+        error make {
+            msg: $"PDF_ARCHIVE_TOKEN is required to push PDF builds to external repository ($repo)."
+        }
     } else {
         $"https://x-access-token:($token)@github.com/($repo).git"
     }
