@@ -32,7 +32,10 @@ def current_tag() -> str:
 def run_command(command: list[str], check: bool = True) -> subprocess.CompletedProcess[str]:
     result = subprocess.run(command, check=False, capture_output=True, text=True)
     if check and result.returncode != 0:
-        raise ScriptError(f"Команда завершилась с ошибкой (код {result.returncode}): {' '.join(command)}")
+        details = (result.stderr or result.stdout).strip()
+        if details:
+            details = f"\n{details}"
+        raise ScriptError(f"Команда завершилась с ошибкой (код {result.returncode}): {' '.join(command)}{details}")
     return result
 
 
