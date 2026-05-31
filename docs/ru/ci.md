@@ -38,6 +38,8 @@ Workflow проверки также оставляет исходные assets 
 
 После публикации release workflow `Release PDF` отправляет PDF в отдельный репозиторий `ethercod3/diploma-pdf-archive`. Там GitHub Pages собирает статический сайт архива через Material for MkDocs.
 
+Перед созданием новой записи архив сравнивает свежий PDF с последней сохраненной сборкой через `scripts/ci/pdf_semantic_hash.py`. Хеш считается после qpdf-нормализации страниц (`qpdf --empty --pages ... --`) с удалением document info/XMP metadata и детерминированным `/ID`, поэтому архив не растет, если изменился только внутренний PDF build id или document metadata.
+
 Для доступа к архивному репозиторию в основном репозитории должен быть GitHub Actions secret:
 
 ```text
@@ -104,6 +106,7 @@ TARGET="Куприянов_И221_диплом.tex"
 | `scripts/ci/resolve_pdf_release_context.py` | Определяет release tag и источник checktool assets |
 | `scripts/ci/download_latest_checktool_assets.py` | Скачивает checktool assets из нужного release |
 | `scripts/ci/publish_pdf_release.py` | Создает/обновляет release и загружает PDF/checktool assets |
+| `scripts/ci/pdf_semantic_hash.py` | Считает нормализованный PDF-хеш для дедупликации архива |
 | `scripts/ci/check_pdf_archive_access.nu` | Проверяет доступ к PDF-архиву перед публикацией |
 | `scripts/ci/publish_pdf_archive.nu` | Публикует PDF в отдельный архивный репозиторий |
 | `scripts/ci/release_check_tools.py` | Публикует exe проверки состояния проекта |

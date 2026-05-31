@@ -5,6 +5,7 @@ const DEFAULT_MAX_BUILDS = "50"
 const DEFAULT_PDF_PATH = "Куприянов_И221_диплом.pdf"
 const ARCHIVE_ROOT = "pdfs"
 const WORKTREE_DIR = ".pdf-archive-worktree"
+const HASH_SCRIPT = "scripts/ci/pdf_semantic_hash.py"
 
 def env-or [name: string, fallback: string] {
     let value = ($env | get --optional $name | default "")
@@ -51,6 +52,33 @@ def archive-remote-url [repo: string, token: string] {
     }
 }
 
+def pdf-semantic-hash [path: string] {
+    let result = (^python $HASH_SCRIPT $path | complete)
+    ensure-success $result $"failed to compute semantic PDF hash for ($path)"
+    $result.stdout | str trim
+}
+
+def pdf-file-in-build [build_dir: string] {
+    if not ($build_dir | path exists) {
+        return ""
+    }
+
+    let metadata_path = ($build_dir | path join "metadata.json")
+    if ($metadata_path | path exists) {
+        let metadata = (open $metadata_path)
+        let pdf_file = ($metadata | get --optional pdf_file | default "")
+        if $pdf_file != "" {
+            let pdf_path = ($build_dir | path join $pdf_file)
+            if ($pdf_path | path exists) {
+                return $pdf_path
+            }
+        }
+    }
+
+    let pdfs = (ls $build_dir | where type == file | where name =~ '\.pdf$' | sort-by name)
+    if ($pdfs | is-empty) { "" } else { ($pdfs | first).name }
+}
+
 def main [] {
     let archive_branch = (env-or "PDF_ARCHIVE_BRANCH" $DEFAULT_ARCHIVE_BRANCH)
     let max_builds = ((env-or "PDF_ARCHIVE_MAX_BUILDS" $DEFAULT_MAX_BUILDS) | into int)
@@ -95,6 +123,26 @@ def main [] {
     run-git [-C $WORKTREE_DIR config user.name "github-actions[bot]"]
     run-git [-C $WORKTREE_DIR config user.email "41898282+github-actions[bot]@users.noreply.github.com"]
 
+    let archive_root = ($WORKTREE_DIR | path join $ARCHIVE_ROOT)
+    let builds = if ($archive_root | path exists) {
+        ls $archive_root | where type == dir | sort-by name --reverse
+    } else {
+        []
+    }
+
+    if not ($builds | is-empty) {
+        let latest_build = ($builds | first)
+        let latest_pdf = (pdf-file-in-build $latest_build.name)
+        if $latest_pdf != "" {
+            let current_hash = (pdf-semantic-hash $pdf_path)
+            let latest_hash = (pdf-semantic-hash $latest_pdf)
+            if $current_hash == $latest_hash {
+                print $"PDF archive unchanged after metadata normalization; latest build remains ($latest_build.name | path basename)."
+                return
+            }
+        }
+    }
+
     let build_dir = ($WORKTREE_DIR | path join $ARCHIVE_ROOT $build_id)
     mkdir $build_dir
 
@@ -109,7 +157,6 @@ def main [] {
         pdf_file: $pdf_name
     } | to json --indent 2 | save -f ($build_dir | path join "metadata.json")
 
-    let archive_root = ($WORKTREE_DIR | path join $ARCHIVE_ROOT)
     let builds = (ls $archive_root | where type == dir | sort-by name --reverse)
     for old_build in ($builds | skip $max_builds) {
         rm -rf $old_build.name
