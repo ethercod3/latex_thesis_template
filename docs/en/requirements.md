@@ -22,10 +22,10 @@ The required toolset depends on how you build the project.
 !!! tip "Shortest path"
     If mise is installed, run `mise trust`, `mise install`, `mise run setup`, and `mise run check`. If mise is not used, install Task and Docker, then run the commands from [Quick start](quick-start.md).
 
-!!! tip "Environment check"
-    After installing the tools, run `task check`. It checks Docker-first entrypoint tools and project state, while local manual-build tools are reported as optional.
+!!! tip "Project state check"
+    After installing the tools, run `task check`. It checks `.env`, the target `.tex`, the application source path, title-page PDFs, and diagram freshness.
 
-    If Python is not installed yet and you only need to check the environment, download `diploma-latex-check.exe` from GitHub Releases, put it into the project root, and run:
+    If Python is not installed yet and you only need to check the project state, download `diploma-latex-check.exe` from GitHub Releases, put it into the project root, and run:
 
     ```powershell
     .\diploma-latex-check.exe

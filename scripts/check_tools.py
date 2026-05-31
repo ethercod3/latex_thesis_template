@@ -1,38 +1,26 @@
-"""Совместимый входной файл для проверки окружения проекта."""
+"""Совместимый входной файл для проверки состояния проекта."""
 
 from __future__ import annotations
 
 from check_tools_lib import (
     Check,
     checks,
-    command_check,
-    docker_compose_check,
     diagram_state_checks,
-    first_line,
     main,
     ok_check,
-    path_only_check,
     project_state_checks,
-    pyluatex_check,
     safe_env_value,
-    uv_environment_check,
     warning_check,
 )
 
 __all__ = [
     "Check",
     "checks",
-    "command_check",
-    "docker_compose_check",
     "diagram_state_checks",
-    "first_line",
     "main",
     "ok_check",
-    "path_only_check",
     "project_state_checks",
-    "pyluatex_check",
     "safe_env_value",
-    "uv_environment_check",
     "warning_check",
 ]
 

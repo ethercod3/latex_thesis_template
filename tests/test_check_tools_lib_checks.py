@@ -4,14 +4,16 @@ import importlib
 from pathlib import Path
 
 from check_tools_lib import checks
-from check_tools_lib.checks import diagram_state_checks
+from check_tools_lib.checks import diagram_state_checks, project_state_checks
 
 
-def test_local_tex_tools_are_optional() -> None:
+def test_checks_only_include_project_state() -> None:
     items = {item.name: item for item in checks()}
+    project_items = {item.name: item for item in project_state_checks()}
 
+    assert items == project_items
     for name in ("LuaLaTeX", "latexmk", "biber", "kpsewhich", "Пакет PyLuaTeX"):
-        assert items[name].required is False
+        assert name not in items
 
 
 def test_mermaid_state_checks_include_supported_extensions(tmp_path: Path, monkeypatch) -> None:
