@@ -63,6 +63,11 @@ jobs:
           INPUT_TAG: ${{ inputs.tag }}
         run: uv run python scripts/ci/resolve_pdf_release_context.py
 
+      - name: Check PDF archive access
+        env:
+          PDF_ARCHIVE_TOKEN: ${{ secrets.PDF_ARCHIVE_TOKEN }}
+        run: nu scripts/ci/check_pdf_archive_access.nu
+
       - name: Checkout diploma code repo
         uses: actions/checkout@v4
         with:
