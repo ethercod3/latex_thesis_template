@@ -29,13 +29,20 @@ def current_tag() -> str:
     return tag
 
 
-def run_command(command: list[str], check: bool = True) -> subprocess.CompletedProcess[str]:
+def run_command(
+    command: list[str],
+    check: bool = True,
+    display_command: list[str] | None = None,
+) -> subprocess.CompletedProcess[str]:
     result = subprocess.run(command, check=False, capture_output=True, text=True)
     if check and result.returncode != 0:
         details = (result.stderr or result.stdout).strip()
         if details:
             details = f"\n{details}"
-        raise ScriptError(f"Команда завершилась с ошибкой (код {result.returncode}): {' '.join(command)}{details}")
+        visible_command = display_command or command
+        raise ScriptError(
+            f"Команда завершилась с ошибкой (код {result.returncode}): {' '.join(visible_command)}{details}"
+        )
     return result
 
 
@@ -62,8 +69,23 @@ def move_nightly_tag(tag: str) -> None:
     if tag != NIGHTLY_TAG:
         return
 
+    token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    repository = os.environ.get("GITHUB_REPOSITORY")
+    remote = "origin"
+    display_remote = "origin"
+    if token and repository:
+        remote = f"https://x-access-token:{token}@github.com/{repository}.git"
+        display_remote = f"https://x-access-token:<TOKEN>@github.com/{repository}.git"
+
     run_command(["git", "tag", "-f", tag, "HEAD"])
-    run_command(["git", "push", "origin", f"refs/tags/{tag}", "--force"])
+    push_command = ["git", "push", remote, f"refs/tags/{tag}", "--force"]
+    if display_remote == remote:
+        run_command(push_command)
+    else:
+        run_command(
+            push_command,
+            display_command=["git", "push", display_remote, f"refs/tags/{tag}", "--force"],
+        )
 
 
 def upload_if_exists(tag: str, local_path: Path, asset_name: str) -> None:
