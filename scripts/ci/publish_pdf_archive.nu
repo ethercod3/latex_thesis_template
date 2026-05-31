@@ -31,6 +31,10 @@ def archive-remote-url [repo: string, token: string] {
         error make {
             msg: $"PDF_ARCHIVE_TOKEN is required to push PDF builds to external repository ($repo)."
         }
+    } else if ($token | str starts-with "ghs_") {
+        error make {
+            msg: $"PDF_ARCHIVE_TOKEN must be a personal access token with Contents read/write access to ($repo), not the workflow GITHUB_TOKEN."
+        }
     } else {
         $"https://x-access-token:($token)@github.com/($repo).git"
     }
