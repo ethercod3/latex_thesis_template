@@ -1,0 +1,20 @@
+name: Block PDF archive merge
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  block-pdf-archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reject pdf-archive as PR source
+        if: ${{ github.head_ref == 'pdf-archive' }}
+        run: |
+          echo "Merging pdf-archive into main is forbidden."
+          exit 1
+
+      - name: Allow other branches
+        if: ${{ github.head_ref != 'pdf-archive' }}
+        run: echo "Source branch is allowed."

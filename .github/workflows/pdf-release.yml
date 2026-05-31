@@ -18,6 +18,10 @@ on:
 permissions:
   contents: write
 
+env:
+  PDF_ARCHIVE_BRANCH: ${{ vars.PDF_ARCHIVE_BRANCH || 'pdf-archive' }}
+  PDF_ARCHIVE_MAX_BUILDS: ${{ vars.PDF_ARCHIVE_MAX_BUILDS || '50' }}
+
 jobs:
   release-pdf:
     if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push') }}
@@ -39,8 +43,14 @@ jobs:
           version: "0.11.16"
           enable-cache: true
 
+      - name: Set up Nushell
+        uses: nushell/setup-nu@v2
+
       - name: Verify uv
         run: uv --version
+
+      - name: Verify Nushell
+        run: nu --version
 
       - name: Install Python dependencies
         run: uv sync --locked
@@ -91,3 +101,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: uv run python scripts/ci/publish_pdf_release.py
+
+      - name: Publish PDF archive
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: nu scripts/ci/publish_pdf_archive.nu
