@@ -31,8 +31,8 @@ def run-git-redacted [args: list<string>, display_args: list<string>] {
 }
 
 def clear-github-extraheader [] {
-    ^git config --unset-all http.https://github.com/.extraheader out+err> /dev/null
-    ^git config --global --unset-all http.https://github.com/.extraheader out+err> /dev/null
+    let _local = (^git config --unset-all http.https://github.com/.extraheader | complete)
+    let _global = (^git config --global --unset-all http.https://github.com/.extraheader | complete)
 }
 
 def archive-remote-url [repo: string, token: string] {
