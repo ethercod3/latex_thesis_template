@@ -19,7 +19,7 @@ def test_run_exe_decodes_utf8_output(monkeypatch) -> None:
     result = subprocess.CompletedProcess(
         args=[str(check_tools_exe.EXE_PATH)],
         returncode=1,
-        stdout="Проверка окружения\n".encode("utf-8"),
+        stdout="Проверка состояния проекта\n".encode("utf-8"),
         stderr="Ошибка\n".encode("utf-8"),
     )
     monkeypatch.setattr(check_tools_exe.subprocess, "run", lambda *args, **kwargs: result)
@@ -27,7 +27,7 @@ def test_run_exe_decodes_utf8_output(monkeypatch) -> None:
     code, stdout, stderr = check_tools_exe.run_exe()
 
     assert code == 1
-    assert stdout == "Проверка окружения\n"
+    assert stdout == "Проверка состояния проекта\n"
     assert stderr == "Ошибка\n"
 
 

@@ -1,4 +1,4 @@
-"""Rich-рендеринг результатов проверки окружения."""
+"""Rich-рендеринг результатов проверки состояния проекта."""
 
 from __future__ import annotations
 
@@ -33,26 +33,15 @@ def print_group(console: Console, title: str, items: list[Check]) -> None:
             console.print(f"        Как исправить: {item.fix}")
 
 
-def print_report(items: list[Check], project_items: list[Check], console: Console | None = None) -> None:
+def print_report(project_items: list[Check], console: Console | None = None) -> None:
     console = console or Console()
-    required = [item for item in items if item.required]
-    optional = [item for item in items if not item.required]
-    missing_required = [item for item in required if not item.ok]
-    warnings = [item for item in [*items, *project_items] if item.ok and item.warning]
+    warnings = [item for item in project_items if item.ok and item.warning]
 
-    console.print("Проверка окружения проекта", style="bold")
-    print_group(console, "Обязательные инструменты для поддерживаемой сборки", required)
+    console.print("Проверка состояния проекта", style="bold")
     print_group(console, "Состояние проекта", project_items)
-    print_group(console, "Опциональные локальные инструменты", optional)
-
-    if missing_required:
-        console.print(f"\nОкружение не готово: обязательных проверок с ошибкой: {len(missing_required)}.", style="red")
-        return
 
     if warnings:
-        console.print(
-            f"\nОкружение можно использовать, но проверок с предупреждениями: {len(warnings)}.", style="yellow"
-        )
+        console.print(f"\nПроект можно использовать, но проверок с предупреждениями: {len(warnings)}.", style="yellow")
         return
 
-    console.print("\nОкружение готово.", style="green")
+    console.print("\nСостояние проекта корректно.", style="green")

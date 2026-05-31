@@ -8,7 +8,7 @@ The `Publish Zensical docs` workflow builds bilingual documentation with `task d
 
 ## Check tools
 
-The `Release check tools exe` workflow runs on `v*` tag pushes and manually. It builds the Windows environment checker:
+The `Release check tools exe` workflow runs on `v*` tag pushes and manually. It builds the Windows project-state checker:
 
 - `diploma-latex-check.exe`;
 - `SHA256SUMS.txt`.
@@ -87,6 +87,6 @@ Non-trivial workflow logic is kept in Python scripts:
 | `scripts/ci/resolve_pdf_release_context.py` | Resolves the release tag and checktool asset source |
 | `scripts/ci/download_latest_checktool_assets.py` | Downloads checktool assets from the appropriate release |
 | `scripts/ci/publish_pdf_release.py` | Creates/updates the release and uploads PDF/checktool assets |
-| `scripts/ci/release_check_tools.py` | Publishes the environment-checker exe |
+| `scripts/ci/release_check_tools.py` | Publishes the project-state-checker exe |
 
 Workflow YAML keeps only basic commands such as `python ...` and `task build`.
