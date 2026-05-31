@@ -38,7 +38,7 @@ Workflow проверки также оставляет исходные assets 
 
 После публикации release workflow `Release PDF` отправляет PDF в отдельный репозиторий `ethercod3/diploma-pdf-archive`. Там GitHub Pages собирает статический сайт архива через Material for MkDocs.
 
-Перед созданием новой записи архив сравнивает свежий PDF с последней сохраненной сборкой через `scripts/ci/pdf_semantic_hash.py`. Хеш считается после qpdf-нормализации страниц (`qpdf --empty --pages ... --`) с удалением document info/XMP metadata и детерминированным `/ID`, поэтому архив не растет, если изменился только внутренний PDF build id или document metadata.
+Перед созданием новой записи архив сравнивает свежий PDF с последней сохраненной сборкой через `scripts/ci/pdf_semantic_hash.py`. Хеш считается после qpdf-нормализации страниц (`qpdf --empty --pages ... --`) с детерминированным `/ID`; исходные document info/XMP metadata при такой пересборке не переносятся, поэтому архив не растет, если изменился только внутренний PDF build id или document metadata.
 
 Для доступа к архивному репозиторию в основном репозитории должен быть GitHub Actions secret:
 

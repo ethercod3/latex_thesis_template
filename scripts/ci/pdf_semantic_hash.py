@@ -16,8 +16,6 @@ def run_qpdf_normalize(source: Path, target: Path) -> None:
         "--object-streams=disable",
         "--stream-data=uncompress",
         "--normalize-content=y",
-        "--remove-info",
-        "--remove-metadata",
         "--empty",
         "--pages",
         str(source),

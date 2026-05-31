@@ -38,7 +38,7 @@ The check-tools workflow also leaves the original `diploma-latex-check.exe` and 
 
 After publishing the release, the `Release PDF` workflow pushes the PDF to the separate `ethercod3/diploma-pdf-archive` repository. That repository builds a static archive site for GitHub Pages with Material for MkDocs.
 
-Before creating a new archive entry, the workflow compares the fresh PDF with the latest stored build through `scripts/ci/pdf_semantic_hash.py`. The hash is computed after qpdf page normalization (`qpdf --empty --pages ... --`) with document info/XMP metadata removed and a deterministic `/ID`, so the archive does not grow when only the internal PDF build id or document metadata changes.
+Before creating a new archive entry, the workflow compares the fresh PDF with the latest stored build through `scripts/ci/pdf_semantic_hash.py`. The hash is computed after qpdf page normalization (`qpdf --empty --pages ... --`) with a deterministic `/ID`; source document info/XMP metadata is not carried over by this rebuild, so the archive does not grow when only the internal PDF build id or document metadata changes.
 
 The main repository needs this GitHub Actions secret for archive access:
 
