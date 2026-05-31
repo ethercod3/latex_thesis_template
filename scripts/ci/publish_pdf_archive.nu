@@ -24,6 +24,16 @@ def run-git [args: list<string>] {
     $result.stdout | str trim
 }
 
+def archive-remote-url [repo: string, token: string] {
+    if $repo == "" {
+        run-git [remote get-url origin]
+    } else if $token == "" {
+        $"https://github.com/($repo).git"
+    } else {
+        $"https://x-access-token:($token)@github.com/($repo).git"
+    }
+}
+
 def main [] {
     let archive_branch = (env-or "PDF_ARCHIVE_BRANCH" $DEFAULT_ARCHIVE_BRANCH)
     let max_builds = ((env-or "PDF_ARCHIVE_MAX_BUILDS" $DEFAULT_MAX_BUILDS) | into int)
@@ -37,8 +47,9 @@ def main [] {
         error make { msg: $"PDF file not found: ($pdf_path)" }
     }
 
-    let repo = (env-or "GITHUB_REPOSITORY" "")
-    let token = (env-or "GITHUB_TOKEN" "")
+    let repo = (env-or "PDF_ARCHIVE_REPOSITORY" "")
+    let token = (env-or "PDF_ARCHIVE_TOKEN" "")
+    let remote_url = (archive-remote-url $repo $token)
     let source_sha = (run-git [rev-parse HEAD])
     let short_sha = (run-git [rev-parse --short HEAD])
     let release_tag = (env-or "CURRENT_TAG" "unknown")
@@ -53,21 +64,17 @@ def main [] {
         }
     }
 
-    let remote_ref = (^git ls-remote --heads origin $archive_branch | complete)
+    let remote_ref = (^git ls-remote --heads $remote_url $archive_branch | complete)
     if ($remote_ref.exit_code == 0) and (($remote_ref.stdout | str trim) != "") {
-        run-git [fetch origin $archive_branch --depth 1]
-        run-git [worktree add $WORKTREE_DIR $"origin/($archive_branch)"]
+        run-git [fetch $remote_url $archive_branch --depth 1]
+        run-git [worktree add $WORKTREE_DIR FETCH_HEAD]
+        run-git [-C $WORKTREE_DIR remote remove origin]
+        run-git [-C $WORKTREE_DIR remote add origin $remote_url]
     } else {
         mkdir $WORKTREE_DIR
         run-git [-C $WORKTREE_DIR init]
         run-git [-C $WORKTREE_DIR checkout --orphan $archive_branch]
-
-        if ($repo != "") and ($token != "") {
-            run-git [-C $WORKTREE_DIR remote add origin $"https://x-access-token:($token)@github.com/($repo).git"]
-        } else {
-            let remote_url = (run-git [remote get-url origin])
-            run-git [-C $WORKTREE_DIR remote add origin $remote_url]
-        }
+        run-git [-C $WORKTREE_DIR remote add origin $remote_url]
     }
 
     run-git [-C $WORKTREE_DIR config user.name "github-actions[bot]"]
