@@ -108,3 +108,25 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: nu scripts/ci/publish_pdf_archive.nu
+
+      - name: Checkout PDF archive
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.PDF_ARCHIVE_BRANCH }}
+          path: pdf-archive-pages
+
+      - name: Generate PDF archive directory listing
+        uses: gacts/directory-listing@v1
+        with:
+          target: pdf-archive-pages
+          overwrite: true
+
+      - name: Publish PDF archive directory listing
+        working-directory: pdf-archive-pages
+        run: |
+          touch .nojekyll
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Update PDF archive directory listing" || exit 0
+          git push origin HEAD:${PDF_ARCHIVE_BRANCH}
