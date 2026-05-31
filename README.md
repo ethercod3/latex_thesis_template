@@ -32,6 +32,10 @@
 
 https://ethercod3.github.io/diploma_latex/
 
+## Каталог PDF по датам
+
+https://ethercod3.github.io/diploma-pdf-archive/
+
 <!-- [[[cog
 from update_pdf_hash import cog_readme_block
 cog.out(cog_readme_block())
@@ -363,7 +367,7 @@ task latex:manual_chain
 
     Пояснение:
 
-    - `VAULT_PATH`: любой абсолютный unix путь. 
+    - `VAULT_PATH`: любой абсолютный unix путь.
     - `VAULT_OS_PATH`: где относительно текущей папки лежит код
     - `TARGET`: `.tex` файл
 
@@ -623,7 +627,7 @@ GitHub не всегда показывает содержимое файлов 
 1. Отредактируйте нужную диаграмму (они содержатся в файлах `.mmd`)
 2. Установите инструмент командой строки `mmdc` : https://github.com/mermaid-js/mermaid-cli
 3. Пересоберите диаграмму:
-    
+
     ```bash
     mmdc -i <file.mmd> -o <file.pdf> -f
     ```
