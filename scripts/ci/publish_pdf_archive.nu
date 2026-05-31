@@ -24,6 +24,12 @@ def run-git [args: list<string>] {
     $result.stdout | str trim
 }
 
+def run-git-redacted [args: list<string>, display_args: list<string>] {
+    let result = (^git ...$args | complete)
+    ensure-success $result $"git command failed: git ($display_args | str join ' ')"
+    $result.stdout | str trim
+}
+
 def archive-remote-url [repo: string, token: string] {
     if $repo == "" {
         run-git [remote get-url origin]
@@ -74,13 +80,10 @@ def main [] {
     if ($remote_ref.exit_code == 0) and (($remote_ref.stdout | str trim) != "") {
         run-git [fetch $remote_url $archive_branch --depth 1]
         run-git [worktree add $WORKTREE_DIR FETCH_HEAD]
-        run-git [-C $WORKTREE_DIR remote remove origin]
-        run-git [-C $WORKTREE_DIR remote add origin $remote_url]
     } else {
         mkdir $WORKTREE_DIR
         run-git [-C $WORKTREE_DIR init]
         run-git [-C $WORKTREE_DIR checkout --orphan $archive_branch]
-        run-git [-C $WORKTREE_DIR remote add origin $remote_url]
     }
 
     run-git [-C $WORKTREE_DIR config user.name "github-actions[bot]"]
@@ -114,6 +117,6 @@ def main [] {
     }
 
     run-git [-C $WORKTREE_DIR commit -m $"Add PDF build ($build_id)"]
-    run-git [-C $WORKTREE_DIR push origin $"HEAD:($archive_branch)"]
+    run-git-redacted [-C $WORKTREE_DIR push $remote_url $"HEAD:($archive_branch)"] [-C $WORKTREE_DIR push "<PDF_ARCHIVE_REPOSITORY>" $"HEAD:($archive_branch)"]
     print $"Published PDF archive build ($build_id) to ($archive_branch)."
 }
