@@ -40,10 +40,17 @@
 \captionsetup[table]{
 	justification=raggedright,
 	singlelinecheck=false,
-	font={stretch=1.2}
+	font={stretch=1.2},
+	skip=0pt
 }
 
-\AtBeginEnvironment{figure}{\vspace{\figuretopcompensationskip}}
+\makeatletter
+\let\origfigure\figure
+\let\endorigfigure\endfigure
+\renewenvironment{figure}[1][\fps@figure]
+  {\origfigure[#1]\vspace{\figuretopcompensationskip}}
+  {\endorigfigure}
+\makeatother
 
 % --- Отступы для figure[p] ---
 
@@ -115,6 +122,7 @@
 \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
 
 
+\setlength{\LTpre}{0pt}
 \setlength{\LTpost}{0pt}
 
 \makeatletter
@@ -122,8 +130,9 @@
 \let\endorigtable\endtable
 
 \renewenvironment{table}
-  {\setlength{\intextsep}{0cm}%
-   \setlength{\textfloatsep}{0cm}%
+  {\setlength{\floatsep}{0pt}%
+   \setlength{\intextsep}{0pt}%
+   \setlength{\textfloatsep}{0pt}%
    \origtable}
   {\endorigtable}
 \makeatother
