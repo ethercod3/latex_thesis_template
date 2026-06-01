@@ -5,7 +5,21 @@ const DEFAULT_MAX_BUILDS = "50"
 const DEFAULT_PDF_PATH = "Куприянов_И221_диплом.pdf"
 const ARCHIVE_ROOT = "pdfs"
 const WORKTREE_DIR = ".pdf-archive-worktree"
-const HASH_SCRIPT = "scripts/ci/pdf_semantic_hash.py"
+const PDF_SOURCE_PATHS = [
+    "*.tex",
+    "*.bib",
+    "*.mmd",
+    "*.py",
+    "*.pdf",
+    "*.docx",
+    "*.sty",
+    "*.cls",
+    "*.bst",
+    "*.toml",
+    "*.yml",
+    "*.yaml",
+    ".latexmkrc",
+]
 
 def env-or [name: string, fallback: string] {
     let value = ($env | get --optional $name | default "")
@@ -36,13 +50,13 @@ def clear-github-extraheader [] {
     let _global = (^git config --global --unset-all http.https://github.com/.extraheader | complete)
 }
 
-def archive-remote-url [repo: string, token: string] {
-    if $repo == "" {
+def archive-remote-url [repo: string, token: string, remote_url: string] {
+    if $remote_url != "" {
+        $remote_url
+    } else if $repo == "" {
         run-git [remote get-url origin]
     } else if $token == "" {
-        error make {
-            msg: $"PDF_ARCHIVE_TOKEN is required to push PDF builds to external repository ($repo)."
-        }
+        $"git@github.com:($repo).git"
     } else if ($token | str starts-with "ghs_") {
         error make {
             msg: $"PDF_ARCHIVE_TOKEN must be a personal access token with Contents read/write access to ($repo), not the workflow GITHUB_TOKEN."
@@ -52,13 +66,7 @@ def archive-remote-url [repo: string, token: string] {
     }
 }
 
-def pdf-semantic-hash [path: string] {
-    let result = (^python $HASH_SCRIPT $path | complete)
-    ensure-success $result $"failed to compute semantic PDF hash for ($path)"
-    $result.stdout | str trim
-}
-
-def pdf-file-in-build [build_dir: string] {
+def source-commit-in-build [build_dir: string] {
     if not ($build_dir | path exists) {
         return ""
     }
@@ -66,17 +74,26 @@ def pdf-file-in-build [build_dir: string] {
     let metadata_path = ($build_dir | path join "metadata.json")
     if ($metadata_path | path exists) {
         let metadata = (open $metadata_path)
-        let pdf_file = ($metadata | get --optional pdf_file | default "")
-        if $pdf_file != "" {
-            let pdf_path = ($build_dir | path join $pdf_file)
-            if ($pdf_path | path exists) {
-                return $pdf_path
-            }
-        }
+        $metadata | get --optional source_commit | default ""
+    } else {
+        ""
+    }
+}
+
+def commit-exists [commit: string] {
+    if $commit == "" {
+        return false
     }
 
-    let pdfs = (ls $build_dir | where type == file | where name =~ '\.pdf$' | sort-by name)
-    if ($pdfs | is-empty) { "" } else { ($pdfs | first).name }
+    let result = (^git cat-file -e $"($commit)^{commit}" | complete)
+    $result.exit_code == 0
+}
+
+def changed-pdf-source-files [base_commit: string, source_commit: string] {
+    let range = $"($base_commit)..($source_commit)"
+    let result = (^git diff --name-only $range -- ...$PDF_SOURCE_PATHS | complete)
+    ensure-success $result $"failed to compare PDF source changes for ($range)"
+    $result.stdout | lines | where { ($in | str trim) != "" }
 }
 
 def main [] {
@@ -94,7 +111,8 @@ def main [] {
 
     let repo = (env-or "PDF_ARCHIVE_REPOSITORY" "")
     let token = (env-or "PDF_ARCHIVE_TOKEN" "")
-    let remote_url = (archive-remote-url $repo $token)
+    let remote_url_override = (env-or "PDF_ARCHIVE_REMOTE_URL" "")
+    let remote_url = (archive-remote-url $repo $token $remote_url_override)
     clear-github-extraheader
     let source_sha = (run-git [rev-parse HEAD])
     let short_sha = (run-git [rev-parse --short HEAD])
@@ -132,14 +150,17 @@ def main [] {
 
     if not ($builds | is-empty) {
         let latest_build = ($builds | first)
-        let latest_pdf = (pdf-file-in-build $latest_build.name)
-        if $latest_pdf != "" {
-            let current_hash = (pdf-semantic-hash $pdf_path)
-            let latest_hash = (pdf-semantic-hash $latest_pdf)
-            if $current_hash == $latest_hash {
-                print $"PDF archive unchanged after metadata normalization; latest build remains ($latest_build.name | path basename)."
+        let latest_source_commit = (source-commit-in-build $latest_build.name)
+        if (commit-exists $latest_source_commit) {
+            let changed_sources = (changed-pdf-source-files $latest_source_commit $source_sha)
+            if ($changed_sources | is-empty) {
+                print $"PDF archive unchanged: no committed PDF source changes since ($latest_source_commit | str substring 0..7). Latest build remains ($latest_build.name | path basename)."
                 return
             }
+
+            print $"PDF source changes since last publish: ($changed_sources | length) file(s)."
+        } else if $latest_source_commit != "" {
+            print $"Last archive source commit ($latest_source_commit) is not available locally; publishing without source-change deduplication."
         }
     }
 

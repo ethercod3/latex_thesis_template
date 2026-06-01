@@ -22,6 +22,7 @@ __pycache__/
 *.pyc
 node_modules/
 .pdf_diff
+.pdf-archive-worktree/
 docs-site/
 ~$*.docx
 *.run.xml
