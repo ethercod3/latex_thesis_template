@@ -96,7 +96,33 @@ def changed-pdf-source-files [base_commit: string, source_commit: string] {
     $result.stdout | lines | where { ($in | str trim) != "" }
 }
 
-def main [] {
+def git-identity [] {
+    let env_name = ($env | get --optional GIT_COMMITTER_NAME | default "")
+    let env_email = ($env | get --optional GIT_COMMITTER_EMAIL | default "")
+    if ($env_name | str trim) != "" and ($env_email | str trim) != "" {
+        return { name: $env_name, email: $env_email }
+    }
+
+    if (($env | get --optional GITHUB_ACTIONS | default "") == "true") {
+        return {
+            name: "github-actions[bot]",
+            email: "41898282+github-actions[bot]@users.noreply.github.com",
+        }
+    }
+
+    let name = (run-git [config user.name])
+    let email = (run-git [config user.email])
+
+    if ($name | str trim) == "" or ($email | str trim) == "" {
+        error make { msg: "Git user.name and user.email must be configured before publishing the PDF archive." }
+    }
+
+    { name: $name, email: $email }
+}
+
+def main [
+    --force # Publish a new archive build even if no committed PDF source files changed.
+] {
     let archive_branch = (env-or "PDF_ARCHIVE_BRANCH" $DEFAULT_ARCHIVE_BRANCH)
     let max_builds = ((env-or "PDF_ARCHIVE_MAX_BUILDS" $DEFAULT_MAX_BUILDS) | into int)
     let pdf_path = (env-or "PDF_ARCHIVE_PDF_PATH" $DEFAULT_PDF_PATH)
@@ -129,17 +155,19 @@ def main [] {
     }
 
     let remote_ref = (^git ls-remote --heads $remote_url $archive_branch | complete)
-    if ($remote_ref.exit_code == 0) and (($remote_ref.stdout | str trim) != "") {
+    ensure-success $remote_ref $"failed to inspect PDF archive branch ($archive_branch)"
+    if ($remote_ref.stdout | str trim) != "" {
         run-git [fetch $remote_url $archive_branch --depth 1]
-        run-git [worktree add $WORKTREE_DIR FETCH_HEAD]
+        run-git [worktree add --detach $WORKTREE_DIR FETCH_HEAD]
     } else {
         mkdir $WORKTREE_DIR
         run-git [-C $WORKTREE_DIR init]
         run-git [-C $WORKTREE_DIR checkout --orphan $archive_branch]
     }
 
-    run-git [-C $WORKTREE_DIR config user.name "github-actions[bot]"]
-    run-git [-C $WORKTREE_DIR config user.email "41898282+github-actions[bot]@users.noreply.github.com"]
+    let identity = (git-identity)
+    run-git [-C $WORKTREE_DIR config user.name $identity.name]
+    run-git [-C $WORKTREE_DIR config user.email $identity.email]
 
     let archive_root = ($WORKTREE_DIR | path join $ARCHIVE_ROOT)
     let builds = if ($archive_root | path exists) {
@@ -148,7 +176,9 @@ def main [] {
         []
     }
 
-    if not ($builds | is-empty) {
+    if $force {
+        print "Forced PDF archive publish: skipping source-change freshness check."
+    } else if not ($builds | is-empty) {
         let latest_build = ($builds | first)
         let latest_source_commit = (source-commit-in-build $latest_build.name)
         if (commit-exists $latest_source_commit) {
@@ -158,7 +188,7 @@ def main [] {
                 return
             }
 
-            print $"PDF source changes since last publish: ($changed_sources | length) file(s)."
+            print $"PDF source changes since last publish: ($changed_sources | length) files."
         } else if $latest_source_commit != "" {
             print $"Last archive source commit ($latest_source_commit) is not available locally; publishing without source-change deduplication."
         }

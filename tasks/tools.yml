@@ -85,4 +85,4 @@ tasks:
       PDF_ARCHIVE_PDF_PATH: '{{.PDF_ARCHIVE_PDF_PATH | default "Куприянов_И221_диплом.pdf"}}'
       CURRENT_TAG: '{{.CURRENT_TAG | default "local"}}'
     cmds:
-      - nu scripts/ci/publish_pdf_archive.nu
+      - nu scripts/ci/publish_pdf_archive.nu {{.CLI_ARGS}}

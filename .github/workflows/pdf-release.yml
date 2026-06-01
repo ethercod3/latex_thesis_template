@@ -6,6 +6,11 @@ on:
       build_run_id:
         description: "Build PDF workflow run id to publish"
         required: true
+      force_archive_publish:
+        description: "Publish PDF archive even if no source files changed since the latest archive build"
+        required: false
+        default: false
+        type: boolean
   workflow_run:
     workflows:
       - Build PDF
@@ -83,4 +88,12 @@ jobs:
       - name: Publish PDF archive
         env:
           PDF_ARCHIVE_TOKEN: ${{ secrets.PDF_ARCHIVE_TOKEN }}
-        run: nu scripts/ci/publish_pdf_archive.nu
+        shell: nu {0}
+        run: |
+          let args = if "${{ github.event_name == 'workflow_dispatch' && inputs.force_archive_publish || false }}" == "true" {
+            ["--force"]
+          } else {
+            []
+          }
+
+          nu scripts/ci/publish_pdf_archive.nu ...$args
