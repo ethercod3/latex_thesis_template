@@ -21,6 +21,7 @@ permissions:
 
 env:
   PDF_ARTIFACT_RETENTION_DAYS: ${{ vars.PDF_ARTIFACT_RETENTION_DAYS || '14' }}
+  DIPLOMA_CODE_REPOSITORY: ${{ vars.DIPLOMA_CODE_REPOSITORY }}
 
 jobs:
   build-pdf:
@@ -57,7 +58,7 @@ jobs:
       - name: Checkout diploma code repo
         uses: actions/checkout@v4
         with:
-          repository: ethercod3/diploma_code
+          repository: ${{ env.DIPLOMA_CODE_REPOSITORY }}
           token: ${{ secrets.VIEW_DIPLOMA_CODE }}
           path: vault_diploma
 

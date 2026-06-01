@@ -79,7 +79,7 @@ tasks:
   publish:
     desc: Опубликовать локальный PDF в архивный репозиторий
     env:
-      PDF_ARCHIVE_REPOSITORY: '{{.PDF_ARCHIVE_REPOSITORY | default "ethercod3/diploma-pdf-archive"}}'
+      PDF_ARCHIVE_REPOSITORY: '{{.PDF_ARCHIVE_REPOSITORY}}'
       PDF_ARCHIVE_BRANCH: '{{.PDF_ARCHIVE_BRANCH | default "main"}}'
       PDF_ARCHIVE_MAX_BUILDS: '{{.PDF_ARCHIVE_MAX_BUILDS | default "50"}}'
       PDF_ARCHIVE_PDF_PATH: '{{.PDF_ARCHIVE_PDF_PATH | default "Куприянов_И221_диплом.pdf"}}'

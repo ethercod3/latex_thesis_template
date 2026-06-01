@@ -54,7 +54,9 @@ def archive-remote-url [repo: string, token: string, remote_url: string] {
     if $remote_url != "" {
         $remote_url
     } else if $repo == "" {
-        run-git [remote get-url origin]
+        error make {
+            msg: "PDF_ARCHIVE_REPOSITORY or PDF_ARCHIVE_REMOTE_URL must be set before publishing the PDF archive."
+        }
     } else if $token == "" {
         $"git@github.com:($repo).git"
     } else if ($token | str starts-with "ghs_") {

@@ -865,7 +865,7 @@ BACKUP_KEEP_WEEKS=30
 
 - `check-tools-exe.yml` собирает `diploma-latex-check.exe` и загружает его в release для тегов `v*`;
 - `pdf-build.yml` собирает PDF через Docker и загружает artifact `pdf-release-assets`;
-- `pdf-release.yml` скачивает готовый artifact и публикует release assets, а также отправляет PDF в `ethercod3/diploma-pdf-archive`;
+- `pdf-release.yml` скачивает готовый artifact и публикует release assets, а также отправляет PDF в архивный репозиторий из переменной `PDF_ARCHIVE_REPOSITORY`;
 - `pages.yml` публикует Zensical-документацию на GitHub Pages;
 - `backup.yml` еженедельно создает `git bundle` и загружает его в облачные хранилища через `rclone`.
 
@@ -873,9 +873,9 @@ BACKUP_KEEP_WEEKS=30
 
 Ночная сборка запускается по cron в 04:00 по Якутску в `Build PDF` и после успешной сборки обновляет служебный тег/release `nightly`.
 
-Для публикации PDF в отдельный архивный репозиторий нужен secret `PDF_ARCHIVE_TOKEN` с `Contents: Read and write` для `ethercod3/diploma-pdf-archive`. Количество хранимых PDF регулируется переменной `PDF_ARCHIVE_MAX_BUILDS`, по умолчанию `50`.
+Для публикации PDF в отдельный архивный репозиторий нужны variable `PDF_ARCHIVE_REPOSITORY` и secret `PDF_ARCHIVE_TOKEN` с `Contents: Read and write` для этого репозитория. Ветка архива регулируется variable `PDF_ARCHIVE_BRANCH`, по умолчанию `main`; количество хранимых PDF регулируется variable `PDF_ARCHIVE_MAX_BUILDS`, по умолчанию `50`.
 
-Для CI-сборки приложений workflow подтягивает приватный репозиторий `ethercod3/diploma_code` в `vault_diploma`. В настройках GitHub Actions должен быть secret `VIEW_DIPLOMA_CODE` с read-only доступом к этому репозиторию.
+Для CI-сборки приложений workflow подтягивает приватный репозиторий из variable `DIPLOMA_CODE_REPOSITORY` в `vault_diploma`. В настройках GitHub Actions должен быть secret `VIEW_DIPLOMA_CODE` с read-only доступом к этому репозиторию.
 
 Нетривиальная логика CI/CD вынесена из YAML в скрипты `scripts/ci/*`: подготовка `.env`, определение release context, скачивание checktool assets, публикация PDF release и выгрузка PDF в архив. Сам workflow вызывает задачи по шагам: `task build`, `python ...` и `nu ...`.
 

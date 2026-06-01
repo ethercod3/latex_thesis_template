@@ -22,7 +22,7 @@ permissions:
   actions: read
 
 env:
-  PDF_ARCHIVE_REPOSITORY: ${{ vars.PDF_ARCHIVE_REPOSITORY || 'ethercod3/diploma-pdf-archive' }}
+  PDF_ARCHIVE_REPOSITORY: ${{ vars.PDF_ARCHIVE_REPOSITORY }}
   PDF_ARCHIVE_BRANCH: ${{ vars.PDF_ARCHIVE_BRANCH || 'main' }}
   PDF_ARCHIVE_MAX_BUILDS: ${{ vars.PDF_ARCHIVE_MAX_BUILDS || '50' }}
 

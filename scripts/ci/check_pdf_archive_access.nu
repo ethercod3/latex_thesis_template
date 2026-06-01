@@ -1,6 +1,5 @@
 #!/usr/bin/env nu
 
-const DEFAULT_ARCHIVE_REPOSITORY = "ethercod3/diploma-pdf-archive"
 const DEFAULT_ARCHIVE_BRANCH = "main"
 
 def env-or [name: string, fallback: string] {
@@ -14,9 +13,15 @@ def clear-github-extraheader [] {
 }
 
 def main [] {
-    let repo = (env-or "PDF_ARCHIVE_REPOSITORY" $DEFAULT_ARCHIVE_REPOSITORY)
+    let repo = (env-or "PDF_ARCHIVE_REPOSITORY" "")
     let branch = (env-or "PDF_ARCHIVE_BRANCH" $DEFAULT_ARCHIVE_BRANCH)
     let token = (env-or "PDF_ARCHIVE_TOKEN" "")
+
+    if $repo == "" {
+        error make {
+            msg: "PDF_ARCHIVE_REPOSITORY is required. Set it in repository variables or .env."
+        }
+    }
 
     if $token == "" {
         error make {
