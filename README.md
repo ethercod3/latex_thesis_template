@@ -34,7 +34,7 @@ https://ethercod3.github.io/diploma_latex/
 
 ## Каталог PDF по датам
 
-https://ethercod3.github.io/diploma-pdf-archive/
+https://ethercod3-diploma-pdf-archive.pages.dev/
 
 <!-- [[[cog
 from update_pdf_hash import cog_readme_block
@@ -874,6 +874,8 @@ BACKUP_KEEP_WEEKS=30
 Ночная сборка запускается по cron в 04:00 по Якутску в `Build PDF` и после успешной сборки обновляет служебный тег/release `nightly`.
 
 Для публикации PDF в отдельный архивный репозиторий нужны variable `PDF_ARCHIVE_REPOSITORY` и secret `PDF_ARCHIVE_TOKEN` с `Contents: Read and write` для этого репозитория. Ветка архива регулируется variable `PDF_ARCHIVE_BRANCH`, по умолчанию `main`; количество хранимых PDF регулируется variable `PDF_ARCHIVE_MAX_BUILDS`, по умолчанию `50`.
+
+Архивный репозиторий публикует каталог PDF в Cloudflare Pages через Direct Upload, поэтому его можно сделать приватным без подключения Cloudflare GitHub App. В архивном репозитории нужны secrets `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` и variables `CLOUDFLARE_PAGES_PROJECT_NAME`, `ARCHIVE_SITE_URL`.
 
 Для CI-сборки приложений workflow подтягивает приватный репозиторий из variable `DIPLOMA_CODE_REPOSITORY` в `vault_diploma`. В настройках GitHub Actions должен быть secret `VIEW_DIPLOMA_CODE` с read-only доступом к этому репозиторию.
 
