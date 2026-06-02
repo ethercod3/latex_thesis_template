@@ -1,0 +1,17 @@
+version: '3'
+
+tasks:
+  python:lint:
+    desc: Проверить форматирование Python-файлов через Black
+    cmds:
+      - uv run black --check --diff scripts[[% if include_diagram_tools %]] python_diagrams[[% endif %]][[% if include_docs %]] docs[[% endif %]] tests
+
+  python:format:
+    desc: Отформатировать Python-файлы через Black
+    cmds:
+      - uv run black scripts[[% if include_diagram_tools %]] python_diagrams[[% endif %]][[% if include_docs %]] docs[[% endif %]] tests
+
+  python:test:
+    desc: Запустить Python-тесты
+    cmds:
+      - uv run pytest

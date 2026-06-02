@@ -1,0 +1,13 @@
+# CI/CD
+
+Этот раздел добавляется, если включена опция `include_ci`.
+
+Шаблон добавляет GitHub Actions workflow для сборки PDF и публикации релизных
+артефактов. Проверьте repository variables и secrets перед первым запуском.
+
+[[% if code_listing_mode == 'external' and fetch_project_code_in_ci %]]
+Workflow ожидает repository variable `DIPLOMA_CODE_REPOSITORY` и secret
+`VIEW_DIPLOMA_CODE`, чтобы скачать отдельный репозиторий с кодом.
+[[% else %]]
+Отдельный remote-репозиторий с кодом не требуется для выбранной конфигурации.
+[[% endif %]]

@@ -1,0 +1,34 @@
+[project]
+site_name = "[[ project_name ]]"
+site_author = "Template Author"
+docs_dir = "docs/en"
+site_dir = "docs-site/en"
+site_url = "https://example.github.io/diploma-latex-template/en/"
+repo_url = "https://github.com/example/diploma-latex-template"
+repo_name = "example/diploma-latex-template"
+copyright = "Copyright &copy; Template Author"
+nav = [
+  {"Start" = "README.md"},
+  {"Quick Start" = "quick-start.md"},
+  {"Project Structure" = "project-structure.md"},
+  {"Build" = "build.md"},
+[[% if include_pdf_tools %]]
+  {"PDF Tools" = "pdf-tools.md"},
+[[% endif %]]
+[[% if include_docx_tools %]]
+  {"Title Pages" = "title-pages.md"},
+[[% endif %]]
+[[% if include_diagram_tools %]]
+  {"Diagrams" = "diagrams.md"},
+[[% endif %]]
+[[% if include_backup_tools %]]
+  {"Backup" = "backup.md"},
+[[% endif %]]
+[[% if include_ci %]]
+  {"CI/CD" = "ci.md"},
+[[% endif %]]
+]
+
+[project.theme]
+language = "en"
+features = ["content.code.copy", "navigation.top", "search.highlight"]

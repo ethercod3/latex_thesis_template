@@ -1,0 +1,21 @@
+[diff_pdf]
+build = "docker compose --profile latex run --build --rm latex"
+env_file = ".env"
+pdf_from_target = true
+view = true
+
+[diff_pdf.env]
+PYTHONIOENCODING = "utf-8"
+PYTHONUTF8 = "1"
+[[% if code_listing_mode == 'external' %]]
+PROJECT_SOURCE_PATH = { from_env = "PROJECT_SOURCE_PATH" }
+PROJECT_SOURCE_OS_PATH = { from_env = "PROJECT_SOURCE_OS_PATH", resolve = true }
+[[% endif %]]
+
+[diff_pdf.copy]
+paths = [
+    ".env",
+    "docker-compose.yaml",
+    "docker/latex.dockerfile",
+    "scripts/build_latex_docker.py",
+]

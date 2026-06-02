@@ -1,0 +1,190 @@
+_templates_suffix: .jinja
+_answers_file: .copier-answers.yml
+
+_envops:
+  variable_start_string: "[["
+  variable_end_string: "]]"
+  block_start_string: "[[%"
+  block_end_string: "%]]"
+  comment_start_string: "[[#"
+  comment_end_string: "#]]"
+
+_exclude:
+  - .git
+  - .copier-smoke-test
+  - copier.yml
+  - .venv
+  - .aux_files
+  - .aux_files_docker
+  - .cache
+  - .coverage
+  - .pdf_diff
+  - .pdf-archive-worktree
+  - docs-site
+  - htmlcov
+  - node_modules
+  - "__pycache__"
+  - "**/__pycache__"
+  - "*.pyc"
+  - "*.pdf"
+  - "*.log"
+  - "*.aux"
+  - "*.out"
+  - "*.toc"
+  - "*.bcf"
+  - "*.bbl"
+  - "*.blg"
+  - "*.run.xml"
+  - "[[% if not include_docs %]]docs[[% endif %]]"
+  - "[[% if not include_docs %]]zensical.toml[[% endif %]]"
+  - "[[% if not include_docs %]]zensical.en.toml[[% endif %]]"
+  - "[[% if not include_docs %]]zensical.pages.toml[[% endif %]]"
+  - "[[% if not include_docs %]]zensical.pages.en.toml[[% endif %]]"
+  - "[[% if not include_docs %]]tasks/docs.yml[[% endif %]]"
+  - "[[% if not include_ci %]]docs/ru/ci.md[[% endif %]]"
+  - "[[% if not include_ci %]]docs/en/ci.md[[% endif %]]"
+  - "[[% if not include_backup_tools %]]docs/ru/backup.md[[% endif %]]"
+  - "[[% if not include_backup_tools %]]docs/en/backup.md[[% endif %]]"
+  - "[[% if not include_docx_tools %]]docs/ru/title-pages.md[[% endif %]]"
+  - "[[% if not include_docx_tools %]]docs/en/title-pages.md[[% endif %]]"
+  - "[[% if not include_diagram_tools %]]docs/ru/diagrams.md[[% endif %]]"
+  - "[[% if not include_diagram_tools %]]docs/en/diagrams.md[[% endif %]]"
+  - "[[% if not include_pdf_tools %]]docs/ru/pdf-tools.md[[% endif %]]"
+  - "[[% if not include_pdf_tools %]]docs/en/pdf-tools.md[[% endif %]]"
+  - "[[% if not include_docker %]]docker[[% endif %]]"
+  - "[[% if not include_docker %]]docker-compose.yaml[[% endif %]]"
+  - "[[% if not include_docker %]]docker-compose.ci-cache.yaml[[% endif %]]"
+  - "[[% if not include_ci %]]docker-compose.ci-cache.yaml[[% endif %]]"
+  - "[[% if not include_docker %]]tasks/build.yml[[% endif %]]"
+  - "[[% if not include_docker %]]scripts/build_all.py[[% endif %]]"
+  - "[[% if not include_docker %]]tests/test_build_latex_docker.py[[% endif %]]"
+  - "[[% if not include_ci %]].github/workflows[[% endif %]]"
+  - "[[% if not include_ci %]].github/tasks[[% endif %]]"
+  - "[[% if not include_ci %]]scripts/ci[[% endif %]]"
+  - "[[% if not include_ci %]]tests/test_ci_release_scripts.py[[% endif %]]"
+  - "[[% if not include_docs %]].github/workflows/pages.yml[[% endif %]]"
+  - "[[% if not include_backup_tools %]].github/workflows/backup.yml[[% endif %]]"
+  - "[[% if not include_backup_tools %]]scripts/backup_project.py[[% endif %]]"
+  - "[[% if not include_backup_tools %]]tests/test_backup_project.py[[% endif %]]"
+  - "[[% if not include_docx_tools %]]docx[[% endif %]]"
+  - "[[% if not include_docx_tools %]]docker/docx.dockerfile[[% endif %]]"
+  - "[[% if not include_docx_tools %]]tasks/docx.yml[[% endif %]]"
+  - "[[% if not include_docx_tools %]]scripts/convert_docx_to_pdf.py[[% endif %]]"
+  - "[[% if not include_docx_tools %]]tests/test_convert_docx_to_pdf.py[[% endif %]]"
+  - "[[% if not include_diagram_tools %]]mermaid[[% endif %]]"
+  - "[[% if not include_diagram_tools %]]python_diagrams[[% endif %]]"
+  - "[[% if not include_diagram_tools %]]docker/mermaid.dockerfile[[% endif %]]"
+  - "[[% if not include_diagram_tools %]]docker/python.dockerfile[[% endif %]]"
+  - "[[% if not include_diagram_tools %]]tasks/diagrams.yml[[% endif %]]"
+  - "[[% if not include_diagram_tools %]]scripts/compile_python_diagrams.py[[% endif %]]"
+  - "[[% if not include_pdf_tools %]]docker/crop.dockerfile[[% endif %]]"
+  - "[[% if not include_pdf_tools %]]diff_config.toml[[% endif %]]"
+  - "[[% if not include_pdf_tools %]]scripts/crop_pdf.py[[% endif %]]"
+  - "[[% if not include_pdf_tools %]]scripts/split_pdf_color.py[[% endif %]]"
+  - "[[% if not include_pdf_tools %]]scripts/update_pdf_hash.py[[% endif %]]"
+  - "[[% if not include_pdf_tools %]]tests/test_crop_pdf.py[[% endif %]]"
+  - "[[% if not include_pdf_tools %]]tests/test_split_pdf_color.py[[% endif %]]"
+  - "[[% if not include_pdf_tools %]]tests/test_update_pdf_hash.py[[% endif %]]"
+
+project_name:
+  type: str
+  help: Название проекта или темы для README/метаданных
+  default: Дипломная работа
+
+author_last_name:
+  type: str
+  help: Фамилия автора для имени основного tex-файла
+  default: Иванов
+
+group_name:
+  type: str
+  help: Учебная группа автора
+  default: Г000
+
+main_tex_filename:
+  type: str
+  help: Имя основного LaTeX-файла
+  default: "[[ author_last_name ]]_[[ group_name ]]_диплом.tex"
+
+code_listing_mode:
+  type: str
+  help: Как в дипломе будут использоваться листинги кода
+  choices:
+    - none
+    - inline
+    - external
+  default: inline
+
+project_source_path:
+  type: str
+  help: Путь к исходникам программного проекта внутри Docker
+  default: /project_code
+  when: "[[ code_listing_mode == 'external' ]]"
+
+project_source_os_path:
+  type: str
+  help: Путь к исходникам программного проекта на хост-машине
+  default: ../project_code
+  when: "[[ code_listing_mode == 'external' ]]"
+
+thesis_keywords:
+  type: str
+  help: Ключевые слова для реферата
+  default: КЛЮЧЕВОЕ СЛОВО, ШАБЛОН, ДИПЛОМНАЯ РАБОТА
+
+thesis_abstract:
+  type: str
+  help: Краткое описание работы для реферата
+  default: В работе рассматривается демонстрационная тема. Текст реферата является шаблонным и должен быть заменен автором.
+
+pdf_archive_repository:
+  type: str
+  help: Репозиторий архива PDF для CI
+  default: owner/pdf-archive
+
+fetch_project_code_in_ci:
+  type: bool
+  help: В CI скачивать отдельный репозиторий с исходным кодом проекта
+  default: false
+  when: "[[ include_ci and code_listing_mode == 'external' ]]"
+
+project_code_repository:
+  type: str
+  help: Репозиторий с исходным кодом дипломного проекта
+  default: owner/project-code
+  when: "[[ include_ci and code_listing_mode == 'external' and fetch_project_code_in_ci ]]"
+
+include_docs:
+  type: bool
+  help: Добавить документацию Zensical
+  default: true
+
+include_docker:
+  type: bool
+  help: Добавить Docker Compose профили сборки
+  default: true
+
+include_ci:
+  type: bool
+  help: Добавить GitHub Actions и CI release scripts
+  default: false
+
+include_backup_tools:
+  type: bool
+  help: Добавить backup scripts через git bundle/rclone
+  default: false
+
+include_docx_tools:
+  type: bool
+  help: Добавить DOCX -> PDF tooling для титульных страниц
+  default: false
+
+include_diagram_tools:
+  type: bool
+  help: Добавить Mermaid/Python diagram tooling
+  default: false
+
+include_pdf_tools:
+  type: bool
+  help: Добавить PDF hash/crop/split/diff tooling
+  default: true

@@ -105,28 +105,15 @@ def project_state_checks() -> list[Check]:
             )
         )
 
-    vault_path = safe_env_value("VAULT_OS_PATH")
-    if not vault_path:
-        items.append(warning_check("VAULT_OS_PATH", "VAULT_OS_PATH не задан в .env", "Укажите путь к проекту с кодом."))
-    else:
+    project_source_path = safe_env_value("PROJECT_SOURCE_OS_PATH")
+    if project_source_path:
         items.append(
             state_check(
-                "VAULT_OS_PATH",
-                (PROJECT_DIR / vault_path).resolve().exists(),
-                f"{vault_path} найден",
-                f"путь не найден: {vault_path}",
-                "Проверьте VAULT_OS_PATH в .env или положите код по ожидаемому пути.",
-            )
-        )
-
-    for pdf_name in ("титульник.pdf", "задание.pdf"):
-        items.append(
-            state_check(
-                pdf_name,
-                (PROJECT_DIR / pdf_name).is_file(),
-                f"{pdf_name} найден",
-                f"{pdf_name} не найден",
-                "Сгенерируйте титульные страницы через task docx или task build.",
+                "PROJECT_SOURCE_OS_PATH",
+                (PROJECT_DIR / project_source_path).resolve().exists(),
+                f"{project_source_path} найден",
+                f"путь не найден: {project_source_path}",
+                "Проверьте PROJECT_SOURCE_OS_PATH в .env или положите код по ожидаемому пути.",
             )
         )
 

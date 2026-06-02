@@ -1,0 +1,57 @@
+version: '3'
+
+dotenv:
+  - .env
+
+vars:
+  COMPOSE_BUILD_PROFILES: >-
+    [[% if include_docx_tools %]]--profile docx [[% endif %]]
+    [[% if include_diagram_tools %]]--profile mermaid --profile python [[% endif %]]
+    --profile latex
+    [[% if include_pdf_tools %]] --profile crop[[% endif %]]
+  COMPOSE_ALL_PROFILES: >-
+    [[% if include_docx_tools %]]--profile docx [[% endif %]]
+    [[% if include_diagram_tools %]]--profile mermaid --profile python [[% endif %]]
+    --profile latex
+
+includes:
+[[% if include_docker %]]
+  build:
+    taskfile: ./tasks/build.yml
+    flatten: true
+[[% endif %]]
+[[% if include_diagram_tools %]]
+  diagrams:
+    taskfile: ./tasks/diagrams.yml
+    flatten: true
+[[% endif %]]
+[[% if include_docker %]]
+  docker:
+    taskfile: ./tasks/docker.yml
+    flatten: true
+[[% endif %]]
+[[% if include_docs %]]
+  docs:
+    taskfile: ./tasks/docs.yml
+    flatten: true
+[[% endif %]]
+[[% if include_docx_tools %]]
+  docx:
+    taskfile: ./tasks/docx.yml
+    flatten: true
+[[% endif %]]
+  latex:
+    taskfile: ./tasks/latex.yml
+    flatten: true
+  python:
+    taskfile: ./tasks/python.yml
+    flatten: true
+  tools:
+    taskfile: ./tasks/tools.yml
+    flatten: true
+
+tasks:
+  default:
+    desc: Показать доступные задачи
+    cmds:
+      - task --list

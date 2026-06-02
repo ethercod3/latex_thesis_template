@@ -1,0 +1,51 @@
+"""Подготовка .env для CI-сборки PDF-релиза.
+
+Записывает минимальный набор переменных, нужных Docker/LaTeX пайплайну,
+включая TARGET и UID/GID runner-а для корректных прав на артефакты.
+"""
+
+from __future__ import annotations
+
+import os
+import sys
+from pathlib import Path
+
+import typer
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from common import PROJECT_DIR
+
+ENV_PATH = PROJECT_DIR / ".env"
+TARGET = "[[ main_tex_filename ]]"
+
+
+def host_uid() -> int:
+    getuid = getattr(os, "getuid", None)
+    return getuid() if getuid else 0
+
+
+def host_gid() -> int:
+    getgid = getattr(os, "getgid", None)
+    return getgid() if getgid else 0
+
+
+def main() -> None:
+    env_content = "\n".join(
+        [
+[[% if code_listing_mode == 'external' %]]
+            'PROJECT_SOURCE_PATH="[[ project_source_path ]]"',
+            'PROJECT_SOURCE_OS_PATH="[[ project_source_os_path ]]"',
+[[% endif %]]
+            f'TARGET="{TARGET}"',
+            f"HOST_UID={host_uid()}",
+            f"HOST_GID={host_gid()}",
+            "",
+        ]
+    )
+    ENV_PATH.write_text(env_content, encoding="utf-8", newline="\n")
+    return 0
+
+
+if __name__ == "__main__":
+    typer.run(main)

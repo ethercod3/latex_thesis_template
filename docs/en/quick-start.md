@@ -1,111 +1,15 @@
-# Quick start
+# Quick Start
 
-## Install Tools
-
-If [mise](https://mise.jdx.dev/) is installed, use it as the shortest path to the required Python, uv, and Task versions:
-
-```bash
-mise trust
-mise install
-mise run setup
-mise run check
-```
-
-After that, run the main commands through `mise run build`, `mise run test`, or directly through `task`.
-
-## Install Task Manually
-
-The project uses [Task](https://taskfile.dev/docs/installation) as the single entry point for builds and helper commands.
-
-Windows:
-
-```powershell
-winget install Task.Task
-```
-
-macOS or Linux with Homebrew:
+1. Copy `.env.example` to `.env`.
+2. Check `TARGET`.
+3. Build the PDF:
 
 ```bash
-brew install go-task/tap/go-task
+task latex:local
 ```
 
-Any platform with Node.js:
+For Docker builds, use:
 
 ```bash
-npm install -g @go-task/cli
+task latex:docker
 ```
-
-If these options do not fit your environment, use the official installation guide: <https://taskfile.dev/docs/installation>.
-
-Check the installation:
-
-```bash
-task --version
-task --list
-```
-
-If Python is not installed yet but you need to check the project state, download `diploma-latex-check.exe` from GitHub Releases, put it into the project root, and run:
-
-```powershell
-.\diploma-latex-check.exe
-```
-
-## Build
-
-!!! tip "Before the first run"
-    - [ ] Docker is installed;
-    - [ ] Task is installed, or the manual commands are ready;
-    - [ ] `.env` is created if the build needs local paths to source code;
-    - [ ] the title page, assignment, and diagrams can be rebuilt from source.
-
-Run the full Docker build:
-
-=== "Task"
-
-    ```bash
-    task build
-    ```
-
-=== "Manual"
-
-    ```bash
-    uv run python scripts/build_all.py
-    ```
-
-The `scripts/build_all.py` script runs profiles in this order: `docx` {{ arrow }} `mermaid` {{ arrow }} `python` {{ arrow }} `latex`.
-
-!!! info "First run"
-    The first `build` will take a while because Docker downloads base images and builds the environment. The script runs profiles through `docker compose run --build`, so Docker checks image freshness before each profile.
-
-To preview and remove generated build artifacts, use:
-
-```bash
-task clean:dry
-task clean
-```
-
-Run Python tests:
-
-```bash
-task python:test
-```
-
-All helper Python scripts are started the same way on Windows, Linux, and macOS.[^mermaid-fonts]
-
-=== "Task"
-
-    ```bash
-    task build
-    task mermaid
-    task diagrams
-    ```
-
-=== "Manual"
-
-    ```bash
-    uv run python scripts/build_all.py
-    uvx --from git+https://github.com/ethercod3/compile_mermaid.git compile-mermaid
-    uv run python scripts/compile_python_diagrams.py
-    ```
-
-[^mermaid-fonts]: Mermaid diagrams are best rebuilt in the same environment where the original was prepared: when built through Docker, the font for KaTeX expressions can differ from the Windows result.

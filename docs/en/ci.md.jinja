@@ -1,0 +1,13 @@
+# CI/CD
+
+This section is included when `include_ci` is enabled.
+
+The template adds GitHub Actions workflows for PDF builds and release assets.
+Check repository variables and secrets before the first run.
+
+[[% if code_listing_mode == 'external' and fetch_project_code_in_ci %]]
+The workflow expects the `DIPLOMA_CODE_REPOSITORY` repository variable and the
+`VIEW_DIPLOMA_CODE` secret to checkout a separate source-code repository.
+[[% else %]]
+A separate source-code remote repository is not required for this configuration.
+[[% endif %]]

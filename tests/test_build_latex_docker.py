@@ -6,7 +6,7 @@ import build_latex_docker as latex
 
 
 def test_main_builds_through_ascii_entrypoint_and_restores_pdf_name(tmp_path: Path, monkeypatch) -> None:
-    target = tmp_path / "Куприянов_И221_диплом.tex"
+    target = tmp_path / "Иванов_Г000_диплом.tex"
     target.write_text(r"\documentclass{article}\begin{document}ok\end{document}", encoding="utf-8")
     calls: list[list[str]] = []
     build_tex = latex.build_entrypoint_for(Path(target.name))
@@ -38,4 +38,4 @@ def test_main_builds_through_ascii_entrypoint_and_restores_pdf_name(tmp_path: Pa
     assert build_tex.name.isascii()
     assert not (tmp_path / build_tex).exists()
     assert not (tmp_path / build_pdf).exists()
-    assert (tmp_path / "Куприянов_И221_диплом.pdf").read_bytes() == b"%PDF-1.4\n%%EOF\n"
+    assert (tmp_path / "Иванов_Г000_диплом.pdf").read_bytes() == b"%PDF-1.4\n%%EOF\n"

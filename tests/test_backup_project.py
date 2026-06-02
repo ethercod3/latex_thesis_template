@@ -26,7 +26,7 @@ def test_remote_file_path_handles_remote_root_and_directory() -> None:
 
 
 def test_backup_filename_is_lexicographically_sortable() -> None:
-    assert backup_project.backup_filename(datetime(2026, 5, 12, 4, 5, 6)) == "diploma_latex_2026-05-12_04-05-06.bundle"
+    assert backup_project.backup_filename(datetime(2026, 5, 12, 4, 5, 6)) == "diploma_template_2026-05-12_04-05-06.bundle"
 
 
 def test_parse_args_accepts_local_only(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -43,13 +43,13 @@ def test_prune_remote_backups_keeps_latest_files(monkeypatch: pytest.MonkeyPatch
         backup_project,
         "list_remote_backups",
         lambda _destination: [
-            "diploma_latex_2026-01-01_00-00-00.bundle",
-            "diploma_latex_2026-01-08_00-00-00.bundle",
-            "diploma_latex_2026-01-15_00-00-00.bundle",
+            "diploma_template_2026-01-01_00-00-00.bundle",
+            "diploma_template_2026-01-08_00-00-00.bundle",
+            "diploma_template_2026-01-15_00-00-00.bundle",
         ],
     )
     monkeypatch.setattr(backup_project, "run_command", lambda command: deleted.append(command))
 
     backup_project.prune_remote_backups("gdrive:backups", keep=2, dry_run=False)
 
-    assert deleted == [["rclone", "deletefile", "gdrive:backups/diploma_latex_2026-01-01_00-00-00.bundle"]]
+    assert deleted == [["rclone", "deletefile", "gdrive:backups/diploma_template_2026-01-01_00-00-00.bundle"]]

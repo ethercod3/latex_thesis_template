@@ -1,0 +1,110 @@
+services:
+  latex:
+    profiles: ["latex"]
+    build:
+      context: .
+      dockerfile: ./docker/latex.dockerfile
+    user: "${HOST_UID:-0}:${HOST_GID:-0}"
+    environment:
+      HOME: /tmp
+      TERM: dumb
+      TARGET: "${TARGET}"
+    volumes:
+      - ./:/data
+[[% if code_listing_mode == 'external' %]]
+      - ${PROJECT_SOURCE_OS_PATH}:${PROJECT_SOURCE_PATH}
+[[% endif %]]
+    working_dir: /data
+    command: ["python3", "scripts/build_latex_docker.py"]
+    env_file:
+      - ./.env
+
+[[% if include_diagram_tools %]]
+  mermaid_diagrams:
+    profiles: ["mermaid"]
+    build:
+      context: .
+      dockerfile: ./docker/mermaid.dockerfile
+    user: "${HOST_UID:-0}:${HOST_GID:-0}"
+    environment:
+      HOME: /tmp
+    env_file:
+      - ./.env
+    volumes:
+      - ./figures:/data/figures
+    command: ["mmdc", "--help"]
+
+  python_diagrams:
+    profiles: ["python"]
+    build:
+      context: .
+      dockerfile: ./docker/python.dockerfile
+    user: "${HOST_UID:-0}:${HOST_GID:-0}"
+    environment:
+      HOME: /tmp
+    env_file:
+      - ./.env
+    volumes:
+      - ./figures:/data/figures
+    command: ["uv", "run", "python", "scripts/compile_python_diagrams.py"]
+[[% endif %]]
+
+[[% if include_docx_tools %]]
+  docx_pdf:
+    profiles: ["docx"]
+    build:
+      context: .
+      dockerfile: ./docker/docx.dockerfile
+    user: "${HOST_UID:-0}:${HOST_GID:-0}"
+    environment:
+      HOME: /tmp
+    volumes:
+      - ./:/data
+    working_dir: /data
+    command: ["python3", "/data/scripts/convert_docx_to_pdf.py"]
+[[% endif %]]
+
+[[% if include_pdf_tools %]]
+  crop_pdf:
+    profiles: ["crop"]
+    build:
+      context: .
+      dockerfile: ./docker/crop.dockerfile
+    user: "${HOST_UID:-0}:${HOST_GID:-0}"
+    environment:
+      HOME: /tmp
+    volumes:
+      - ./:/data
+    working_dir: /data
+    command: ["python3", "scripts/crop_pdf.py"]
+[[% endif %]]
+
+[[% if include_docs %]]
+  docs:
+    profiles: ["docs"]
+    image: zensical/zensical:0.0.40
+    volumes:
+      - ./:/data
+    working_dir: /data
+    ports:
+      - "8000:8000"
+    entrypoint: ["sh", "-lc"]
+    command: ["zensical build --config-file zensical.toml && zensical build --config-file zensical.en.toml && python -m http.server 8000 --directory docs-site"]
+[[% endif %]]
+
+[[% if include_pdf_tools %]]
+  stirling_pdf:
+    profiles: ["stirling"]
+    image: stirlingtools/stirling-pdf:latest
+    ports:
+      - "${STIRLING_PORT:-8080}:8080"
+    environment:
+      SECURITY_ENABLELOGIN: "true"
+      SECURITY_INITIALLOGIN_PASSWORD: "${STIRLING_ADMIN_PASSWORD:-stirling}"
+      LANGS: "en_GB"
+      DISABLE_ADDITIONAL_FEATURES: "false"
+    volumes:
+      - ./pdf_diff/stirling/configs:/configs
+      - ./pdf_diff/stirling/logs:/logs
+      - ./pdf_diff/stirling/pipeline:/pipeline
+[[% endif %]]

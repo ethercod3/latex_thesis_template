@@ -15,10 +15,10 @@ import typer
 
 from common import PROJECT_DIR, ScriptError, env_value, require_command
 
-DEFAULT_DESTINATIONS = "gdrive:diploma_latex_backups,ydisk:diploma_latex_backups"
+DEFAULT_DESTINATIONS = "gdrive:diploma_template_backups,ydisk:diploma_template_backups"
 DEFAULT_KEEP = 30
 BACKUP_DIR = PROJECT_DIR / ".cache" / "backups"
-BACKUP_PREFIX = "diploma_latex"
+BACKUP_PREFIX = "diploma_template"
 BACKUP_SUFFIX = ".bundle"
 
 

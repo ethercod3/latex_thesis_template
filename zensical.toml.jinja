@@ -1,0 +1,34 @@
+[project]
+site_name = "[[ project_name ]]"
+site_author = "Template Author"
+docs_dir = "docs/ru"
+site_dir = "docs-site"
+dev_addr = "0.0.0.0:8000"
+repo_url = "https://github.com/example/diploma-latex-template"
+repo_name = "example/diploma-latex-template"
+copyright = "Copyright &copy; Template Author"
+nav = [
+  {"Начало" = "README.md"},
+  {"Быстрый старт" = "quick-start.md"},
+  {"Структура проекта" = "project-structure.md"},
+  {"Сборка" = "build.md"},
+[[% if include_pdf_tools %]]
+  {"PDF-инструменты" = "pdf-tools.md"},
+[[% endif %]]
+[[% if include_docx_tools %]]
+  {"Титульные страницы" = "title-pages.md"},
+[[% endif %]]
+[[% if include_diagram_tools %]]
+  {"Диаграммы" = "diagrams.md"},
+[[% endif %]]
+[[% if include_backup_tools %]]
+  {"Резервное копирование" = "backup.md"},
+[[% endif %]]
+[[% if include_ci %]]
+  {"CI/CD" = "ci.md"},
+[[% endif %]]
+]
+
+[project.theme]
+language = "ru"
+features = ["content.code.copy", "navigation.top", "search.highlight"]

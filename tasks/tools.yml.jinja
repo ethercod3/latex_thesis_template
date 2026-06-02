@@ -1,0 +1,96 @@
+version: '3'
+
+tasks:
+  check:
+    desc: Проверить наличие инструментов для сборки проекта
+    cmds:
+      - uv run python scripts/check_tools.py
+
+  deps:
+    desc: Синхронизировать Python-окружение через uv
+    cmds:
+      - uv sync
+
+  hooks:
+    desc: Подключить локальные Git hooks проекта
+    cmds:
+      - git config core.hooksPath .githooks
+
+  clean:
+    desc: Удалить сгенерированные артефакты сборки и кэши
+    cmds:
+      - uv run python scripts/clean.py
+
+  clean:docker:
+    desc: Остановить и удалить контейнеры/сети текущего Docker Compose-проекта
+    cmds:
+      - uv run python scripts/clean_docker.py
+
+  clean:docker:dry:
+    desc: Показать Docker-команду очистки проекта без выполнения
+    cmds:
+      - uv run python scripts/clean_docker.py --dry-run
+
+  clean:docker:images:
+    desc: Удалить контейнеры/сети и локальные образы текущего Docker Compose-проекта
+    cmds:
+      - uv run python scripts/clean_docker.py --images
+
+  clean:dry:
+    desc: Показать, какие артефакты удалит task clean
+    cmds:
+      - uv run python scripts/clean.py --dry-run
+
+[[% if include_backup_tools %]]
+  backup:
+    desc: Создать git bundle и загрузить бэкап через rclone
+    cmds:
+      - uv run python scripts/backup_project.py {{.CLI_ARGS}}
+
+  backup:dry:
+    desc: Проверить создание bundle и показать rclone-операции без загрузки и удаления
+    cmds:
+      - uv run python scripts/backup_project.py --dry-run {{.CLI_ARGS}}
+
+  backup:local:
+    desc: Создать и проверить локальный git bundle без загрузки в облако
+    cmds:
+      - uv run python scripts/backup_project.py --local-only {{.CLI_ARGS}}
+[[% endif %]]
+
+[[% if include_pdf_tools %]]
+  hash:
+    desc: Обновить контрольные суммы PDF в README.md
+    cmds:
+      - uv run python scripts/update_pdf_hash.py {{.CLI_ARGS}}
+
+  crop:
+    desc: Обрезать поля PDF через pdfcrop и обновить исходный файл
+    cmds:
+      - uv run python scripts/crop_pdf.py {{.CLI_ARGS}}
+
+[[% if include_docker %]]
+  crop:docker:
+    desc: Обрезать поля PDF через pdfcrop в Docker и обновить исходный файл
+    cmds:
+      - docker compose --profile crop run --build --rm crop_pdf python3 scripts/crop_pdf.py {{.CLI_ARGS}}
+[[% endif %]]
+
+  diff:
+    desc: Сравнить PDF между коммитами; аргументы передаются после --
+    cmds:
+      - uvx --refresh diff-pdf-commits --config diff_config.toml {{.CLI_ARGS}}
+[[% endif %]]
+
+[[% if include_ci %]]
+  publish:
+    desc: Опубликовать локальный PDF в архивный репозиторий
+    env:
+      PDF_ARCHIVE_REPOSITORY: '{{.PDF_ARCHIVE_REPOSITORY}}'
+      PDF_ARCHIVE_BRANCH: '{{.PDF_ARCHIVE_BRANCH | default "main"}}'
+      PDF_ARCHIVE_MAX_BUILDS: '{{.PDF_ARCHIVE_MAX_BUILDS | default "50"}}'
+      PDF_ARCHIVE_PDF_PATH: '{{.PDF_ARCHIVE_PDF_PATH | default "[[ main_tex_filename | replace('.tex', '.pdf') ]]"}}'
+      CURRENT_TAG: '{{.CURRENT_TAG | default "local"}}'
+    cmds:
+      - nu scripts/ci/publish_pdf_archive.nu {{.CLI_ARGS}}
+[[% endif %]]

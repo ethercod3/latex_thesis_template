@@ -1,0 +1,82 @@
+\documentclass[14pt, a4paper]{extarticle}
+
+\input{preamble/packages.tex}
+\input{preamble/lst.tex}
+\input{preamble/toc.tex}
+\input{preamble/sections.tex}
+\input{preamble/counters.tex}
+\input{preamble/russian_plural.tex}
+\input{preamble/bibliography_setup.tex}
+\input{preamble/lists_setup.tex}
+\input{preamble/hyperrefsetup.tex}
+
+\graphicspath{ {./figures/} }
+
+\onehalfspacing
+\setlength{\parindent}{1.25cm}
+\setmainfont{Times New Roman}
+\setmonofont{Inconsolata}
+
+\addto\captionsrussian{\renewcommand{\figurename}{Рисунок}}
+\addto\captionsrussian{\renewcommand{\refname}{}}
+
+\begin{document}
+
+    {\centering РЕФЕРАТ\par}
+
+    \vspace*{\baselineskip}
+
+    Дипломная работа содержит \pageref*{bib:end} с.,
+    \tablesBeforeBib{} \russianTables{\tablesBeforeBib},
+    \totalappendices{} \russianAppendices{\totalappendices},
+    \totalbibitems{} \russianSources{\totalbibitems}.
+
+    \vspace*{\baselineskip}
+
+    [[ thesis_keywords ]]
+
+    \vspace*{\baselineskip}
+
+    [[ thesis_abstract ]]
+
+    \newpage
+
+    {\centering СОДЕРЖАНИЕ\par}
+
+    \vspace*{-1.6cm}
+
+    \tableofcontents
+    \newpage
+
+    \genericsection{Введение}
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+    sollicitudin, lorem vitae facilisis fermentum, urna neque cursus augue,
+    vitae interdum neque lorem at justo. Sed vitae lectus non ipsum elementum
+    volutpat. Nulla facilisi. Donec consequat, velit at cursus luctus, nibh
+    sapien gravida erat, sed consequat mi lectus non augue.
+
+    Suspendisse potenti. Praesent consequat, nibh at consequat aliquet, mi
+    lectus cursus augue, sed luctus lorem ipsum sed urna. Integer non lorem
+    vitae arcu luctus tincidunt. Curabitur sed sem sed neque pulvinar dapibus.
+    Morbi at neque at ipsum cursus tincidunt. Donec non augue et neque
+    elementum fermentum.
+
+    Nam vitae lorem ac ipsum pretium vulputate. Phasellus non dolor at erat
+    facilisis faucibus. Etiam porta, neque vitae commodo elementum, neque lorem
+    gravida mauris, vitae faucibus neque justo vitae ipsum. Vestibulum ante
+    ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;
+    Aliquam erat volutpat.
+
+    В качестве демонстрационного источника используется dummy-запись
+    \cite{dummy-source-one}. Дополнительная dummy-запись приведена для проверки
+    работы библиографического списка \cite{dummy-source-two}.
+
+    \newpage
+
+    \genericsection{Список использованных источников}
+
+    \printbibliography[heading=none]
+    \label{bib:end}
+
+\end{document}

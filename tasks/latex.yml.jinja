@@ -1,0 +1,34 @@
+version: '3'
+
+tasks:
+  latex:local:
+    desc: Собрать LaTeX локально через latexmk; дополнительные аргументы передаются после --
+[[% if code_listing_mode == 'external' %]]
+    env:
+      PROJECT_SOURCE_PATH: '{{.PROJECT_SOURCE_OS_PATH}}'
+[[% endif %]]
+    cmds:
+      - uv run python scripts/build_latex_manual.py {{.CLI_ARGS}}
+
+  latex:manual_chain:
+    desc: Собрать LaTeX локально ручной цепочкой lualatex/biber
+[[% if code_listing_mode == 'external' %]]
+    env:
+      PROJECT_SOURCE_PATH: '{{.PROJECT_SOURCE_OS_PATH}}'
+[[% endif %]]
+    cmds:
+      - uv run python scripts/build_latex_manual.py --no-latexmk {{.CLI_ARGS}}
+
+[[% if include_docker %]]
+  latex:docker:
+    desc: Собрать итоговый PDF в Docker
+    cmds:
+      - docker compose --profile latex run --build --rm latex
+[[% endif %]]
+
+[[% if include_pdf_tools and include_docker %]]
+  pdf:split-color:
+    desc: Разделить PDF на *_color.pdf и *_bw.pdf через Ghostscript и qpdf в Docker
+    cmds:
+      - docker compose --profile latex run --build --rm latex python3 scripts/split_pdf_color.py {{.CLI_ARGS}}
+[[% endif %]]
