@@ -1,3 +1,20 @@
+[![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-orange.json)](https://github.com/copier-org/copier)
+
+![LaTeX](https://img.shields.io/badge/LaTeX-LuaLaTeX-008080?style=flat-square&logo=latex)
+![latexmk](https://img.shields.io/badge/Build-latexmk-008080?style=flat-square&logo=latex)
+![biblatex](https://img.shields.io/badge/Bibliography-biblatex-008080?style=flat-square&logo=latex)
+![biber](https://img.shields.io/badge/Backend-biber-008080?style=flat-square&logo=latex)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.13+-3776AB?style=flat-square&logo=python&logoColor=white)
+![Nushell](https://img.shields.io/badge/Shell-Nushell-4E9A06?style=flat-square&logo=nushell&logoColor=white)
+![uv](https://img.shields.io/badge/Deps-uv-6D4AFF?style=flat-square)
+![Mermaid](https://img.shields.io/badge/Diagrams-Mermaid-FF3670?style=flat-square&logo=mermaid&logoColor=white)
+![Zensical](https://img.shields.io/badge/Docs-Zensical-5B5BD6?style=flat-square)
+![GitHub Actions](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)
+![Task](https://img.shields.io/badge/Tasks-go--task-29BEB0?style=flat-square&logo=task&logoColor=white)
+![rclone](https://img.shields.io/badge/Backup-rclone-00AEEF?style=flat-square)
+![LibreOffice](https://img.shields.io/badge/DOCX-LibreOffice-18A303?style=flat-square&logo=libreoffice&logoColor=white)
+
 # LaTeX-шаблон дипломной работы
 
 Обезличенный шаблон дипломного проекта на LaTeX с поддержкой Copier, Task,
