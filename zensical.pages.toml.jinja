@@ -1,12 +1,12 @@
 [project]
 site_name = "[[ project_name ]]"
-site_author = "Template Author"
+site_author = "ethercod3"
 docs_dir = "docs/ru"
 site_dir = "docs-site"
 site_url = "https://ethercod3.github.io/latex_thesis_template/"
 repo_url = "https://github.com/ethercod3/latex_thesis_template"
 repo_name = "ethercod3/latex_thesis_template"
-copyright = "Copyright &copy; Template Author"
+copyright = "Copyright &copy; <a href=\"https://github.com/ethercod3\">ethercod3</a>"
 nav = [
   {"Начало" = "README.md"},
   {"Быстрый старт" = "quick-start.md"},
@@ -32,3 +32,13 @@ nav = [
 [project.theme]
 language = "ru"
 features = ["content.code.copy", "navigation.top", "search.highlight"]
+palette = [
+  {media = "(prefers-color-scheme: light)", scheme = "default", toggle = {icon = "material/weather-night", name = "Переключить на темную тему"}},
+  {media = "(prefers-color-scheme: dark)", scheme = "slate", toggle = {icon = "material/weather-sunny", name = "Переключить на светлую тему"}},
+]
+
+[project.extra]
+alternate = [
+  {name = "Русский", link = "https://ethercod3.github.io/latex_thesis_template/", lang = "ru"},
+  {name = "English", link = "https://ethercod3.github.io/latex_thesis_template/en/", lang = "en"},
+]
