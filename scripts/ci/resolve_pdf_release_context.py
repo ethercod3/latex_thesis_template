@@ -43,7 +43,7 @@ def run_checked(command: list[str]) -> tuple[int, str, str]:
 
 def tags_pointing_at_head() -> list[str]:
     run_checked(["git", "fetch", "--tags", "--force"])
-    code, stdout, stderr = run_checked(["git", "tag", "--points-at", "HEAD", "--list", "v*"])
+    code, stdout, stderr = run_checked(["git", "tag", "--points-at", "HEAD", "--list", "v*", "[0-9]*"])
     if code != 0:
         details = stderr.strip() or stdout.strip() or "вывода нет"
         raise typer.Exit(code=code)
@@ -53,7 +53,7 @@ def tags_pointing_at_head() -> list[str]:
 def workflow_run_tag() -> str:
     tags = tags_pointing_at_head()
     if not tags:
-        raise typer.BadParameter("Не найден тег v*, указывающий на HEAD workflow_run checkout.")
+        raise typer.BadParameter("Не найден релизный тег v* или [0-9]*, указывающий на HEAD workflow_run checkout.")
     return tags[-1]
 
 

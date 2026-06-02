@@ -44,12 +44,12 @@ cog.out(cog_readme_block())
 ]]] -->
 ## Контрольные суммы PDF
 
-MD5: `d4209c59b79bbbcd39f13dfd50c40fc5`<br>
-SHA-1: `21a595ef2ae663b4ea5aa337d2391432f1dbaa87`<br>
-SHA-256: `ce348b4c651bb9e204996c2f160a336691847df61df1b78c3527cc5c97b69594`<br>
-SHA3-256: `11d4d1dd135fc49a2736bbd00334e30b0357fb7f891eb9c2ce40e4c70d9b20c1`<br>
-BLAKE2s: `e6e7b6b96d629f6f5fdb1abd6add0582214ae357d464999244d3cc14384e6e52`<br>
-SHAKE-128 (256-bit output): `ebbd934bec212e51cbf9ba85c668c1cc292ce2d166506a66ea3d0e4340520950`<br>
+MD5: `42c9135a650982481fe2eac7461da1ff`<br>
+SHA-1: `3ea65b48faefffc875bb3c8adc3ae1a60be324f7`<br>
+SHA-256: `7f482cbaae188e4ac0dcf94d189b1e57ce6280d75dcc845fdce1a0aad59517b8`<br>
+SHA3-256: `c7bb093fab3d58c92483c544ba69dbf151b230c832ae111d36c1f0a4d5f1f10c`<br>
+BLAKE2s: `3d4fc81fe5da79a1ebec64f7a61af16e6cedc6d078b02fcd701d63366c82551e`<br>
+SHAKE-128 (256-bit output): `64fbcae129403109db8fa5b6b1aa74dea3c76653b0677ec0677dbedd9b631944`<br>
 <!-- [[[end]]] -->
 
 Репозиторий с исходниками дипломной работы: `LaTeX`-документы, `Mermaid`-диаграммы, Python-диаграммы, DOCX-шаблоны титульных страниц и Docker-профили для воспроизводимой сборки.

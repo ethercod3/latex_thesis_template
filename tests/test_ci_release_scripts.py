@@ -7,6 +7,7 @@ import pytest
 from ci import download_latest_checktool_assets as download
 from ci import prepare_pdf_release_env as prepare
 from ci import publish_pdf_release as publish
+from ci import release_check_tools as check_release
 from ci import resolve_pdf_release_context as context
 from common import ScriptError
 
@@ -108,9 +109,49 @@ def test_release_tag_for_workflow_run_uses_tag_pointing_at_head(monkeypatch) -> 
     assert context.release_tag_for_event() == "v0.1.3"
 
 
+def test_release_tag_for_workflow_run_accepts_plain_semver_tag(monkeypatch) -> None:
+    monkeypatch.setattr(context, "github_event_name", lambda: "workflow_run")
+    monkeypatch.setattr(context, "tags_pointing_at_head", lambda: ["0.2.0"])
+
+    assert context.release_tag_for_event() == "0.2.0"
+
+
 def test_checktool_source_tag_is_empty_for_nightly() -> None:
     assert context.checktool_source_tag("nightly") == ""
 
 
 def test_checktool_source_tag_is_current_tag_for_version_release() -> None:
     assert context.checktool_source_tag("v0.1.3") == "v0.1.3"
+
+
+def test_release_check_tools_uploads_exe_and_checksum(tmp_path, monkeypatch) -> None:
+    dist = tmp_path / "dist"
+    dist.mkdir()
+    exe = dist / "diploma-latex-check.exe"
+    checksum = dist / "SHA256SUMS.txt"
+    exe.write_bytes(b"exe")
+    checksum.write_text("checksum", encoding="utf-8")
+
+    commands: list[list[str]] = []
+
+    def fake_run_checked(command: list[str]) -> tuple[int, str, str]:
+        commands.append(command)
+        if command == ["gh", "release", "view", "0.2.0"]:
+            return 1, "", "not found"
+        return 0, "ok", ""
+
+    monkeypatch.setenv("GH_TOKEN", "token")
+    monkeypatch.setenv("GITHUB_REF_NAME", "0.2.0")
+    monkeypatch.setattr(check_release, "EXE_PATH", exe)
+    monkeypatch.setattr(check_release, "CHECKSUM_PATH", checksum)
+    monkeypatch.setattr(check_release, "run_checked", fake_run_checked)
+
+    check_release.main()
+
+    assert commands == [
+        ["gh", "release", "list"],
+        ["gh", "release", "view", "0.2.0"],
+        ["gh", "release", "create", "0.2.0", "--title", "0.2.0", "--notes", "Автоматическая сборка check tools."],
+        ["gh", "release", "upload", "0.2.0", f"{exe}#checktool-windows-x64.exe", "--clobber"],
+        ["gh", "release", "upload", "0.2.0", f"{checksum}#checktool-SHA256SUMS.txt", "--clobber"],
+    ]
