@@ -6,7 +6,7 @@ Docker и вспомогательных Python-скриптов.
 ## Создание проекта
 
 ```bash
-uvx copier copy https://github.com/example/diploma-latex-template.git my-diploma
+uvx copier copy https://github.com/ethercod3/latex_thesis_template my-diploma
 ```
 
 После генерации скопируйте `.env.example` в `.env` и проверьте `TARGET`.

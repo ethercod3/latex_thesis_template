@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  BACKUP_RCLONE_DESTINATIONS: ${{ vars.BACKUP_RCLONE_DESTINATIONS || 'gdrive:diploma_latex_backups,ydisk:diploma_latex_backups' }}
+  BACKUP_RCLONE_DESTINATIONS: ${{ vars.BACKUP_RCLONE_DESTINATIONS || 'gdrive:latex_thesis_backups,ydisk:latex_thesis_backups' }}
   BACKUP_KEEP_WEEKS: ${{ vars.BACKUP_KEEP_WEEKS || '30' }}
 
 jobs:

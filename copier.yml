@@ -20,6 +20,7 @@ _exclude:
   - .coverage
   - .pdf_diff
   - .pdf-archive-worktree
+  - .pytest_cache
   - docs-site
   - htmlcov
   - node_modules
